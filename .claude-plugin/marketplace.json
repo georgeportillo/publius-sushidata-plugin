@@ -1,14 +1,14 @@
 {
-  "name": "sushidata-gtm",
+  "name": "sushidata-gtm-publius",
   "owner": {
     "name": "Sushidata"
   },
   "plugins": [
     {
-      "name": "sushidata-gtm",
+      "name": "sushidata-gtm-publius",
       "source": {
         "source": "github",
-        "repo": "georgeportillo/sushidata-plugin"
+        "repo": "georgeportillo/publius-sushidata-plugin"
       },
       "description": "Sushidata context lake + GTM agent: prospecting, outbound, competitor battlecards, ICP signals, and outreach copy."
     }

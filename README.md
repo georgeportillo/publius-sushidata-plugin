@@ -1,4 +1,4 @@
-# sushidata-gtm
+# sushidata-gtmgit n
 
 A Claude Cowork plugin that turns Claude into a Sushidata-native GTM agent. Every research session, prospect list, and competitive finding is saved to the Sushidata context lake so future sessions build on what was already learned — not from scratch.
 
@@ -63,8 +63,8 @@ All skills connect to:
 
 ```
 BASE URL:  https://dashboard.sushidata.ai/public/019e50b4-7223-70f9-901f-99ea9706152c/
-Tenant:    Sushidata
-Dataspace: Sushidata Internal
+Tenant:    Plubius
+Dataspace: Plubius Internal
 ```
 
 Key endpoints:

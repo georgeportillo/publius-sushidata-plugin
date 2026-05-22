@@ -16,8 +16,8 @@ lake and brief the user on what was found. This replaces the need to reload
 a prior conversation.
 
 BASE URL: https://dashboard.sushidata.ai/public/019e50b4-7223-70f9-901f-99ea9706152c/
-Tenant: Sushidata
-Dataspace: Sushidata Internal
+Tenant: Publius
+Dataspace: Publius Internal
 
 ---
 
@@ -46,8 +46,8 @@ Content-Type: application/json
 ```json
 {
   "query": "session restore — all saved context",
-  "tenant": "Sushidata",
-  "dataspace": "Sushidata Internal",
+  "tenant": "Publius",
+  "dataspace": "Publius Internal",
   "threadId": "<cowork-session-id>",
   "limit": 50
 }
@@ -65,8 +65,8 @@ Content-Type: application/json
 ```json
 {
   "query": "recent session intelligence accounts contacts competitors documents",
-  "tenant": "Sushidata",
-  "dataspace": "Sushidata Internal",
+  "tenant": "Publius",
+  "dataspace": "Publius Internal",
   "limit": 20
 }
 ```

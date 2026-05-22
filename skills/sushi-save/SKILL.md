@@ -13,8 +13,8 @@ When triggered, give the user a choice of what to save, then write their
 selection to the Sushidata context lake.
 
 BASE URL: https://dashboard.sushidata.ai/public/019e50b4-7223-70f9-901f-99ea9706152c/
-Tenant: Sushidata
-Dataspace: Sushidata Internal
+Tenant: Publius
+Dataspace: Publius Internal
 
 ---
 
