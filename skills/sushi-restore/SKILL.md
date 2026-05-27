@@ -15,16 +15,13 @@ When triggered, pull prior session intelligence from the Sushidata context
 lake and brief the user on what was found. This replaces the need to reload
 a prior conversation.
 
-BASE URL: https://dashboard.sushidata.ai/public/019e50b4-7223-70f9-901f-99ea9706152c/
-Tenant: Publius
-Dataspace: Publius Internal
+> Read `SETTINGS.md` at the plugin root for **BASE_URL**, **Tenant**, and **Dataspace**.
 
 ---
 
 ## Step 1 — Get the session ID
 
 Run:
-
 ```bash
 echo $PWD | grep -oP 'local_[a-f0-9-]+'
 ```
@@ -46,8 +43,8 @@ Content-Type: application/json
 ```json
 {
   "query": "session restore — all saved context",
-  "tenant": "Publius",
-  "dataspace": "Publius Internal",
+  "tenant": "Sushidata",
+  "dataspace": "Sushidata Internal",
   "threadId": "<cowork-session-id>",
   "limit": 50
 }
@@ -65,8 +62,8 @@ Content-Type: application/json
 ```json
 {
   "query": "recent session intelligence accounts contacts competitors documents",
-  "tenant": "Publius",
-  "dataspace": "Publius Internal",
+  "tenant": "Sushidata",
+  "dataspace": "Sushidata Internal",
   "limit": 20
 }
 ```
@@ -108,7 +105,6 @@ Present the findings as a clean, scannable brief:
 [For each category that has results:]
 
 #### [Category Name]
-
 - [Concise bullet per item — company name, person, document title, or signal
   type. One line each. Include the date it was saved if available.]
 

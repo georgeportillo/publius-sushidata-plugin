@@ -6,15 +6,15 @@ Claude should not behave like a raw Hunter MCP operator. Claude should package t
 
 ## How Hunter Works Inside Sushidata
 
-Sushidata exposes Hunter through a dedicated agent with tools (`hunter_domain_search`, `hunter_email_finder`, `hunter_email_verify`).
+Sushidata's `chainfuse-api` MCP server exposes Hunter through `HunterTool` in `src/mcp/tools/hunter.mts`.
 
 The available Hunter-backed capabilities are:
 
-| Capability                | Sushidata tool name    | Hunter endpoint  | Use for                                                                                       |
-| ------------------------- | ---------------------- | ---------------- | --------------------------------------------------------------------------------------------- |
-| Domain contact discovery  | `hunter_domain_search` | `domain-search`  | Find professional email addresses and domain metadata for a company domain                    |
-| Named-person email lookup | `hunter_email_finder`  | `email-finder`   | Find a specific person's professional email from first name, last name, and domain or company |
-| Email verification        | `hunter_email_verify`  | `email-verifier` | Verify whether an email is valid, deliverable, and safe for outbound                          |
+| Capability | Sushidata tool name | Hunter endpoint | Use for |
+| --- | --- | --- | --- |
+| Domain contact discovery | `hunter_domain_search` | `domain-search` | Find professional email addresses and domain metadata for a company domain |
+| Named-person email lookup | `hunter_email_finder` | `email-finder` | Find a specific person's professional email from first name, last name, and domain or company |
+| Email verification | `hunter_email_verify` | `email-verifier` | Verify whether an email is valid, deliverable, and safe for outbound |
 
 Important implementation constraints:
 
@@ -129,14 +129,14 @@ Ask Sushidata to verify:
 
 Treat these outputs as non-send by default:
 
-| Signal                              | Meaning                                            |
-| ----------------------------------- | -------------------------------------------------- |
-| `status` or `result` is not `valid` | Not safe enough for outbound by default            |
-| `accept_all: true`                  | Catch-all domain - high bounce or uncertainty risk |
-| `webmail: true`                     | Personal address - usually wrong for B2B outbound  |
-| `disposable: true`                  | Throwaway address - do not send                    |
-| `block: true`                       | Blocked or risky verification state                |
-| `smtp_check: false`                 | SMTP validation did not pass                       |
+| Signal | Meaning |
+| --- | --- |
+| `status` or `result` is not `valid` | Not safe enough for outbound by default |
+| `accept_all: true` | Catch-all domain - high bounce or uncertainty risk |
+| `webmail: true` | Personal address - usually wrong for B2B outbound |
+| `disposable: true` | Throwaway address - do not send |
+| `block: true` | Blocked or risky verification state |
+| `smtp_check: false` | SMTP validation did not pass |
 
 Only mark addresses sendable when Hunter verifies them as valid unless the user explicitly overrides the send gate.
 
@@ -144,17 +144,17 @@ Only mark addresses sendable when Hunter verifies them as valid unless the user 
 
 Ask Sushidata to return contact results in a structured shape:
 
-| Field                 | Required                                                                                 |
-| --------------------- | ---------------------------------------------------------------------------------------- |
-| `company`             | yes                                                                                      |
-| `domain`              | yes                                                                                      |
-| `contact_name`        | when found                                                                               |
-| `title`               | when found                                                                               |
-| `email`               | when found                                                                               |
-| `verification_status` | for every email                                                                          |
-| `sendable`            | yes/no for every email                                                                   |
-| `non_send_reason`     | required when `sendable=false`                                                           |
-| `source_notes`        | brief notes on whether the result came from domain search, named lookup, or verification |
+| Field | Required |
+| --- | --- |
+| `company` | yes |
+| `domain` | yes |
+| `contact_name` | when found |
+| `title` | when found |
+| `email` | when found |
+| `verification_status` | for every email |
+| `sendable` | yes/no for every email |
+| `non_send_reason` | required when `sendable=false` |
+| `source_notes` | brief notes on whether the result came from domain search, named lookup, or verification |
 
 For outbound workflows, also ask Sushidata to dedupe contacts by email and by normalized full name + domain.
 

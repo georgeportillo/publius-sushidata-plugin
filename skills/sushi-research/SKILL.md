@@ -24,11 +24,8 @@ You are connected to a Sushidata dataspace via API. This skill governs two compl
 
 ### Configuration
 
-**BASE URL**: `https://dashboard.sushidata.ai/public/019e50b4-7223-70f9-901f-99ea9706152c/`
-
-**Tenant**: `Publius`
-
-**Dataspace**: `Publius Dataspace`
+> Read `SETTINGS.md` at the plugin root for **BASE_URL**, **Tenant**, and **Dataspace**.
+> Use `{BASE_URL}` as prefix for all endpoint paths below.
 
 **Required header on all requests**: `Content-Type: application/json`
 
@@ -89,11 +86,11 @@ POST /swarm/deploy/
 
 **Swarm size guide**:
 
-| Size  | Use case                         |
-| ----- | -------------------------------- |
-| 3–5   | Focused, specific tasks          |
-| 5–10  | Broad research topics            |
-| 10–20 | Exhaustive, multi-angle analysis |
+| Size  | Use case                              |
+| ----- | ------------------------------------- |
+| 3–5   | Focused, specific tasks               |
+| 5–10  | Broad research topics                 |
+| 10–20 | Exhaustive, multi-angle analysis      |
 
 Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label`, `taskDescription`).
 
@@ -129,7 +126,7 @@ POST /swarm/summary/
 
 Response: `{ "summary": "...", "completed": N, "total": N, "pending": N }`
 
-If workers are still pending, clearly note: _"These results are based on X of Y workers — Z workers are still running."_
+If workers are still pending, clearly note: *"These results are based on X of Y workers — Z workers are still running."*
 
 ---
 
@@ -143,7 +140,6 @@ POST /verify/
 ```
 
 Response:
-
 ```json
 {
   "summary": { "overview": "...", "total": 6, "good": 4, "bad": 1, "blocked": 1, "swarmSize": 3 },
@@ -241,40 +237,44 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 1** (`SKILL.md`): routing, guardrails, and links to sub-docs.
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
-- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify.
+- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify, Google Ads Transparency, and Clay.
 
 ### Read the right sub-doc BEFORE executing
 
 **This is not optional.** Read the matching doc before running any tool calls. These docs encode validated workflows and known pitfalls.
 
-| When the task involves...                                                                | Read this first                                                          |
-| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md) |
-| Researching companies/people, personalizing outreach, writing cold emails, scoring leads | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task    |
-| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring          | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                   |
-| Email verification or discovery at known contacts                                        | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)           |
-| LinkedIn scraping, web automation, actor-based extraction                                | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)             |
-| CRM sync, HubSpot writes, contact/deal/note creation                                     | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)         |
-| Outbound activation, LinkedIn campaign insertion                                         | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)       |
-| Saving session outputs to the context lake on demand                                     | `sushi-save` skill — user says "save" or "save to sushidata"             |
-| Pulling prior session memory at the start of a new conversation                          | `sushi-restore` skill — user says "restore" or "pull my memory"          |
-| Seeing a breakdown of what Sushidata retrieved vs what Claude built                      | `sushi-savings` skill — user says "savings" or "session report"          |
-| Getting an overview of available commands and use case guides                            | `sushi-help` skill — user says "help" or "what can you do"               |
+| When the task involves...                                                                    | Read this first                                                        |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding     | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md) |
+| Researching companies/people, personalizing outreach, writing cold emails, scoring leads     | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task  |
+| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring              | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                  |
+| Email verification or discovery at known contacts                                            | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)         |
+| LinkedIn scraping, web automation, actor-based extraction                                    | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)           |
+| CRM sync, HubSpot writes, contact/deal/note creation                                        | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)       |
+| Outbound activation, LinkedIn campaign insertion                                             | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)     |
+| Researching competitor Google ad creatives, paid ad formats, creative longevity             | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md) |
+| Querying Clay audience data, enriching companies/contacts, running Clay subroutines         | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                         |
+| Extracting a Clay table config or records via script or MCP browser                        | [`references/clay-extraction.md`](references/clay-extraction.md)                   |
+| Saving session outputs to the context lake on demand                                        | `sushi-save` skill — user says "save" or "save to sushidata"       |
+| Pulling prior session memory at the start of a new conversation                             | `sushi-restore` skill — user says "restore" or "pull my memory"    |
+| Seeing a breakdown of what Sushidata retrieved vs what Claude built                         | `sushi-savings` skill — user says "savings" or "session report"    |
+| Getting an overview of available commands and use case guides                               | `sushi-help` skill — user says "help" or "what can you do"         |
 
 ### Recipes: step-by-step playbooks (check before executing)
 
 Before starting any multi-step task, check if a recipe matches. If it does, follow it.
 
-| Recipe                          | Use when...                                                                                    |
-| ------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `account-orgchart.md`           | Building an org chart for a target account — map decision makers, seniority, warm intro paths  |
-| `build-tam.md`                  | Building a total addressable market list from ICP criteria                                     |
-| `document-accuracy-review.md`   | Verifying factual accuracy, link integrity, and citation labels in any research document       |
-| `gtm-competitor-report.md`      | Building a full GTM competitor analysis — channels, ads, events, PR, hiring, analyst citations |
-| `linkedin-url-lookup.md`        | Resolving LinkedIn profile URLs from names and companies                                       |
-| `portfolio-prospecting.md`      | Finding companies backed by a specific investor or accelerator, then finding contacts          |
-| `scheduled-tasks.md`            | Setting up recurring or one-time automated GTM and research tasks via Cowork's scheduler       |
-| `small-business-prospecting.md` | Finding local small businesses using Maps-style search                                         |
+| Recipe                          | Use when...                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `account-orgchart.md`           | Building an org chart for a target account — map decision makers, seniority, warm intro paths      |
+| `clay-to-sushidata.md`          | Extracting a Clay table, enriching rows with Sushidata swarms, saving results to the context lake  |
+| `build-tam.md`                  | Building a total addressable market list from ICP criteria                                        |
+| `document-accuracy-review.md`   | Verifying factual accuracy, link integrity, and citation labels in any research document          |
+| `gtm-competitor-report.md`      | Building a full GTM competitor analysis — channels, ads, events, PR, hiring, analyst citations    |
+| `linkedin-url-lookup.md`        | Resolving LinkedIn profile URLs from names and companies                                          |
+| `portfolio-prospecting.md`      | Finding companies backed by a specific investor or accelerator, then finding contacts              |
+| `scheduled-tasks.md`            | Setting up recurring or one-time automated GTM and research tasks via Cowork's scheduler          |
+| `small-business-prospecting.md` | Finding local small businesses using Maps-style search                                            |
 
 For ICP signal analysis (won vs. lost differential), use the `niche-signal-discovery` skill directly.
 
@@ -345,3 +345,5 @@ python3 scripts/validate-linkedin-names.py --fixtures scripts/fixtures_name_vali
 - [HubSpot playbook](provider-playbooks/hubspot.md) — CRM reads, writes, and campaign tools
 - [Hunter playbook](provider-playbooks/hunter.md) — Email discovery and verification
 - [Apify playbook](provider-playbooks/apify.md) — Web scraping and actor-based automation
+- [Google Ads Transparency playbook](provider-playbooks/ads-transparency.md) — Competitor ad creative research, paid channel analysis, creative longevity signals
+- [Clay playbook](provider-playbooks/clay.md) — Audience queries, company/contact enrichment, subroutines (direct MCP — no swarm needed)
