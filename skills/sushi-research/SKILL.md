@@ -79,6 +79,8 @@ Response: `{ "summary": "...", "sources": [...] }`
 
 **When to use**: Comprehensive research, broad analysis, or multi-faceted questions where `/query/` is insufficient. Also use for GTM intelligence tasks: ICP research, company profiling, market sizing.
 
+> **Do not apply any self-imposed time limit to this call.** `/swarm/deploy/` is a heavy operation. It may take time to respond — wait for it. Do not cancel, time out, or give up on the request. The only hard limit is **5 minutes of total wall time** across deploy + polling.
+
 ```json
 POST /swarm/deploy/
 { "query": "<research task>", "swarmSize": <2-20> }
