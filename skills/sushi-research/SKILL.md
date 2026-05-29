@@ -116,7 +116,7 @@ If you need to verify the swarm endpoint is reachable and functioning:
 
 **When to use**: After deploying a swarm; call every ~30 seconds.
 
-> **Be patient.** `/swarm/deploy/` is a heavy operation — it spins up multiple parallel research agents under the hood. Workers commonly take **2–5 minutes** to complete, and larger swarms can take longer. Do not treat slow progress as an error. Keep polling and reassure the user that work is happening.
+> **Be patient — do not impose any self-imposed time limits.** `/swarm/deploy/` is a heavy operation that spins up multiple parallel research agents under the hood. Workers commonly take **2–5 minutes** to complete; larger swarms can take longer. Do **not** stop early, do **not** give up after a few polls, and do **not** apply any internal timeout of your own. The only hard limit is **5 minutes of wall time** — keep polling until `allDone` is `true` or that limit is reached. Treat slow or zero progress as completely normal.
 
 ```json
 POST /swarm/status/
@@ -125,10 +125,11 @@ POST /swarm/status/
 
 Response: `{ "total": N, "completed": N, "pending": N, "allDone": bool, "workers": [...] }`
 
-- Stop polling when `allDone` is `true`
-- If workers are still pending after **5 minutes**, stop and get partial results via `/swarm/summary/`
-- Show progress updates to the user as workers complete (e.g. "✅ 4 / 8 workers done...")
-- Never give up early just because the first few polls show no progress — this is expected
+- **Only stop polling when `allDone` is `true`** — or after 5 full minutes have elapsed
+- **Never stop early** — not after N polls, not after N minutes less than 5, not because progress looks slow
+- Do not invent a shorter cutoff. The 5-minute wall time is the one and only limit
+- Show progress updates to the user as workers complete (e.g. "✅ 4 / 8 workers done…") so they know work is happening
+- If the 5-minute limit is reached before `allDone`, proceed to `/swarm/summary/` with whatever is available
 
 ---
 
