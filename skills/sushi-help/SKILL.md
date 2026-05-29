@@ -26,66 +26,68 @@ Show this card exactly:
 
 #### Commands you can use anytime
 
-| Command | What it does |
-|---|---|
-| **restore** | Pull everything saved from your prior sessions back into memory |
-| **save** | Save this session's outputs to your context lake — save all or choose what |
-| **savings** | See a breakdown of what Sushidata retrieved vs what Claude built this session |
-| **help** | Show this screen |
+| Command     | What it does                                                                        |
+| ----------- | ----------------------------------------------------------------------------------- |
+| **restore** | Pull everything saved from your prior sessions back into memory                     |
+| **save**    | Save this session's outputs to your context lake — save all or choose what          |
+| **savings** | See a breakdown of what Sushidata retrieved vs what Claude built this session       |
+| **matrix**  | Launch a competitor/category research matrix and render a spreadsheet with evidence |
+| **help**    | Show this screen                                                                    |
 
 ---
 
 #### Research & Intelligence
 
-| Say something like... | What happens |
-|---|---|
-| "Research [company]" | Deploys a swarm to build a full intel profile |
-| "Who are [company]'s competitors" | Identifies and profiles key competitors |
-| "Build a GTM competitor report on [company]" | Full channel-by-channel GTM analysis |
-| "Build a battlecard for [company]" | Positioning and objection-handling card |
-| "Find contacts at [company]" | Discovers key contacts with LinkedIn profiles |
-| "Build an org chart for [company]" | Maps the org structure and buying committee |
+| Say something like...                                      | What happens                                                       |
+| ---------------------------------------------------------- | ------------------------------------------------------------------ |
+| "Research [company]"                                       | Deploys a swarm to build a full intel profile                      |
+| "Who are [company]'s competitors"                          | Identifies and profiles key competitors                            |
+| "Build a GTM competitor report on [company]"               | Full channel-by-channel GTM analysis                               |
+| "Run a research matrix for [competitors] and [categories]" | Launches a research matrix and returns a spreadsheet with evidence |
+| "Build a battlecard for [company]"                         | Positioning and objection-handling card                            |
+| "Find contacts at [company]"                               | Discovers key contacts with LinkedIn profiles                      |
+| "Build an org chart for [company]"                         | Maps the org structure and buying committee                        |
 
 ---
 
 #### Prospecting & Outreach
 
-| Say something like... | What happens |
-|---|---|
-| "Find me leads for [ICP description]" | Builds a targeted prospect list |
-| "Write outreach for [person/company]" | Drafts personalized LinkedIn or email copy |
-| "Add these leads to HeyReach" | Pushes contacts into a HeyReach campaign |
-| "Enrich these contacts in HubSpot" | Updates HubSpot records with researched data |
-| "Find emails for [list]" | Runs Hunter to find verified email addresses |
+| Say something like...                 | What happens                                 |
+| ------------------------------------- | -------------------------------------------- |
+| "Find me leads for [ICP description]" | Builds a targeted prospect list              |
+| "Write outreach for [person/company]" | Drafts personalized LinkedIn or email copy   |
+| "Add these leads to HeyReach"         | Pushes contacts into a HeyReach campaign     |
+| "Enrich these contacts in HubSpot"    | Updates HubSpot records with researched data |
+| "Find emails for [list]"              | Runs Hunter to find verified email addresses |
 
 ---
 
 #### ICP & Signal Discovery
 
-| Say something like... | What happens |
-|---|---|
+| Say something like...             | What happens                                    |
+| --------------------------------- | ----------------------------------------------- |
 | "Analyze my won vs lost accounts" | Discovers niche signals that predict closed-won |
-| "What signals should I look for" | Builds a scoring model from your ICP data |
-| "Score these accounts" | Classifies accounts by ICP fit |
+| "What signals should I look for"  | Builds a scoring model from your ICP data       |
+| "Score these accounts"            | Classifies accounts by ICP fit                  |
 
 ---
 
 #### Community & Market Intelligence
 
-| Say something like... | What happens |
-|---|---|
+| Say something like...                  | What happens                               |
+| -------------------------------------- | ------------------------------------------ |
 | "What are people saying about [topic]" | Scrapes Discord, Reddit, forums for signal |
-| "Build a TAM report for [segment]" | Sizes the addressable market with sources |
-| "Review this document for accuracy" | Verifies claims, links, and citations |
+| "Build a TAM report for [segment]"     | Sizes the addressable market with sources  |
+| "Review this document for accuracy"    | Verifies claims, links, and citations      |
 
 ---
 
 #### Scheduled & Automated
 
-| Say something like... | What happens |
-|---|---|
-| "Run this every Monday morning" | Sets up a recurring scheduled task |
-| "Alert me when [condition]" | Creates a trigger-based scheduled task |
+| Say something like...           | What happens                           |
+| ------------------------------- | -------------------------------------- |
+| "Run this every Monday morning" | Sets up a recurring scheduled task     |
+| "Alert me when [condition]"     | Creates a trigger-based scheduled task |
 
 ---
 

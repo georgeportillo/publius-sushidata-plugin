@@ -88,9 +88,12 @@ POST /swarm/deploy/
 
 | Size  | Use case                              |
 | ----- | ------------------------------------- |
+| 2     | Minimum valid size — use only for connectivity checks |
 | 3–5   | Focused, specific tasks               |
 | 5–10  | Broad research topics                 |
 | 10–20 | Exhaustive, multi-angle analysis      |
+
+> **Minimum swarm size is 2.** Never deploy with `swarmSize: 1` — it will fail.
 
 Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label`, `taskDescription`).
 
@@ -98,9 +101,22 @@ Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label
 
 ---
 
+#### Debugging / checking if the swarm is live
+
+If you need to verify the swarm endpoint is reachable and functioning:
+
+- Use `swarmSize: 2` (the minimum)
+- Use a real, meaningful query (e.g. `"What is Salesforce's primary product offering?"`) — not a placeholder like "test" or "hello"
+- **Do NOT save the test deployment or its results to the context lake** — skip all `/context/` saves for diagnostic runs
+- Discard the results after confirming connectivity; do not surface them to the user as research output
+
+---
+
 #### 4. `/swarm/status/` — Poll swarm progress
 
 **When to use**: After deploying a swarm; call every ~30 seconds.
+
+> **Be patient.** `/swarm/deploy/` is a heavy operation — it spins up multiple parallel research agents under the hood. Workers commonly take **2–5 minutes** to complete, and larger swarms can take longer. Do not treat slow progress as an error. Keep polling and reassure the user that work is happening.
 
 ```json
 POST /swarm/status/
@@ -112,6 +128,7 @@ Response: `{ "total": N, "completed": N, "pending": N, "allDone": bool, "workers
 - Stop polling when `allDone` is `true`
 - If workers are still pending after **5 minutes**, stop and get partial results via `/swarm/summary/`
 - Show progress updates to the user as workers complete (e.g. "✅ 4 / 8 workers done...")
+- Never give up early just because the first few polls show no progress — this is expected
 
 ---
 
