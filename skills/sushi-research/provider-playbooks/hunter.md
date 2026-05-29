@@ -15,13 +15,19 @@ The available Hunter-backed capabilities are:
 | Domain contact discovery | `hunter_domain_search` | `domain-search` | Find professional email addresses and domain metadata for a company domain |
 | Named-person email lookup | `hunter_email_finder` | `email-finder` | Find a specific person's professional email from first name, last name, and domain or company |
 | Email verification | `hunter_email_verify` | `email-verifier` | Verify whether an email is valid, deliverable, and safe for outbound |
+| Person enrichment | `hunter_email_enrichment` | `people/find` | Enrich a person by email or LinkedIn handle — returns name, location, employment, social profiles, timezone |
+| Company enrichment | `hunter_company_enrichment` | `companies/find` | Enrich a company by domain — returns industry, HQ, tech stack, funding, social profiles, employee count |
+| Combined enrichment | `hunter_combined_enrichment` | `combined/find` | Enrich both a person and their company in one call from a single email address |
 
 Important implementation constraints:
 
-- `hunter_domain_search` currently accepts only `domain`.
+- `hunter_domain_search` accepts only `domain`.
 - `hunter_email_finder` requires `first_name`, `last_name`, and either `domain` or `company`.
 - `hunter_email_verify` requires `email`.
-- Department, seniority, pagination, enrichment-only endpoints, combined-finder endpoints, and free ICP-count endpoints are not exposed.
+- `hunter_email_enrichment` requires either `email` or `linkedin_handle` (or both).
+- `hunter_company_enrichment` requires `domain`.
+- `hunter_combined_enrichment` requires `email`.
+- Department filters, seniority filters, pagination, and ICP-count endpoints are not exposed.
 
 ## Agent Behavior
 
@@ -140,6 +146,66 @@ Treat these outputs as non-send by default:
 
 Only mark addresses sendable when Hunter verifies them as valid unless the user explicitly overrides the send gate.
 
+---
+
+### 4. Person Enrichment
+
+Use this when you have an email or LinkedIn handle and want full profile data for a contact — name, location, employment, social profiles, timezone.
+
+Ask Sushidata to enrich by email:
+
+```json
+{
+  "email": "matt@hunter.io"
+}
+```
+
+Or by LinkedIn handle:
+
+```json
+{
+  "linkedin_handle": "matttharp"
+}
+```
+
+Returns: `name`, `email`, `location`, `timeZone`, `geo`, `bio`, `employment` (company domain, title, role, seniority), `linkedin`, `twitter`, `github`, `facebook`, `phone`, `avatar`.
+
+Use this to fill in gaps after domain discovery or named lookup — especially to confirm job titles, seniority, and current employer before outbound.
+
+---
+
+### 5. Company Enrichment
+
+Use this when you have a domain and want full firmographic data — industry, HQ, headcount, tech stack, funding, social profiles.
+
+Ask Sushidata to enrich by domain:
+
+```json
+{
+  "domain": "hunter.io"
+}
+```
+
+Returns: `name`, `legalName`, `domain`, `description`, `industry`, `foundedYear`, `location`, `geo`, `metrics` (employees, revenue, funding raised, market cap), `tech`, `techCategories`, `linkedin`, `twitter`, `crunchbase`, `fundingRounds`, `tags`, `category` (sector, GICS, SIC, NAICS).
+
+Use this to validate ICP fit before running email discovery or outbound.
+
+---
+
+### 6. Combined Enrichment
+
+Use this when you have a contact's email and want both their personal profile and their company's firmographic data in a single call.
+
+Ask Sushidata to run combined enrichment:
+
+```json
+{
+  "email": "matt@hunter.io"
+}
+```
+
+Returns a combined `person` and `company` object. Equivalent to running person enrichment + company enrichment together. Use when you want to confirm both the contact and the account in one step.
+
 ## Output Expectations
 
 Ask Sushidata to return contact results in a structured shape:
@@ -164,15 +230,18 @@ For outbound workflows, also ask Sushidata to dedupe contacts by email and by no
 2. Ask Sushidata to filter returned contacts by the target persona.
 3. Ask Sushidata to use named-person lookup for relevant known contacts that are missing emails.
 4. Ask Sushidata to verify every candidate email.
-5. Cross-check names, titles, domains, and LinkedIn URLs with Sushidata research, Browser Rendering, Apify, or first-party sources before campaign activation.
+5. Optionally enrich key contacts with person enrichment and key accounts with company enrichment to validate ICP fit and fill profile gaps.
+6. Use combined enrichment when you have a contact's email and want both person + company data in one step.
+7. Cross-check names, titles, domains, and LinkedIn URLs with Sushidata research, Browser Rendering, Apify, or first-party sources before campaign activation.
 
 ## Pitfalls
 
 - Treating this as a direct Hunter tool-use playbook instead of a Sushidata swarm-packaging playbook.
 - Asking the user to choose a Hunter tool. Claude should choose the workflow.
-- Requesting unsupported Hunter options such as department filters, seniority filters, pagination, combined find, people find, company find, email count, or discover.
+- Requesting unsupported Hunter options such as department filters, seniority filters, pagination, or ICP-count endpoints.
 - Skipping email verification before outbound.
 - Treating Hunter as authoritative for identity. Always confirm that the person, company, and domain match the target account before activation.
+- Using `hunter_combined_enrichment` or `hunter_email_enrichment` without a valid email — these require a real email address, not a domain or name.
 
 ---
 
