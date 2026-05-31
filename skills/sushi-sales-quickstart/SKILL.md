@@ -15,7 +15,12 @@ A live demo of Sushidata's GTM capabilities — runs in under 5 minutes and deli
 
 If the user hasn't told you what they sell and who they sell to, ask:
 
-> "Quick question before we start: what does your company sell, and who's your ideal buyer? (e.g. 'We sell contract management software to VP Legal at Series B+ companies'). I'll use this to make the results specific to you — or I can run a generic demo if you'd rather just see it in action."
+> 🎯 **Quick question before we start:** What does your company sell, and who's your ideal buyer?
+> *(e.g. "We sell contract management software to VP Legal at Series B+ companies")*
+>
+> I'll tailor the results to your ICP — or:
+>
+> 💬 **"Just show me"** — Run a generic demo with a default ICP right now
 
 If they don't answer or say "just show me," proceed with Recipe 1 using the default ICP.
 
@@ -119,11 +124,13 @@ Display a clean table:
 
 Then offer:
 
-> **What's next?**
-> - **Activate in HeyReach** — I can add these contacts to a LinkedIn outbound campaign right now
-> - **Write personalized emails** — I'll research each company and write a custom first line per contact
-> - **Go deeper on one account** — Run Recipe 2 to build a full account brief on any company here
-> - **Save to HubSpot** — I can create contacts and a deal pipeline in your CRM
+**What would you like to do next?**
+
+> 💬 **"Add these contacts to HeyReach"** — Launch a LinkedIn outbound campaign right now
+> 💬 **"Write personalized emails for these contacts"** — Custom first line per contact based on live research
+> 💬 **"Tell me everything about [Company Name]"** — Full account brief: signals, org chart, outreach angle
+> 💬 **"Save to HubSpot"** — Create contacts and a deal pipeline in your CRM
+> 💬 **"Save these results"** — Persist to your context lake for future sessions
 
 ---
 
@@ -209,7 +216,13 @@ Structure the output as:
 - **Personalized first line:** ...
 - **Talk track angle:** ...
 
-Then offer: Write a full sequence | Add to HeyReach | Save to HubSpot | Research another account
+**What would you like to do next?**
+
+> 💬 **"Write a full outreach sequence for [Name]"** — Personalized email + LinkedIn cadence based on the research
+> 💬 **"Add [Name] to HeyReach"** — Launch a LinkedIn outbound sequence now
+> 💬 **"Save to HubSpot"** — Create a contact and deal in your CRM
+> 💬 **"Tell me everything about [another company]"** — Run this recipe on a different target account
+> 💬 **"Save these results"** — Persist the account brief to your context lake
 
 ---
 
@@ -281,7 +294,12 @@ Show a table of Tier 1 companies with competitor evidence and contacts. Then off
 
 > **Displacement angle:** "You're paying for {{competitor}} — here's why teams like yours switch to {{your product}}: {{top migration reason from research}}."
 
-Offer: Write displacement email sequence | Add Tier 1 to HeyReach | Research any company in detail (Recipe 2)
+**What would you like to do next?**
+
+> 💬 **"Write a displacement email sequence"** — Draft a tailored sequence for switching away from [competitor]
+> 💬 **"Add Tier 1 to HeyReach"** — Launch outbound for your highest-priority displacement targets
+> 💬 **"Tell me everything about [Company Name]"** — Build a full account brief on any match
+> 💬 **"Save these results"** — Persist the displacement list to your context lake
 
 ---
 
@@ -307,8 +325,9 @@ Never skip the saves. The context lake is what makes Sushidata useful across ses
 
 Remind the user of these commands they can use anytime:
 
-> 🍣 **Sushidata commands:**
-> - **save** — save this session's outputs to your context lake
-> - **restore** — pull prior session memory back at the start of any new session
-> - **savings** — see what Sushidata retrieved vs what Claude built this session
-> - **help** — see everything Sushidata can do, with GTM, Marketing, and Competitor Analysis guides
+> 🍣 **Sushidata commands — use anytime:**
+>
+> 💬 **"save"** — save this session’s outputs to your context lake
+> 💬 **"restore"** — pull prior session memory back at the start of any new session
+> 💬 **"savings"** — see what Sushidata retrieved vs what Claude built this session
+> 💬 **"help"** — see everything Sushidata can do

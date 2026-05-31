@@ -53,10 +53,8 @@ Here's what I found worth saving from this session:
 
 **What would you like to save?**
 
-- **All** — save everything listed above
-- **Choose** — tell me which categories or specific items to save
-
----
+> 💬 **"Save all"** — Persist everything listed above to your context lake
+> 💬 **"Save [category name]"** — Save just that category (e.g. *"Save the competitor intel"* or *"Save the contacts"*)
 
 Wait for the user's response before writing anything.
 
@@ -123,6 +121,12 @@ After all saves are complete, confirm with a short receipt:
 [List each item saved with a checkmark. One line each.]
 
 > These will be available in any future session when you run a restore.
+
+**What's next?**
+
+> 💬 **"Restore"** — Pull this context back at the start of any future session
+> 💬 **"Help"** — See everything Sushidata can do
+> 💬 **"Research [company]"** — Keep the momentum going
 
 ---
 

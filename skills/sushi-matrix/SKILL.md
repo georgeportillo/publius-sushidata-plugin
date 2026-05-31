@@ -95,7 +95,17 @@ Build a Markdown table where:
 - If a cell has no evidence, write `—`
 - If a cell's status is `errored` or `unknown`, write `⚠️ No data`
 
-**After the table**, add a brief summary paragraph highlighting the most significant differences across competitors.
+**After the table**, add a brief summary paragraph highlighting the most significant differences across competitors. Then offer next-step CTAs:
+
+---
+
+**What would you like to do next?**
+
+> 💬 **"Tell me everything about [Competitor Name]"** — Full account brief with signals, contacts, and org chart
+> 💬 **"Find contacts at [Competitor Name]"** — Discover and verify buyer emails
+> 💬 **"Build a battlecard for [Competitor Name]"** — Positioning, objection handling, and GTM signals
+> 💬 **"Run a deeper matrix with [additional categories]"** — Expand the comparison with more dimensions
+> 💬 **"Save this matrix"** — Persist the results to your context lake
 
 ---
 

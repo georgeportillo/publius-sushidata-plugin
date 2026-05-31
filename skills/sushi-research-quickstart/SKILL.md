@@ -175,9 +175,12 @@ Present a clean, structured competitive battlecard. Use this format:
 
 ### Suggested Next Steps
 
-- To go deeper on any competitor: *"Deploy a full Sushidata swarm on [Competitor]"*
-- To build a prospect list targeting customers of these competitors: use the `build-tam` recipe
-- To set up a weekly competitive digest: *"Schedule a competitor monitor for [COMPANY]"*
+> 💬 **"Tell me more about [Competitor A]"** — Deploy a focused research swarm on that competitor
+> 💬 **"Find contacts at [Competitor A]"** — Discover buyer contacts with verified emails
+> 💬 **"Build a prospect list targeting [Competitor A]'s customers"** — Surface displacement opportunities
+> 💬 **"Run a matrix on these competitors"** — Compare them side-by-side across categories in a spreadsheet
+> 💬 **"Save this battlecard"** — Persist it to your context lake for future sessions
+> 💬 **"Schedule a weekly monitor for [COMPANY]"** — Get competitive alerts automatically
 
 ---
 

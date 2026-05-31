@@ -112,8 +112,18 @@ Present the findings as a clean, scannable brief:
 
 #### Ready to continue
 
-> Here's what I found in your context lake. Pick up where you left off or
-> tell me what you're working on today.
+> Here's what I found in your context lake. Pick up where you left off:
+
+After delivering the brief, offer targeted CTAs by filling in actual names from the restored context. Choose the most relevant 3–4:
+
+> 💬 **"Go deeper on [Company Name]"** — Deploy a fresh research swarm on an account already in your context
+> 💬 **"Find contacts at [Company Name]"** — Run Hunter on a previously researched account
+> 💬 **"Build a battlecard for [Competitor Name]"** — Competitive card with live GTM signals
+> 💬 **"Run a matrix on [Competitor A, Competitor B, ...]"** — Compare restored competitors across categories
+> 💬 **"Tell me everything about [Company Name]"** — Full account brief: signals, org chart, outreach angle
+> 💬 **"Save"** — Persist anything new from this session
+
+Only show options relevant to what was actually restored. Use real names, not placeholders — replace "[Company Name]" with the actual company names found in the context lake.
 
 ---
 

@@ -91,21 +91,19 @@ Show this card exactly:
 
 ---
 
-## Step 2 — Offer use case guides
+## Step 2 — Offer starting points as CTAs
 
-After the command card, add:
+After the command card, add this section exactly — use the CTA format so the user can click without typing:
 
 ---
 
-Want to go deeper? I can walk you through how to use Sushidata for a specific
-use case:
+**Where do you want to start?**
 
-- **GTM Sales** — prospecting, outreach, account research, pipeline enrichment
-- **Marketing** — competitor intelligence, community signals, TAM analysis,
-  campaign research
-- **Competitor Analysis** — GTM reports, battlecards, positioning, tracking
-
-Just say which one and I'll show you the full workflow.
+> 💬 **"Research my competitors"** — Competitive battlecard with real-time Sushidata research
+> 💬 **"Find me leads for [describe your ICP]"** — Qualified prospect list with verified emails in under 5 minutes
+> 💬 **"Run a matrix on [competitors] across [categories]"** — Side-by-side comparison spreadsheet with evidence per cell
+> 💬 **"Tell me everything about [company name]"** — Full account brief: signals, contacts, org chart, outreach angle
+> 💬 **"Restore my prior sessions"** — Pull your saved research back into context
 
 ---
 
@@ -113,55 +111,37 @@ Just say which one and I'll show you the full workflow.
 
 ### GTM Sales
 
-Walk through this workflow:
+Walk through this workflow — click any step to start:
 
-1. **Start with your ICP** — "Describe who you're selling to and I'll find
-   matching accounts." Use the niche-signal-discovery skill if they have
-   won/lost data.
-2. **Build a prospect list** — "Find leads for [ICP]." Deploys swarm,
-   returns companies and contacts with LinkedIn profiles.
-3. **Research priority accounts** — "Research [company]." Full intel profile
-   saved to context lake.
-4. **Write outreach** — "Write a LinkedIn message for [person] at [company]."
-   Personalized to their role and signals.
-5. **Push to HeyReach** — "Add these leads to my HeyReach campaign." Routes
-   through the HeyReach playbook.
-6. **Save your work** — "Save" at the end of any session to persist everything
-   for next time.
+> 💬 **"Find me leads for [your ICP description]"** — Build a qualified prospect list with verified emails
+> 💬 **"Tell me everything about [company name]"** — Full account brief: signals, org chart, outreach angle
+> 💬 **"Write a LinkedIn message for [person] at [company]"** — Personalized outreach drafted from live research
+> 💬 **"Add these leads to my HeyReach campaign"** — Push contacts to a LinkedIn sequence
+> 💬 **"Save"** — Persist this session to your context lake
 
 ---
 
 ### Marketing
 
-Walk through this workflow:
+Walk through this workflow — click any step to start:
 
-1. **Map the competitive landscape** — "Who are [company]'s competitors."
-   Profiles key players across SEO, Paid, Social, Events, PR.
-2. **Build a GTM competitor report** — "Build a GTM competitor report on
-   [company]." Full channel-by-channel analysis with sources.
-3. **Listen to the community** — "What are people saying about [topic/pain point]."
-   Surfaces signal from Discord, Reddit, forums.
-4. **Size the market** — "Build a TAM report for [segment]." Structured market
-   sizing with analyst citations.
-5. **Track over time** — Schedule a weekly competitor check: "Run a competitor
-   update on [company] every Monday."
+> 💬 **"Who are [company]'s competitors"** — Profile key players across SEO, Paid, Social, Events, PR
+> 💬 **"Build a GTM competitor report on [company]"** — Full channel-by-channel analysis with sources
+> 💬 **"What are people saying about [topic]"** — Surfaces signal from Discord, Reddit, and forums
+> 💬 **"Build a TAM report for [segment]"** — Structured market sizing with analyst citations
+> 💬 **"Run a competitor update on [company] every Monday"** — Set up ongoing tracking
 
 ---
 
 ### Competitor Analysis
 
-Walk through this workflow:
+Walk through this workflow — click any step to start:
 
-1. **Start with a battlecard** — "Build a battlecard for [competitor]."
-   Positioning, strengths, weaknesses, objection handling.
-2. **Go deeper with a GTM report** — "Build a GTM competitor report on
-   [competitor]." Maps every channel they use and how they use it.
-3. **Verify what you find** — "Review this document for accuracy." Checks
-   all claims, links, and citations before you publish.
-4. **Save intel to the context lake** — "Save" after each session. Future
-   sessions pick up where this one left off via "restore."
-5. **Schedule ongoing tracking** — "Check [competitor]'s hiring page every
-   week." Signals intent before press releases do.
+> 💬 **"Build a battlecard for [competitor]"** — Positioning, strengths, weaknesses, objection handling
+> 💬 **"Build a GTM competitor report on [competitor]"** — Every channel they use and how they use it
+> 💬 **"Run a matrix on [competitors] across [categories]"** — Side-by-side spreadsheet with live evidence
+> 💬 **"Review this document for accuracy"** — Verify all claims, links, and citations before publishing
+> 💬 **"Check [competitor]'s hiring page every week"** — Schedule ongoing tracking for early intent signals
 
 ---
 
