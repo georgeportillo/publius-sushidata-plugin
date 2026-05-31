@@ -120,33 +120,76 @@ If you need to verify the swarm endpoint is reachable and functioning:
 
 > **Be patient — do not impose any self-imposed time limits.** `/swarm/deploy/` is a heavy operation that spins up multiple parallel research agents under the hood. Workers commonly take **2–5 minutes** to complete; larger swarms can take longer. Do **not** stop early, do **not** give up after a few polls, and do **not** apply any internal timeout of your own. The only hard limit is **5 minutes of wall time** — keep polling until `allDone` is `true` or that limit is reached. Treat slow or zero progress as completely normal.
 
+**This is the only correct way to poll swarm progress.** Do not invent your own status-checking logic, do not call `/swarm/deploy/` again, and do not call `/swarm/summary/` until polling is complete or the 5-minute limit is reached.
+
 ```json
-POST /swarm/status/
-{ "workers": ["<doId>", ...] }
+POST {BASE_URL}swarm/status/
+Content-Type: application/json
+
+{ "workers": ["<doId>", "<doId>", ...] }
 ```
 
-Response: `{ "total": N, "completed": N, "pending": N, "allDone": bool, "workers": [...] }`
+Exact response shape:
 
+```json
+{
+  "total": 5,
+  "completed": 3,
+  "pending": 2,
+  "allDone": false,
+  "workers": [
+    { "doId": "<id>", "status": "complete", "output": { ... } },
+    { "doId": "<id>", "status": "running",  "output": null },
+    { "doId": "<id>", "status": "queued",   "output": null },
+    { "doId": "<id>", "status": "errored",  "output": null },
+    { "doId": "<id>", "status": "unknown",  "output": null }
+  ]
+}
+```
+
+Field reference:
+- `total` — total number of workers in the swarm
+- `completed` — workers with `status: "complete"` (output is populated)
+- `pending` — workers not yet complete (running, queued, errored, or unknown)
+- `allDone` — `true` only when `pending === 0`; this is the **only signal to stop polling**
+- `workers[].status` — one of: `queued`, `running`, `complete`, `errored`, `unknown`
+- `workers[].output` — populated only when `status === "complete"`, otherwise `null`
+
+Polling rules:
 - **Only stop polling when `allDone` is `true`** — or after 5 full minutes have elapsed
 - **Never stop early** — not after N polls, not after N minutes less than 5, not because progress looks slow
 - Do not invent a shorter cutoff. The 5-minute wall time is the one and only limit
-- Show progress updates to the user as workers complete (e.g. "✅ 4 / 8 workers done…") so they know work is happening
+- Show progress updates to the user as workers complete (e.g. "✅ 3 / 5 workers done…") so they know work is happening
+- `errored` and `unknown` workers count as pending — do not treat them as done until `allDone` is `true`
 - If the 5-minute limit is reached before `allDone`, proceed to `/swarm/summary/` with whatever is available
 
 ---
 
 #### 5. `/swarm/summary/` — Get unified summary (partial or complete)
 
-**When to use**: Once the swarm is complete (`allDone: true`), or to get partial results if the timeout is reached.
+**When to use**: Once polling is complete (`allDone: true`), or to get partial results after the 5-minute timeout. Do not call this before polling — it requires `query` and the full `workers` array from the deploy response.
 
 ```json
-POST /swarm/summary/
-{ "workers": ["<doId>", ...], "query": "<original task>" }
+POST {BASE_URL}swarm/summary/
+Content-Type: application/json
+
+{ "workers": ["<doId>", ...], "query": "<original task as sent to /swarm/deploy/>" }
 ```
 
-Response: `{ "summary": "...", "completed": N, "total": N, "pending": N }`
+Exact response shape:
 
-If workers are still pending, clearly note: *"These results are based on X of Y workers — Z workers are still running."*
+```json
+{
+  "summary": "Unified research summary across all completed workers...",
+  "completed": 4,
+  "total": 5,
+  "pending": 1
+}
+```
+
+- `query` is required and must match the original task — do not paraphrase or shorten it
+- If `pending > 0`, clearly note to the user: *"These results are based on X of Y workers — Z workers are still running."*
+- If `completed === 0`, the response will be: `{ "summary": "No workers have completed yet. Please try again later.", ... }` — do not surface this as a final result; wait and retry
 
 ---
 
