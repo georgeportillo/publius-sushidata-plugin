@@ -165,6 +165,60 @@ Ask Sushidata to use G2 review extraction for competitor review analysis or cust
 }
 ```
 
+### Leads Finder
+
+Ask Sushidata to use the leads finder capability when you need validated prospect contacts at known companies or matching a people/company profile.
+
+**By domain (known account list):**
+
+```json
+{
+  "company_domain": ["sailpoint.com", "crowdstrike.com", "databricks.com"],
+  "contact_job_title": [
+    "chief marketing officer", "cmo", "vp marketing", "vice president marketing",
+    "head of marketing", "marketing director", "director of marketing"
+  ],
+  "email_status": ["validated"],
+  "fetch_count": 200
+}
+```
+
+**By ICP profile (title + location + industry):**
+
+```json
+{
+  "contact_job_title": ["Head of Marketing", "VP Marketing", "CMO"],
+  "functional_level": ["Marketing"],
+  "contact_location": ["United States"],
+  "company_industry": ["computer software", "saas", "information technology & services"],
+  "email_status": ["validated"],
+  "fetch_count": 500
+}
+```
+
+**City-level targeting (use `contact_city`, leave `contact_location` empty):**
+
+```json
+{
+  "contact_job_title": ["CTO", "Head of Engineering", "VP Engineering"],
+  "contact_city": ["Amsterdam"],
+  "email_status": ["validated", "unknown"],
+  "fetch_count": 200
+}
+```
+
+Field notes:
+- `email_status`: prefer `["validated"]` for outbound-ready lists; add `"unknown"` to increase volume.
+- `contact_location` vs `contact_city`: pick one — use `contact_location` for region/country/state, `contact_city` for city-only. Do not combine.
+- `seniority_level`: Founder, Owner, C-Level, Director, VP, Head, Manager, Senior, Entry, Trainee.
+- `functional_level`: C-Level, Finance, Product, Engineering, Design, HR, IT, Legal, Marketing, Operations, Sales, Support.
+- `size`: 0–1, 2–10, 11–20, 21–50, 51–100, 101–200, 201–500, 501–1000, 1001–2000, 2001–5000, 10000+
+- `funding`: Seed, Angel, Series A–F, Venture, Debt, Convertible, PE, Other.
+- Use `company_not_industry` / `company_not_keywords` to quickly exclude irrelevant segments.
+- If merging multiple runs, dedupe downstream by: email → linkedin → (full_name, company_domain).
+- Actor is capped at `maxItems=200` by Sushidata. Set `fetch_count` accordingly.
+- Combine with Hunter-backed email verification before any outbound activation.
+
 ### YC Company Sourcing
 
 Ask Sushidata to use YC company extraction for YC batch or category sourcing:
