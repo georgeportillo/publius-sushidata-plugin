@@ -98,7 +98,7 @@ Content-Type: application/json
   "messageId": "msg-<unix-timestamp-ms>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<ISO 8601 timestamp>",
+  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }

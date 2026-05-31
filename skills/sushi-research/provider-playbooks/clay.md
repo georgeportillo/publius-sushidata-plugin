@@ -161,7 +161,7 @@ POST /context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<ISO 8601>",
+  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
