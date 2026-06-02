@@ -318,9 +318,11 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | LinkedIn scraping, web automation, actor-based extraction                                    | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)           |
 | CRM sync, HubSpot writes, contact/deal/note creation                                        | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)       |
 | Outbound activation, LinkedIn campaign insertion                                             | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)     |
-| Researching competitor Google ad creatives, paid ad formats, creative longevity             | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md) |
+| Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                   | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md) |
 | Querying Clay audience data, enriching companies/contacts, running Clay subroutines         | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                         |
 | Extracting a Clay table config or records via script or MCP browser                        | [`references/clay-extraction.md`](references/clay-extraction.md)                   |
+| Finding or enriching emails, phones, person profiles, or company data (ContactOut, Datagma, Dropleads, FullEnrich, LimaData, Lusha, PDL, Wiza, ZeroBounce, AI ARK) | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
+| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack) | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md) |
 | Saving session outputs to the context lake on demand                                        | `sushi-save` skill — user says "save" or "save to sushidata"       |
 | Pulling prior session memory at the start of a new conversation                             | `sushi-restore` skill — user says "restore" or "pull my memory"    |
 | Seeing a breakdown of what Sushidata retrieved vs what Claude built                         | `sushi-savings` skill — user says "savings" or "session report"    |

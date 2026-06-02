@@ -1,18 +1,60 @@
-# Google Ads Transparency Playbook
+# Paid Ad Intelligence Playbook
 
-Use this playbook when a Sushidata research or GTM task needs competitor paid ad intelligence from Google's Ads Transparency Center — creative formats, longevity, recency, and messaging patterns.
+Use this playbook when a Sushidata research or GTM task needs competitor paid ad intelligence — creative formats, longevity, recency, and messaging patterns — across **Google, Facebook/Meta, and LinkedIn**.
 
-Claude should not behave like a raw Ads Transparency operator. Claude should package the research need into a Sushidata swarm request, using the constraints below so Sushidata can execute the right work and return usable results.
+Two tools are available:
+- **`ads_transparency`** — Google Ads Transparency Center (Google Search/Display Network, swarm-based)
+- **Adyntel** (`search_facebook_ads`, `search_google_ads`, `search_linkedin_ads`) — Direct Ad Library queries across all three channels; faster, returns more detail per creative
+
+Use Adyntel first for most ad intelligence tasks. Fall back to `ads_transparency` for deep Google creative history.
 
 ---
 
-## How Ads Transparency Works Inside Sushidata
+## Adyntel — Direct Multi-Channel Ad Research
+
+Adyntel provides direct access to Facebook (Meta), Google, and LinkedIn ad libraries. These tools are called directly (no swarm required for single lookups).
+
+| Tool name | Channel | Input |
+| --- | --- | --- |
+| `search_facebook_ads` | Facebook / Meta Ad Library | `keyword` (search term), `country` code (e.g. `"US"`) |
+| `search_google_ads` | Google Ads Transparency | `domain` (e.g. `"hubspot.com"`) |
+| `search_linkedin_ads` | LinkedIn Ad Library | `company_domain` OR `linkedin_page_id` |
+
+### Adyntel: Facebook Ads
+- Searches the Meta Ad Library by keyword + country
+- Returns ad creatives, copy, format, and active status
+- Use when you need to see what messaging a brand is running on Meta
+
+### Adyntel: Google Ads
+- Direct query to Google Ads Transparency by domain
+- Faster alternative to `ads_transparency` (Apify scraper) for quick lookups
+
+### Adyntel: LinkedIn Ads
+- Returns sponsored content creatives, commentary, images, and carousel details
+- Provide `company_domain` OR `linkedin_page_id` (numeric, e.g. `"15564"`)
+- Use `continuation_token` from prior response to paginate
+
+### Multi-channel competitive sweep (Adyntel)
+
+To get a full paid media picture of a competitor, run all three Adyntel calls in parallel:
+
+```json
+POST /swarm/deploy/
+{
+  "query": "Run a full paid ad sweep for [company]. In parallel: (1) search_google_ads with domain = '[domain]', (2) search_linkedin_ads with company_domain = '[domain]', (3) search_facebook_ads with keyword = '[brand name]' and country = 'US'. For each channel: count of active creatives, recurring themes and messaging angles, format types used, and any evergreen (long-running) ads. Return a cross-channel comparison: where is this company most active? What messages are they repeating across channels? What CTAs recur?",
+  "swarmSize": 3
+}
+```
+
+---
+
+## How Ads Transparency Works Inside Sushidata (Google Deep History)
 
 Sushidata's `chainfuse-api` MCP server exposes Google Ads Transparency through `AdsTransparencyTool`.
 
 | Capability | Sushidata tool name | Use for |
 |---|---|---|
-| Google ad creative search | `ads_transparency` | Find ad creatives associated with a domain from Google's Ads Transparency Center |
+| Google ad creative search (deep history) | `ads_transparency` | Find ad creatives associated with a domain from Google's Ads Transparency Center |
 
 **Input:** `domain` — a valid domain string (e.g. `"salesforce.com"`, `"hubspot.com"`). No protocol, no path, no `www.` prefix.
 
@@ -38,11 +80,15 @@ Sushidata's `chainfuse-api` MCP server exposes Google Ads Transparency through `
 
 ## Agent Behavior
 
-Claude should infer what the user needs, then ask Sushidata to run `ads_transparency` through a swarm.
+Claude should infer what the user needs, then run the appropriate ad intelligence tools.
 
-Do not ask the user to choose a tool or format. If multiple competitor domains are needed, include all domains in the swarm request and ask Sushidata to analyze and compare results across them.
+**For a quick ad lookup on a single competitor**: call `search_linkedin_ads`, `search_google_ads`, and `search_facebook_ads` directly (or via a swarm) — no need for the Apify-backed `ads_transparency` scraper for a fast lookup.
 
-Do not improvise unavailable capabilities. `ads_transparency` covers Google only. If the user needs LinkedIn Ads data, use `apify_linkedin_ad_library_scraper` (see `apify.md`). If the capability is missing entirely, name it and help the user send feedback to `support@sushidata.com`.
+**For deep Google creative history** (precise longevity, `total_days_shown`, complete output fields): use a swarm with `ads_transparency`.
+
+**For multi-competitor comparison**: deploy a swarm with all three Adyntel tools in parallel across all domains.
+
+Do not improvise unavailable capabilities. If the capability is missing entirely, name it and help the user send feedback to `support@sushidata.com`.
 
 ---
 
