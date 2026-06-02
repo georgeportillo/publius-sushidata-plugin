@@ -45,14 +45,14 @@ POST /context/
   "messageId": "msg-<unix-timestamp-ms>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
 ```
 
 - Use a **unique** `messageId` for each save (e.g. `"msg-" + Date.now()` in ms)
-- `createdDate` must be valid ISO 8601 (e.g. `"2026-05-07T14:30:00.000Z"`)
+- `createdDate` must be `new Date().toISOString()` — exact UTC with millisecond precision, never local time
 - `threadId` is the Cowork session ID — extract it once at the start of the conversation and reuse it for every `/context/` save in that session. Run this in bash:
   ```bash
   echo $PWD | grep -oP 'local_[a-f0-9-]+'
@@ -167,7 +167,7 @@ Polling rules:
 
 #### 5. `/swarm/summary/` — Get unified summary (partial or complete)
 
-**When to use**: Once polling is complete (`allDone: true`), or to get partial results after the 5-minute timeout. Do not call this before polling — it requires `query` and the full `workers` array from the deploy response.
+**When to use**: Once polling is complete (`allDone: true`), or to get partial results after the 5-minute polling timeout. Do not call this before polling — it requires `query` and the full `workers` array from the deploy response.
 
 ```json
 POST {BASE_URL}swarm/summary/
@@ -190,6 +190,9 @@ Exact response shape:
 - `query` is required and must match the original task — do not paraphrase or shorten it
 - If `pending > 0`, clearly note to the user: *"These results are based on X of Y workers — Z workers are still running."*
 - If `completed === 0`, the response will be: `{ "summary": "No workers have completed yet. Please try again later.", ... }` — do not surface this as a final result; wait and retry
+- **Allow up to 5 minutes** for this call to respond before treating it as failed — it is a heavy aggregation operation
+
+**If `/swarm/summary/` fails, errors, or times out after 5 minutes**: Do not stop. Synthesize the summary yourself directly from the `output` fields collected on completed workers during the `/swarm/status/` polling loop. Combine findings across workers, dedupe, and present the result as if the endpoint had succeeded. Clearly note at the top: *"Summary endpoint unavailable — synthesized directly from worker outputs."*
 
 ---
 
@@ -356,6 +359,12 @@ For multi-step tasks, use the Cowork task list (TaskCreate / TaskUpdate) to trac
 #### Working directory
 
 Write output files to a descriptive project-local path, not system `/tmp/`. Use a slug that describes the task (e.g., `output/yc-cmo-outbound/`, `output/acme-email-waterfall/`). The user needs to find these files later.
+
+#### Contact / lead output — required columns
+
+Whenever returning a list of people (prospects, leads, contacts, enriched rows), **always include these four columns first, in this order**: `linkedin_url`, `email` (with status emoji), `first_name`, `last_name`. Additional columns follow after. The four above are non-negotiable and always first.
+
+**Email status emoji key** — append directly after the address, no space: ✅ Verified · ⚠️ Catch-all · ❓ Unknown · ❌ Invalid
 
 #### Over-provision, then filter — never chase missing rows
 

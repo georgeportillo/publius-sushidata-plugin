@@ -41,7 +41,7 @@ POST /context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<ISO 8601>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
@@ -194,7 +194,7 @@ POST /context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<ISO 8601>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }

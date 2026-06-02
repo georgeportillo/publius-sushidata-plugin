@@ -94,7 +94,7 @@ POST /context/
   "messageId": "msg-{{Date.now()}}",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "{{ISO-8601 now}}",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }

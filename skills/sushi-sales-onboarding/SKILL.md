@@ -392,7 +392,7 @@ POST {BASE_URL}context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
@@ -570,7 +570,7 @@ POST {BASE_URL}context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
@@ -962,7 +962,7 @@ POST {BASE_URL}context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
@@ -1011,7 +1011,7 @@ POST {BASE_URL}context/
   "messageId": "msg-<timestamp>",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }

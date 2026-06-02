@@ -58,7 +58,31 @@ Escalate only when you need a filter the current step lacks.
 
 ## Output format
 
+### Company seed list
+
 Deliver a CSV or structured list with at minimum: `company_name`, `domain`, and any available `linkedin_url`. Preserve source lineage. Do not start row-level enrichment until the seed list is complete and reviewed.
+
+### Contact / lead output — required columns
+
+Whenever returning a list of people (prospects, leads, contacts, enriched rows), **always include these four columns first, in this order**:
+
+| # | Column | Notes |
+| --- | --- | --- |
+| 1 | `linkedin_url` | Full profile URL. Leave blank if not found — never fabricate. |
+| 2 | `email` | Address + a status emoji (see key below). Leave blank if not found. |
+| 3 | `first_name` | Given name only. Split from full name if needed. |
+| 4 | `last_name` | Family name only. Split from full name if needed. |
+
+Additional columns (title, company, domain, phone, seniority, etc.) follow after these four. You decide which additional columns are useful for the task — but the four above are **always present and always first**.
+
+**Email status emoji key** — append directly after the address, no space:
+
+| Emoji | Meaning |
+| --- | --- |
+| ✅ | Verified — safe for outbound |
+| ⚠️ | Catch-all — deliverable but domain accepts everything; use with caution |
+| ❓ | Unknown — not yet verified |
+| ❌ | Invalid — bad address, do not send |
 
 ---
 
@@ -74,7 +98,7 @@ POST /context/
   "messageId": "msg-{{Date.now()}}",
   "userId": "claude-user",
   "username": "Claude",
-  "createdDate": "<current UTC time as ISO 8601, e.g. 2026-05-07T14:30:00.000Z>",
+  "createdDate": "<new Date().toISOString() — exact UTC timestamp, never local time or an approximation>",
   "channelId": "claude-session",
   "threadId": "<cowork-session-id>"
 }
