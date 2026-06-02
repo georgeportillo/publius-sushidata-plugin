@@ -78,7 +78,7 @@ Show this card exactly:
 | -------------------------------------- | ------------------------------------------ |
 | "What are people saying about [topic]" | Scrapes Discord, Reddit, forums for signal |
 | "Build a TAM report for [segment]"     | Sizes the addressable market with sources  |
-| "Review this document for accuracy"    | Verifies claims, links, and citations      |
+| "Review this document for accuracy"    | Runs `/sushi-verify` — checks claims, links, and citations |
 
 ---
 
@@ -140,7 +140,7 @@ Walk through this workflow — click any step to start:
 > 💬 **"Build a battlecard for [competitor]"** — Positioning, strengths, weaknesses, objection handling
 > 💬 **"Build a GTM competitor report on [competitor]"** — Every channel they use and how they use it
 > 💬 **"Run a matrix on [competitors] across [categories]"** — Side-by-side spreadsheet with live evidence
-> 💬 **"Review this document for accuracy"** — Verify all claims, links, and citations before publishing
+> 💬 **"Review this document for accuracy"** — Runs `/sushi-verify` to check all claims, links, and citations before publishing
 > 💬 **"Check [competitor]'s hiring page every week"** — Schedule ongoing tracking for early intent signals
 
 ---

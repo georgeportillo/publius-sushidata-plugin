@@ -88,12 +88,12 @@ POST /swarm/deploy/
 
 **Swarm size guide**:
 
-| Size  | Use case                              |
-| ----- | ------------------------------------- |
+| Size  | Use case                                              |
+| ----- | ----------------------------------------------------- |
 | 2     | Minimum valid size — use only for connectivity checks |
-| 3–5   | Focused, specific tasks               |
-| 5–10  | Broad research topics                 |
-| 10–20 | Exhaustive, multi-angle analysis      |
+| 3–5   | Focused, specific tasks                               |
+| 5–10  | Broad research topics                                 |
+| 10–20 | Exhaustive, multi-angle analysis                      |
 
 > **Minimum swarm size is 2.** Never deploy with `swarmSize: 1` — it will fail.
 
@@ -148,6 +148,7 @@ Exact response shape:
 ```
 
 Field reference:
+
 - `total` — total number of workers in the swarm
 - `completed` — workers with `status: "complete"` (output is populated)
 - `pending` — workers not yet complete (running, queued, errored, or unknown)
@@ -156,6 +157,7 @@ Field reference:
 - `workers[].output` — populated only when `status === "complete"`, otherwise `null`
 
 Polling rules:
+
 - **Only stop polling when `allDone` is `true`** — or after 5 full minutes have elapsed
 - **Never stop early** — not after N polls, not after N minutes less than 5, not because progress looks slow
 - Do not invent a shorter cutoff. The 5-minute wall time is the one and only limit
@@ -188,11 +190,11 @@ Exact response shape:
 ```
 
 - `query` is required and must match the original task — do not paraphrase or shorten it
-- If `pending > 0`, clearly note to the user: *"These results are based on X of Y workers — Z workers are still running."*
+- If `pending > 0`, clearly note to the user: _"These results are based on X of Y workers — Z workers are still running."_
 - If `completed === 0`, the response will be: `{ "summary": "No workers have completed yet. Please try again later.", ... }` — do not surface this as a final result; wait and retry
 - **Allow up to 5 minutes** for this call to respond before treating it as failed — it is a heavy aggregation operation
 
-**If `/swarm/summary/` fails, errors, or times out after 5 minutes**: Do not stop. Synthesize the summary yourself directly from the `output` fields collected on completed workers during the `/swarm/status/` polling loop. Combine findings across workers, dedupe, and present the result as if the endpoint had succeeded. Clearly note at the top: *"Summary endpoint unavailable — synthesized directly from worker outputs."*
+**If `/swarm/summary/` fails, errors, or times out after 5 minutes**: Do not stop. Synthesize the summary yourself directly from the `output` fields collected on completed workers during the `/swarm/status/` polling loop. Combine findings across workers, dedupe, and present the result as if the endpoint had succeeded. Clearly note at the top: _"Summary endpoint unavailable — synthesized directly from worker outputs."_
 
 ---
 
@@ -206,6 +208,7 @@ POST /verify/
 ```
 
 Response:
+
 ```json
 {
   "summary": { "overview": "...", "total": 6, "good": 4, "bad": 1, "blocked": 1, "swarmSize": 3 },
@@ -309,24 +312,24 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **This is not optional.** Read the matching doc before running any tool calls. These docs encode validated workflows and known pitfalls.
 
-| When the task involves...                                                                    | Read this first                                                        |
-| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding     | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md) |
-| Researching companies/people, personalizing outreach, writing cold emails, scoring leads     | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task  |
-| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring              | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                  |
-| Email verification or discovery at known contacts                                            | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)         |
-| LinkedIn scraping, web automation, actor-based extraction                                    | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)           |
-| CRM sync, HubSpot writes, contact/deal/note creation                                        | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)       |
-| Outbound activation, LinkedIn campaign insertion                                             | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)     |
-| Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                   | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md) |
-| Querying Clay audience data, enriching companies/contacts, running Clay subroutines         | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                         |
-| Extracting a Clay table config or records via script or MCP browser                        | [`references/clay-extraction.md`](references/clay-extraction.md)                   |
+| When the task involves...                                                                                                                                          | Read this first                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                                                           | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
+| Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                                                           | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
+| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                                                    | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
+| Email verification or discovery at known contacts                                                                                                                  | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
+| LinkedIn scraping, web automation, actor-based extraction                                                                                                          | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
+| CRM sync, HubSpot writes, contact/deal/note creation                                                                                                               | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
+| Outbound activation, LinkedIn campaign insertion                                                                                                                   | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
+| Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                                                                                          | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md)         |
+| Querying Clay audience data, enriching companies/contacts, running Clay subroutines                                                                                | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                                 |
+| Extracting a Clay table config or records via script or MCP browser                                                                                                | [`references/clay-extraction.md`](references/clay-extraction.md)                           |
 | Finding or enriching emails, phones, person profiles, or company data (ContactOut, Datagma, Dropleads, FullEnrich, LimaData, Lusha, PDL, Wiza, ZeroBounce, AI ARK) | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
-| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack) | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md) |
-| Saving session outputs to the context lake on demand                                        | `sushi-save` skill — user says "save" or "save to sushidata"       |
-| Pulling prior session memory at the start of a new conversation                             | `sushi-restore` skill — user says "restore" or "pull my memory"    |
-| Seeing a breakdown of what Sushidata retrieved vs what Claude built                         | `sushi-savings` skill — user says "savings" or "session report"    |
-| Getting an overview of available commands and use case guides                               | `sushi-help` skill — user says "help" or "what can you do"         |
+| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack)                                                              | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)             |
+| Saving session outputs to the context lake on demand                                                                                                               | `sushi-save` skill — user says "save" or "save to sushidata"                               |
+| Pulling prior session memory at the start of a new conversation                                                                                                    | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
+| Seeing a breakdown of what Sushidata retrieved vs what Claude built                                                                                                | `sushi-savings` skill — user says "savings" or "session report"                            |
+| Getting an overview of available commands and use case guides                                                                                                      | `sushi-help` skill — user says "help" or "what can you do"                                 |
 
 ### Recipes: step-by-step playbooks (check before executing)
 
@@ -334,13 +337,13 @@ Before starting any multi-step task, check if a recipe matches. If it does, foll
 
 | Recipe                          | Use when...                                                                                       |
 | ------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `account-orgchart.md`           | Building an org chart for a target account — map decision makers, seniority, warm intro paths      |
-| `clay-to-sushidata.md`          | Extracting a Clay table, enriching rows with Sushidata swarms, saving results to the context lake  |
+| `account-orgchart.md`           | Building an org chart for a target account — map decision makers, seniority, warm intro paths     |
+| `clay-to-sushidata.md`          | Extracting a Clay table, enriching rows with Sushidata swarms, saving results to the context lake |
 | `build-tam.md`                  | Building a total addressable market list from ICP criteria                                        |
-| `document-accuracy-review.md`   | Verifying factual accuracy, link integrity, and citation labels in any research document          |
+| `document-accuracy-review.md`   | Detailed reference for accuracy review — use `/sushi-verify` to trigger this as a skill          |
 | `gtm-competitor-report.md`      | Building a full GTM competitor analysis — channels, ads, events, PR, hiring, analyst citations    |
 | `linkedin-url-lookup.md`        | Resolving LinkedIn profile URLs from names and companies                                          |
-| `portfolio-prospecting.md`      | Finding companies backed by a specific investor or accelerator, then finding contacts              |
+| `portfolio-prospecting.md`      | Finding companies backed by a specific investor or accelerator, then finding contacts             |
 | `scheduled-tasks.md`            | Setting up recurring or one-time automated GTM and research tasks via Cowork's scheduler          |
 | `small-business-prospecting.md` | Finding local small businesses using Maps-style search                                            |
 
