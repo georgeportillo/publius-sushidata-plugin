@@ -60,7 +60,7 @@ Content-Type: application/json
 
 Response includes `doIds` — an array of agent IDs, one per cell in the matrix.
 
-Tell the user: _"Matrix launched — researching [N] cells across [X] competitors and [Y] features. This may take up to 60 seconds…"_
+Tell the user: _"Matrix launched — researching [N] cells across [X] competitors and [Y] features. This may take a few minutes…"_
 
 ---
 
@@ -73,10 +73,12 @@ Content-Type: application/json
 { "doIds": ["<doId>", ...] }
 ```
 
-- Poll every **3 seconds**
-- Stop when `allDone` is `true` or **60 seconds** have elapsed
+> **Be patient — do not impose any self-imposed time limits.** The matrix deployment sends out parallel swarm workers and may take several minutes to fully dispatch and complete. Do **not** stop early, do **not** give up, and do **not** apply any internal timeout of your own. The only hard limit is **5 minutes of total wall time** — keep polling until `allDone` is `true` or that limit is reached. Treat slow or zero progress as completely normal.
+
+- Poll every **10 seconds**
+- Stop **only** when `allDone` is `true` or **5 minutes** have elapsed
 - Show a progress update after each poll: _"⏳ X / N cells complete…"_
-- If the 60-second limit is reached before `allDone`, proceed with whatever results are available and note how many cells are still pending
+- If the 5-minute limit is reached before `allDone`, proceed with whatever results are available and note how many cells are still pending
 
 ---
 
