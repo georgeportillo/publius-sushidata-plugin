@@ -99,6 +99,8 @@ POST /swarm/deploy/
 
 > **Keep each worker's task small and focused.** Claude has a hard ~45-second execution limit per turn. Workers that are given broad, multi-part tasks (e.g. "research all of Salesforce's product offerings, pricing, and integrations") will time out before finishing. Each worker's `taskDescription` should be a **single, specific question** that can be answered in one focused lookup — not a compound task. If a research goal requires many angles, use more workers each with a narrow scope rather than fewer workers with wide scope.
 
+> **Always name specific tools in enrichment and signal worker tasks.** When a swarm worker's job involves enrichment (email, phone, profile) or signal intelligence (buying signals, tech stack, hiring), the worker's task description **must name the exact tools to use** — not just describe the goal. Vague queries like "find the email for this person" give the agent no instruction on which providers to call. Instead write: "Use `datagma_find_work_email` with firstName + lastName + domain, then `dropleads_email_finder` as fallback." Consult [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) and [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md) for the full tool list and recommended sequences before writing any swarm worker tasks.
+
 Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label`, `taskDescription`).
 
 **After deploying**: Show the orchestrator's plan and list each worker's label + task to the user before polling.
@@ -349,6 +351,58 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
 - **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify, Google Ads Transparency, and Clay.
+
+---
+
+### Active Tool Reference — Enrichment & Signal Tools
+
+> **Read this before writing any swarm worker tasks involving contacts, emails, phones, companies, or signals.** Swarm workers must name specific tools — not describe goals vaguely. Use these tool names directly in worker task descriptions. Full usage details and multi-agent strategies are in the linked playbooks.
+
+#### Contact & Email Enrichment — [`enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
+
+**Email discovery (waterfall — try in order, stop on first hit):**
+`hunter_email_finder` → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
+
+**Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
+
+**Mobile phone:** `aiark_mobile_phone_finder` → `dropleads_mobile_finder` → `wiza_find_phone` → `limadata_find_phone` → `datagma_search_phone_numbers`
+
+**Profile / LinkedIn resolution:** `aiark_people_search`, `contactout_people_search`, `limadata_find_profiles`, `pdl_person_identify`
+
+**Deep profile enrichment:** `pdl_person_enrich`, `limadata_enrich_person`, `contactout_people_enrich`, `lusha_search_enrich_contacts`
+
+**Personal email:** `wiza_find_email` (set `accept_personal: true`), `contactout_linkedin_profile`  
+**Wiza is async** — start all reveals first, then poll each with `wiza_get_reveal`
+
+**Email verification (always verify before outbound):** `zerobounce_validate_email` (primary), `dropleads_email_verifier` (catch-all second opinion)
+
+**Company enrichment:** `limadata_enrich_company`, `pdl_company_enrich`, `contactout_domain_enrich`
+
+**Decision makers at a company:** `contactout_decision_makers` (by domain), supplement with `lusha_prospect_contacts`, `aiark_people_search`
+
+**Prospecting by ICP criteria:** `aiark_people_search`, `pdl_person_search`, `lusha_prospect_contacts`, `limadata_prospect_people_search_url`, `lusha_lookalike_contacts`
+
+---
+
+#### Signal Intelligence — [`intent-signals.md`](provider-playbooks/intent-signals.md)
+
+**Company news events (funding, hires, launches, partnerships):** `predictleads_news_events` — filter by: `receives_financing`, `hires`, `increases_headcount_by`, `launches`, `expands_offices_in`, `partners_with`, `wins_contract`
+
+**Hiring signals:** `predictleads_job_openings` (per-company), `theirstack_job_search` (cross-company with title/tech filters)
+
+**Technology stack:** `theirstack_technographics` (current stack by domain), `predictleads_technology_detections` (active tools, first/last seen)
+
+**Technology adoption history:** `predictleads_extended_technology_detection`
+
+**Buying intent:** `theirstack_buying_intents` (domain-level intent scoring)
+
+**Company discovery by signal:** `predictleads_discover_companies`, `theirstack_company_search` (by tech slug, hiring, firmographics), `predictleads_companies_using_technology`
+
+**Financing events:** `predictleads_financing_events`
+
+**Signal scoring:** Financing (last 30d) +5 · Sales/mktg hiring +3 · Competitor tech detected +3 · Tech recently removed +4 · Active buying intent +5 · Office expansion +2 · Partnership/launch +2. Tier A ≥ 12, Tier B 6–11, Tier C < 6.
+
+---
 
 ### Read the right sub-doc BEFORE executing
 
