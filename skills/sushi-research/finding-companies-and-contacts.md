@@ -62,13 +62,13 @@ Escalate only when you need a filter the current step lacks.
 
 ## Discovery workflow
 
-| Step | What to do                                                              | Why                                        |
-| ---- | ----------------------------------------------------------------------- | ------------------------------------------ |
-| 0    | Check if the data exists on a known public URL                          | Avoid unnecessary provider calls           |
-| 1    | Shortlist 1–2 providers from the table above                            | Prevent random provider thrash             |
-| 2    | Run a count-like or narrow first pass                                   | Cheaply confirm fit before full pull       |
-| 3    | Execute the full discovery pass                                         | Build the seed list                        |
-| 4    | Hand off to enrichment/contact-finding phase with the seed list         | Keep phases clean                          |
+| Step | What to do                                                      | Why                                  |
+| ---- | --------------------------------------------------------------- | ------------------------------------ |
+| 0    | Check if the data exists on a known public URL                  | Avoid unnecessary provider calls     |
+| 1    | Shortlist 1–2 providers from the table above                    | Prevent random provider thrash       |
+| 2    | Run a count-like or narrow first pass                           | Cheaply confirm fit before full pull |
+| 3    | Execute the full discovery pass                                 | Build the seed list                  |
+| 4    | Hand off to enrichment/contact-finding phase with the seed list | Keep phases clean                    |
 
 ## Anti-patterns
 
@@ -86,23 +86,23 @@ Deliver a CSV or structured list with at minimum: `company_name`, `domain`, and 
 
 Whenever returning a list of people (prospects, leads, contacts, enriched rows), **always include these four columns first, in this order**:
 
-| # | Column | Notes |
-| --- | --- | --- |
-| 1 | `linkedin_url` | Full profile URL. Leave blank if not found — never fabricate. |
-| 2 | `email` | Address + a status emoji (see key below). Leave blank if not found. |
-| 3 | `first_name` | Given name only. Split from full name if needed. |
-| 4 | `last_name` | Family name only. Split from full name if needed. |
+| #   | Column         | Notes                                                               |
+| --- | -------------- | ------------------------------------------------------------------- |
+| 1   | `linkedin_url` | Full profile URL. Leave blank if not found — never fabricate.       |
+| 2   | `email`        | Address + a status emoji (see key below). Leave blank if not found. |
+| 3   | `first_name`   | Given name only. Split from full name if needed.                    |
+| 4   | `last_name`    | Family name only. Split from full name if needed.                   |
 
 Additional columns (title, company, domain, phone, seniority, etc.) follow after these four. You decide which additional columns are useful for the task — but the four above are **always present and always first**.
 
 **Email status emoji key** — append directly after the address, no space:
 
-| Emoji | Meaning |
-| --- | --- |
-| ✅ | Verified — safe for outbound |
-| ⚠️ | Catch-all — deliverable but domain accepts everything; use with caution |
-| ❓ | Unknown — not yet verified |
-| ❌ | Invalid — bad address, do not send |
+| Emoji | Meaning                                                                 |
+| ----- | ----------------------------------------------------------------------- |
+| ✅    | Verified — safe for outbound                                            |
+| ⚠️    | Catch-all — deliverable but domain accepts everything; use with caution |
+| ❓    | Unknown — not yet verified                                              |
+| ❌    | Invalid — bad address, do not send                                      |
 
 ---
 
