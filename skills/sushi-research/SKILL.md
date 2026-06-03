@@ -226,6 +226,46 @@ Response:
 
 ---
 
+#### 7. `/delete/` — Remove entries from the context lake
+
+**When to use**: When the user asks to delete, clear, or remove saved context — e.g. "delete that", "remove those entries", "clear my research on [topic]".
+
+Before calling this, use `/query/` to locate the relevant entries and collect their `messageId` values.
+
+```json
+POST {BASE_URL}delete/
+Content-Type: application/json
+
+{ "ids": ["msg-<id1>", "msg-<id2>", ...] }
+```
+
+- `ids` must be an array of message ID strings — non-empty, max **100 per request**
+- Each ID must be a non-empty string
+- If the user wants to delete more than 100 entries, batch into multiple requests of ≤ 100
+
+Response:
+
+```json
+{
+  "deleted": 3,
+  "vectorsDeleted": 3,
+  "requested": 3
+}
+```
+
+- `deleted` — number of messages removed from the message store
+- `vectorsDeleted` — number of entries removed from the vector index
+- `errors` — present only if partial or total failures occurred
+
+**Status codes:**
+- `200` — all entries deleted cleanly
+- `207` — partial success (some deleted, some failed) — surface the `errors` to the user
+- `500` — complete failure — surface the error and suggest the user try again
+
+**After deleting**, confirm to the user what was removed and how many entries were cleared.
+
+---
+
 ### Decision Flow
 
 ```
