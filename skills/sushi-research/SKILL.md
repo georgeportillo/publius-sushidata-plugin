@@ -97,6 +97,8 @@ POST /swarm/deploy/
 
 > **Minimum swarm size is 2.** Never deploy with `swarmSize: 1` — it will fail.
 
+> **Keep each worker's task small and focused.** Claude has a hard ~45-second execution limit per turn. Workers that are given broad, multi-part tasks (e.g. "research all of Salesforce's product offerings, pricing, and integrations") will time out before finishing. Each worker's `taskDescription` should be a **single, specific question** that can be answered in one focused lookup — not a compound task. If a research goal requires many angles, use more workers each with a narrow scope rather than fewer workers with wide scope.
+
 Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label`, `taskDescription`).
 
 **After deploying**: Show the orchestrator's plan and list each worker's label + task to the user before polling.

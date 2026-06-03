@@ -36,7 +36,31 @@ over marketing pages, blog posts, or social content. Marketing copy is unreliabl
 
 ---
 
-## Step 2 — Launch the matrix
+## Step 2 — Chunk and launch in batches
+
+> **Never launch the entire matrix in one request.** Large matrices time out because Claude has a hard ~45-second execution limit per turn. Always break the work into small batches and complete each batch before starting the next.
+
+### Chunk size rules
+
+| Total cells (competitors × features) | Batch size |
+|---------------------------------------|------------|
+| ≤ 10 | 1 batch — all cells |
+| 11–30 | 5 cells per batch |
+| 31–60 | 4 cells per batch |
+| > 60 | 3 cells per batch |
+
+A "cell" = one competitor × one feature. Calculate total cells before launching. Tell the user the plan:
+
+_"This matrix has [N] cells. I'll research them in [X] batches of ~[Y] cells each, so nothing times out."_
+
+### Per-cell task scope
+
+Each cell's task passed to the matrix endpoint must be a **single, tightly scoped question** — one competitor, one feature. Do not bundle multiple features or multiple competitors into one cell task. Broad tasks fail to complete in time.
+
+**Good:** `"Does Salesforce Sales Cloud support inline spell-check in email compose?"`  
+**Bad:** `"What are Salesforce's email, calendar, and mobile features?"`
+
+### Launch one batch
 
 ```
 POST {BASE_URL}matrix/create
@@ -58,13 +82,15 @@ Content-Type: application/json
 }
 ```
 
-Response includes `doIds` — an array of agent IDs, one per cell in the matrix.
+Only include the competitors and features for **this batch** — not the full set.
 
-Tell the user: _"Matrix launched — researching [N] cells across [X] competitors and [Y] features. This may take a few minutes…"_
+Response includes `doIds` — an array of agent IDs, one per cell in the batch.
+
+Tell the user: _"Batch [N] of [X] launched — researching [K] cells…"_
 
 ---
 
-## Step 3 — Poll for results
+## Step 3 — Drain the batch, then repeat
 
 ```
 POST {BASE_URL}matrix/status
@@ -73,12 +99,13 @@ Content-Type: application/json
 { "doIds": ["<doId>", ...] }
 ```
 
-> **Be patient — do not impose any self-imposed time limits.** The matrix deployment sends out parallel swarm workers and may take several minutes to fully dispatch and complete. Do **not** stop early, do **not** give up, and do **not** apply any internal timeout of your own. The only hard limit is **5 minutes of total wall time** — keep polling until `allDone` is `true` or that limit is reached. Treat slow or zero progress as completely normal.
+> **Do not start the next batch until the current one is fully drained.** Wait for `allDone: true` on the current batch before calling `/matrix/create` again. This keeps each turn's work small and prevents timeouts.
 
 - Poll every **10 seconds**
-- Stop **only** when `allDone` is `true` or **5 minutes** have elapsed
-- Show a progress update after each poll: _"⏳ X / N cells complete…"_
-- If the 5-minute limit is reached before `allDone`, proceed with whatever results are available and note how many cells are still pending
+- Stop **only** when `allDone` is `true` or **5 minutes** have elapsed for this batch
+- Show a progress update after each poll: _"⏳ Batch [N]: X / K cells complete…"_
+- If the 5-minute limit is reached before `allDone`, collect whatever completed, note the pending cells, then move on to the next batch
+- After all batches are drained, merge results and proceed to Step 4
 
 ---
 
@@ -199,3 +226,5 @@ After delivering the sheet, offer:
 - Only use sources with relevancy ≥ 85%
 - Every verdict must be traceable to a source URL in the Evidence tab — no unsourced cells
 - If the matrix has more than ~6 competitor columns, suggest splitting by category for readability
+- **Always chunk large matrices into batches** — never launch more cells than the batch size table allows in a single `/matrix/create` call
+- Each per-cell task must be scoped to one competitor + one feature — no bundling
