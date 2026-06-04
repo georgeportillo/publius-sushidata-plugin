@@ -26,13 +26,14 @@ Show this card exactly:
 
 #### Commands you can use anytime
 
-| Command     | What it does                                                                        |
-| ----------- | ----------------------------------------------------------------------------------- |
-| **restore** | Pull everything saved from your prior sessions back into memory                     |
-| **save**    | Save this session's outputs to your context lake — save all or choose what          |
-| **savings** | See a breakdown of what Sushidata retrieved vs what Claude built this session       |
-| **matrix**  | Launch a competitor/category research matrix and render a spreadsheet with evidence |
-| **help**    | Show this screen                                                                    |
+| Command      | What it does                                                                        |
+| ------------ | ----------------------------------------------------------------------------------- |
+| **restore**  | Pull everything saved from your prior sessions back into memory                     |
+| **save**     | Save this session's outputs to your context lake — save all or choose what          |
+| **savings**  | See a breakdown of what Sushidata retrieved vs what Claude built this session       |
+| **matrix**   | Launch a competitor/category research matrix and render a spreadsheet with evidence |
+| **sequence** | Run a multi-step research pipeline where each step builds on the last               |
+| **help**     | Show this screen                                                                    |
 
 ---
 
