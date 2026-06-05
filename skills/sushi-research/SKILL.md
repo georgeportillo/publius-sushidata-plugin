@@ -404,6 +404,16 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 ---
 
+#### Web & Page Fetching
+
+**General web search:** `web-search`
+
+**Standard page rendering (docs, blogs, help centers):** `get_url_markdown` (text/markdown), `get_url_screenshot` (visual)
+
+**Bot-protected pages (PitchBook, LinkedIn, CAPTCHA/403 errors):** `massive_browser_render` — use when `get_url_markdown` fails or returns empty. Formats: `markdown`, `text`, `rendered`. Set `country` for geo-targeted fetches. See [`provider-playbooks/massive.md`](provider-playbooks/massive.md).
+
+---
+
 ### Read the right sub-doc BEFORE executing
 
 **This is not optional.** Read the matching doc before running any tool calls. These docs encode validated workflows and known pitfalls.
@@ -434,6 +444,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack)                                                              | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)             |
 | Searching the public web for general information, competitor content, or sourcing URLs                                                                             | [`provider-playbooks/web-search.md`](provider-playbooks/web-search.md)                     |
 | Fetching rendered page content (markdown or screenshot) from a URL, verifying claims on live pages                                                                 | [`provider-playbooks/browser-rendering.md`](provider-playbooks/browser-rendering.md)       |
+| Fetching pages that block standard crawlers (PitchBook, LinkedIn, Crunchbase, CAPTCHA/403 pages) via residential browser network                                    | [`provider-playbooks/massive.md`](provider-playbooks/massive.md)                           |
 | Saving session outputs to the context lake on demand                                                                                                               | `sushi-save` skill — user says "save" or "save to sushidata"                               |
 | Pulling prior session memory at the start of a new conversation                                                                                                    | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
 | Seeing a breakdown of what Sushidata retrieved vs what Claude built                                                                                                | `sushi-savings` skill — user says "savings" or "session report"                            |
