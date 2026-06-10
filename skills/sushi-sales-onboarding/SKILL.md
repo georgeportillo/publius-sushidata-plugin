@@ -28,7 +28,7 @@ Two phases:
 
 | Capability | Source |
 |---|---|
-| Context lake CRUD | `sushi-research` SKILL → endpoints `/context/`, `/query/`, `/swarm/deploy/`, `/swarm/status/`, `/swarm/summary/` |
+| Context lake CRUD | `sushi-research` SKILL → endpoints `/context/`, `/query/`, `/swarm/deploy/`, `/swarm/status/` |
 | Company & contact discovery order | `sushi-research/finding-companies-and-contacts.md` |
 | Email discovery & verification | `provider-playbooks/hunter.md` → `hunter_domain_search`, `hunter_email_finder`, `hunter_email_verify` |
 | LinkedIn campaign activation | `provider-playbooks/heyreach.md` → `heyreach_list_campaigns`, `heyreach_add_to_campaign` |
@@ -946,7 +946,7 @@ Over-provision at 60 to account for ~33% disqualification falloff.
 
 Follow the discovery order from `finding-companies-and-contacts.md`: **companies first, then people.**
 
-Poll `{BASE_URL}swarm/status/` every 30s. Show progress using the **Progress Updates** format (progress bar with worker count and accounts discovered). Get results via `{BASE_URL}swarm/summary/` when complete or at 5-minute timeout.
+Poll `{BASE_URL}swarm/status/` every 30s. Show progress using the **Progress Updates** format (progress bar with worker count and accounts discovered). When `allDone: true` or at 5-minute timeout, synthesize results directly from the `output` fields of completed workers gathered during polling.
 
 ---
 

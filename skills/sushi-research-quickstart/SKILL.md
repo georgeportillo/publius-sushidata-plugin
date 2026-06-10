@@ -92,7 +92,7 @@ Show the orchestrator's plan and list all worker labels to the user before polli
 Poll `/swarm/status/` every 30 seconds. Show progress updates:
 *"⏳ 4/8 workers complete, checking again in 30s..."*
 
-Once `allDone: true` (or 5-minute timeout), call `/swarm/summary/`.
+Once `allDone: true` (or 5-minute timeout), synthesize results directly from the `output` fields of completed workers collected during polling. Combine findings across workers, dedupe, and present the unified result.
 
 ---
 

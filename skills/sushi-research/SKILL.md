@@ -124,7 +124,7 @@ If you need to verify the swarm endpoint is reachable and functioning:
 
 > **Be patient — do not impose any self-imposed time limits.** `/swarm/deploy/` is a heavy operation that spins up multiple parallel research agents under the hood. Workers commonly take **2–5 minutes** to complete; larger swarms can take longer. Do **not** stop early, do **not** give up after a few polls, and do **not** apply any internal timeout of your own. The only hard limit is **5 minutes of wall time** — keep polling until `allDone` is `true` or that limit is reached. Treat slow or zero progress as completely normal.
 
-**This is the only correct way to poll swarm progress.** Do not invent your own status-checking logic, do not call `/swarm/deploy/` again, and do not call `/swarm/summary/` until polling is complete or the 5-minute limit is reached.
+**This is the only correct way to poll swarm progress.** Do not invent your own status-checking logic and do not call `/swarm/deploy/` again. When polling is complete or the 5-minute limit is reached, synthesize results directly from the `output` fields already collected during polling — no additional endpoint call is needed.
 
 ```json
 POST {BASE_URL}swarm/status/
@@ -167,38 +167,23 @@ Polling rules:
 - Do not invent a shorter cutoff. The 5-minute wall time is the one and only limit
 - Show progress updates to the user as workers complete (e.g. "✅ 3 / 5 workers done…") so they know work is happening
 - `errored` and `unknown` workers count as pending — do not treat them as done until `allDone` is `true`
-- If the 5-minute limit is reached before `allDone`, proceed to `/swarm/summary/` with whatever is available
+- If the 5-minute limit is reached before `allDone`, stop polling and synthesize from whatever worker outputs are available
 
 ---
 
-#### 5. `/swarm/summary/` — Get unified summary (partial or complete)
+#### 5. Synthesize results from `/swarm/status/` output
 
-**When to use**: Once polling is complete (`allDone: true`), or to get partial results after the 5-minute polling timeout. Do not call this before polling — it requires `query` and the full `workers` array from the deploy response.
+**When to do this**: Immediately after polling ends — either because `allDone: true` or the 5-minute wall-time limit was reached. There is no separate summary endpoint. The `output` fields collected from completed workers during polling contain all the data you need.
 
-```json
-POST {BASE_URL}swarm/summary/
-Content-Type: application/json
+**How to synthesize**:
 
-{ "workers": ["<doId>", ...], "query": "<original task as sent to /swarm/deploy/>" }
-```
+1. Collect every `workers[].output` where `status === "complete"` from all poll responses
+2. Combine findings across workers — merge lists, dedupe duplicates, reconcile overlapping claims
+3. Organize the result by the original research goal (e.g. by competitor, by signal type, by account)
+4. If `pending > 0` at the end, note to the user: _"These results are based on X of Y workers — Z workers did not complete in time."
+5. Present the synthesized result directly — do not wait for or call any additional endpoint
 
-Exact response shape:
-
-```json
-{
-  "summary": "Unified research summary across all completed workers...",
-  "completed": 4,
-  "total": 5,
-  "pending": 1
-}
-```
-
-- `query` is required and must match the original task — do not paraphrase or shorten it
-- If `pending > 0`, clearly note to the user: _"These results are based on X of Y workers — Z workers are still running."_
-- If `completed === 0`, the response will be: `{ "summary": "No workers have completed yet. Please try again later.", ... }` — do not surface this as a final result; wait and retry
-- **Allow up to 5 minutes** for this call to respond before treating it as failed — it is a heavy aggregation operation
-
-**If `/swarm/summary/` fails, errors, or times out after 5 minutes**: Do not stop. Synthesize the summary yourself directly from the `output` fields collected on completed workers during the `/swarm/status/` polling loop. Combine findings across workers, dedupe, and present the result as if the endpoint had succeeded. Clearly note at the top: _"Summary endpoint unavailable — synthesized directly from worker outputs."_
+> **This is the primary and only path.** Do not attempt to call `/swarm/summary/` or any other aggregation endpoint — it has been removed. Always synthesize directly from the `output` fields gathered during polling.
 
 ---
 
@@ -280,7 +265,7 @@ Save user message → POST /context/
 Deep / comprehensive research?
   ├── YES → POST /swarm/deploy/ → Show plan + workers
   │             → Poll /swarm/status/ every 30s
-  │             → allDone OR 5min timeout → POST /swarm/summary/
+  │             → allDone OR 5min timeout → Synthesize from worker output fields
   │             → POST /verify/ → filter bad/blocked links
   │             → Present results + verified sources
   │             → Save response → POST /context/

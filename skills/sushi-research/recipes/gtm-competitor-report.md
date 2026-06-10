@@ -61,12 +61,7 @@ POST /swarm/deploy/
 
 Poll `/swarm/status/` every 30 seconds. Show the user the worker list and progress (e.g., "5 / 10 workers done...").
 
-Once `allDone: true`:
-
-```
-POST /swarm/summary/
-{ "workers": ["<doId>", ...], "query": "<original task>" }
-```
+Once `allDone: true` (or 5-minute timeout), synthesize results directly from the `output` fields of completed workers collected during polling. Combine findings across workers, dedupe, and proceed to Step 3.
 
 ---
 

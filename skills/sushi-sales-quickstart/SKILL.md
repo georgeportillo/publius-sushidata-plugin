@@ -74,7 +74,7 @@ POST /swarm/deploy/
 
 Poll `/swarm/status/` every 30 seconds. Show progress: "✅ 3 / 6 workers done..."
 
-Once complete, call `/swarm/summary/` and parse out the list of companies. Then run `/verify/` on any source URLs before presenting.
+Once complete, synthesize results directly from the `output` fields of completed workers collected during polling — parse out the list of companies from those outputs. Then run `/verify/` on any source URLs before presenting.
 
 Show the user a quick preview: "Found 12 candidates — filtering to the 10 strongest fits..."
 

@@ -75,7 +75,6 @@ Key endpoints:
 | `POST /query/`         | Fast lookup — always try before deploying a swarm     |
 | `POST /swarm/deploy/`  | Parallel research agents (swarmSize 2–20)             |
 | `POST /swarm/status/`  | Poll swarm progress                                   |
-| `POST /swarm/summary/` | Get unified results once complete                     |
 | `POST /verify/`        | Validate evidence links before presenting to the user |
 
 ---
