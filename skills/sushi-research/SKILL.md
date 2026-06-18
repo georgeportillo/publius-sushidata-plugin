@@ -174,7 +174,7 @@ Polling rules:
 - After the 5-minute limit, if **zero workers completed** (no `output` fields populated), discard the stale swarm and deploy a fresh one. Do not re-poll dead workers.
 - If synthesis produces no useful answer (e.g. all workers errored, outputs are empty or irrelevant), spawn a new swarm with a refined query — do not re-poll the old one.
 - If a swarm's results are clearly insufficient and you would need to run another swarm anyway, start fresh immediately — do not stay stuck looping on the previous swarm's IDs.
-- When spawning a replacement swarm, tell the user: *"The previous swarm didn't return enough data — spinning up a new one with a refined approach."*
+- When spawning a replacement swarm, tell the user: _"The previous swarm didn't return enough data — spinning up a new one with a refined approach."_
 - Treat old swarm IDs as abandoned once you move on. Never mix old and new swarm worker IDs in the same `/swarm/status/` poll call.
 
 ---
@@ -188,7 +188,7 @@ Polling rules:
 1. Collect every `workers[].output` where `status === "complete"` from all poll responses
 2. Combine findings across workers — merge lists, dedupe duplicates, reconcile overlapping claims
 3. Organize the result by the original research goal (e.g. by competitor, by signal type, by account)
-4. If `pending > 0` at the end, note to the user: _"These results are based on X of Y workers — Z workers did not complete in time."
+4. If `pending > 0` at the end, note to the user: \_"These results are based on X of Y workers — Z workers did not complete in time."
 5. Present the synthesized result directly — do not wait for or call any additional endpoint
 
 > **This is the primary and only path.** Do not attempt to call `/swarm/summary/` or any other aggregation endpoint — it has been removed. Always synthesize directly from the `output` fields gathered during polling.
@@ -253,6 +253,7 @@ Response:
 - `errors` — present only if partial or total failures occurred
 
 **Status codes:**
+
 - `200` — all entries deleted cleanly
 - `207` — partial success (some deleted, some failed) — surface the `errors` to the user
 - `500` — complete failure — surface the error and suggest the user try again
@@ -411,37 +412,37 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **This is not optional.** Read the matching doc before running any tool calls. These docs encode validated workflows and known pitfalls.
 
-| When the task involves...                                                                                                                                          | Read this first                                                                            |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                                                           | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
-| Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                                                           | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
-| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                                                    | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
-| Email verification or discovery at known contacts                                                                                                                  | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
-| LinkedIn scraping, web automation, actor-based extraction                                                                                                          | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
-| CRM sync, HubSpot writes, contact/deal/note creation                                                                                                               | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
-| Outbound activation, LinkedIn campaign insertion                                                                                                                   | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
-| Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                                                                                          | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md)         |
-| Querying Clay audience data, enriching companies/contacts, running Clay subroutines                                                                                | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                                 |
-| Extracting a Clay table config or records via script or MCP browser                                                                                                | [`references/clay-extraction.md`](references/clay-extraction.md)                           |
-| Finding or enriching emails, phones, person profiles, or company data — multi-provider waterfall strategy                                                           | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
-| AI ARK — people search (500M+), company search (70M+), reverse lookup, mobile phone from LinkedIn URL                                                             | [`provider-playbooks/ai-ark.md`](provider-playbooks/ai-ark.md)                             |
-| ContactOut — LinkedIn profile → email/phone, decision makers, people search, bulk contact info                                                                     | [`provider-playbooks/contactout.md`](provider-playbooks/contactout.md)                     |
-| Datagma — work email finder, person/company enrichment, reverse phone, Twitter/X lookups, job change detection                                                     | [`provider-playbooks/datagma.md`](provider-playbooks/datagma.md)                           |
-| Dropleads — email finder, mobile phone from LinkedIn URL, email verifier                                                                                           | [`provider-playbooks/dropleads.md`](provider-playbooks/dropleads.md)                       |
-| FullEnrich — bulk async email + phone enrichment (15+ providers waterfall), reverse email, people + company search                                                 | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                     |
-| LimaData — person/company enrichment, LinkedIn post search, post comments + reactions, prospecting                                                                 | [`provider-playbooks/limadata.md`](provider-playbooks/limadata.md)                         |
-| Lusha — contact/company enrichment, lookalike search, ICP prospecting, intent signals (job changes, growth)                                                        | [`provider-playbooks/lusha.md`](provider-playbooks/lusha.md)                               |
-| People Data Labs (PDL) — person/company search + enrichment, fuzzy identity resolution, reverse-IP to company                                                      | [`provider-playbooks/pdl.md`](provider-playbooks/pdl.md)                                   |
-| Wiza — async email/phone/profile reveals from LinkedIn URL, bulk reveal pattern                                                                                    | [`provider-playbooks/wiza.md`](provider-playbooks/wiza.md)                                 |
-| ZeroBounce — email validation (7 statuses), email finder, domain email pattern search                                                                              | [`provider-playbooks/zerobounce.md`](provider-playbooks/zerobounce.md)                     |
-| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack)                                                              | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)             |
-| Searching the public web for general information, competitor content, or sourcing URLs                                                                             | [`provider-playbooks/web-search.md`](provider-playbooks/web-search.md)                     |
-| Fetching rendered page content (markdown or screenshot) from a URL, verifying claims on live pages                                                                 | [`provider-playbooks/browser-rendering.md`](provider-playbooks/browser-rendering.md)       |
-| Fetching pages that block standard crawlers (PitchBook, LinkedIn, Crunchbase, CAPTCHA/403 pages) via residential browser network                                    | [`provider-playbooks/massive.md`](provider-playbooks/massive.md)                           |
-| Saving session outputs to the context lake on demand                                                                                                               | `sushi-save` skill — user says "save" or "save to sushidata"                               |
-| Pulling prior session memory at the start of a new conversation                                                                                                    | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
-| Seeing a breakdown of what Sushidata retrieved vs what Claude built                                                                                                | `sushi-savings` skill — user says "savings" or "session report"                            |
-| Getting an overview of available commands and use case guides                                                                                                      | `sushi-help` skill — user says "help" or "what can you do"                                 |
+| When the task involves...                                                                                                        | Read this first                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                         | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
+| Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                         | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
+| Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                  | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
+| Email verification or discovery at known contacts                                                                                | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
+| LinkedIn scraping, web automation, actor-based extraction                                                                        | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
+| CRM sync, HubSpot writes, contact/deal/note creation                                                                             | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
+| Outbound activation, LinkedIn campaign insertion                                                                                 | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
+| Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                                                        | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md)         |
+| Querying Clay audience data, enriching companies/contacts, running Clay subroutines                                              | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                                 |
+| Extracting a Clay table config or records via script or MCP browser                                                              | [`references/clay-extraction.md`](references/clay-extraction.md)                           |
+| Finding or enriching emails, phones, person profiles, or company data — multi-provider waterfall strategy                        | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
+| AI ARK — people search (500M+), company search (70M+), reverse lookup, mobile phone from LinkedIn URL                            | [`provider-playbooks/ai-ark.md`](provider-playbooks/ai-ark.md)                             |
+| ContactOut — LinkedIn profile → email/phone, decision makers, people search, bulk contact info                                   | [`provider-playbooks/contactout.md`](provider-playbooks/contactout.md)                     |
+| Datagma — work email finder, person/company enrichment, reverse phone, Twitter/X lookups, job change detection                   | [`provider-playbooks/datagma.md`](provider-playbooks/datagma.md)                           |
+| Dropleads — email finder, mobile phone from LinkedIn URL, email verifier                                                         | [`provider-playbooks/dropleads.md`](provider-playbooks/dropleads.md)                       |
+| FullEnrich — bulk async email + phone enrichment (15+ providers waterfall), reverse email, people + company search               | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                     |
+| LimaData — person/company enrichment, LinkedIn post search, post comments + reactions, prospecting                               | [`provider-playbooks/limadata.md`](provider-playbooks/limadata.md)                         |
+| Lusha — contact/company enrichment, lookalike search, ICP prospecting, intent signals (job changes, growth)                      | [`provider-playbooks/lusha.md`](provider-playbooks/lusha.md)                               |
+| People Data Labs (PDL) — person/company search + enrichment, fuzzy identity resolution, reverse-IP to company                    | [`provider-playbooks/pdl.md`](provider-playbooks/pdl.md)                                   |
+| Wiza — async email/phone/profile reveals from LinkedIn URL, bulk reveal pattern                                                  | [`provider-playbooks/wiza.md`](provider-playbooks/wiza.md)                                 |
+| ZeroBounce — email validation (7 statuses), email finder, domain email pattern search                                            | [`provider-playbooks/zerobounce.md`](provider-playbooks/zerobounce.md)                     |
+| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack)                            | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)             |
+| Searching the public web for general information, competitor content, or sourcing URLs                                           | [`provider-playbooks/web-search.md`](provider-playbooks/web-search.md)                     |
+| Fetching rendered page content (markdown or screenshot) from a URL, verifying claims on live pages                               | [`provider-playbooks/browser-rendering.md`](provider-playbooks/browser-rendering.md)       |
+| Fetching pages that block standard crawlers (PitchBook, LinkedIn, Crunchbase, CAPTCHA/403 pages) via residential browser network | [`provider-playbooks/massive.md`](provider-playbooks/massive.md)                           |
+| Saving session outputs to the context lake on demand                                                                             | `sushi-save` skill — user says "save" or "save to sushidata"                               |
+| Pulling prior session memory at the start of a new conversation                                                                  | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
+| Seeing a breakdown of what Sushidata retrieved vs what Claude built                                                              | `sushi-savings` skill — user says "savings" or "session report"                            |
+| Getting an overview of available commands and use case guides                                                                    | `sushi-help` skill — user says "help" or "what can you do"                                 |
 
 ### Recipes: step-by-step playbooks (check before executing)
 
@@ -452,7 +453,7 @@ Before starting any multi-step task, check if a recipe matches. If it does, foll
 | `account-orgchart.md`           | Building an org chart for a target account — map decision makers, seniority, warm intro paths     |
 | `clay-to-sushidata.md`          | Extracting a Clay table, enriching rows with Sushidata swarms, saving results to the context lake |
 | `build-tam.md`                  | Building a total addressable market list from ICP criteria                                        |
-| `document-accuracy-review.md`   | Detailed reference for accuracy review — use `/sushi-verify` to trigger this as a skill          |
+| `document-accuracy-review.md`   | Detailed reference for accuracy review — use `/sushi-verify` to trigger this as a skill           |
 | `gtm-competitor-report.md`      | Building a full GTM competitor analysis — channels, ads, events, PR, hiring, analyst citations    |
 | `linkedin-url-lookup.md`        | Resolving LinkedIn profile URLs from names and companies                                          |
 | `portfolio-prospecting.md`      | Finding companies backed by a specific investor or accelerator, then finding contacts             |

@@ -10,25 +10,25 @@ Sushidata's `chainfuse-api` MCP server exposes Apify through `ApifyTools` in `sr
 
 The available Apify-backed capabilities are:
 
-| Capability                | Sushidata tool name                 | Actor                                        | Use for                                                                            |
-| ------------------------- | ----------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- |
-| SEO data                  | `apify_ahrefs_scraper`              | `radeance/ahrefs-scraper`                    | Traffic, keywords, backlinks, SERP, authority, and AI visibility options for a URL |
-| LinkedIn ads              | `apify_linkedin_ad_library_scraper` | `silva95gustavo/linkedin-ad-library-scraper` | LinkedIn Ad Library searches from prepared LinkedIn ad search URLs                 |
-| LinkedIn posts            | `apify_linkedin_post_search`        | `harvestapi/linkedin-post-search`            | LinkedIn post search by keywords, including reactions and comments                 |
-| LinkedIn company profiles | `apify_linkedin_company_scraper`    | `dev_fusion/linkedin-company-scraper`        | LinkedIn company profile data from company profile URLs                            |
-| YouTube                   | `apify_youtube_scraper`             | `streamers/youtube-scraper`                  | YouTube search results or direct video URLs, including subtitles                   |
-| Instagram posts/details   | `apify_instagram_scraper`           | `apify/instagram-scraper`                    | Instagram posts, comments, profile details, or stories from direct URLs            |
-| Instagram Reels           | `apify_instagram_reel_scraper`      | `apify/instagram-reel-scraper`               | Instagram Reels by username                                                        |
+| Capability                | Sushidata tool name                 | Actor                                                         | Use for                                                                                                                             |
+| ------------------------- | ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| SEO data                  | `apify_ahrefs_scraper`              | `radeance/ahrefs-scraper`                                     | Traffic, keywords, backlinks, SERP, authority, and AI visibility options for a URL                                                  |
+| LinkedIn ads              | `apify_linkedin_ad_library_scraper` | `silva95gustavo/linkedin-ad-library-scraper`                  | LinkedIn Ad Library searches from prepared LinkedIn ad search URLs                                                                  |
+| LinkedIn posts            | `apify_linkedin_post_search`        | `harvestapi/linkedin-post-search`                             | LinkedIn post search by keywords, including reactions and comments                                                                  |
+| LinkedIn company profiles | `apify_linkedin_company_scraper`    | `dev_fusion/linkedin-company-scraper`                         | LinkedIn company profile data from company profile URLs                                                                             |
+| YouTube                   | `apify_youtube_scraper`             | `streamers/youtube-scraper`                                   | YouTube search results or direct video URLs, including subtitles                                                                    |
+| Instagram posts/details   | `apify_instagram_scraper`           | `apify/instagram-scraper`                                     | Instagram posts, comments, profile details, or stories from direct URLs                                                             |
+| Instagram Reels           | `apify_instagram_reel_scraper`      | `apify/instagram-reel-scraper`                                | Instagram Reels by username                                                                                                         |
 | Leads                     | `apify_leads_finder`                | `pipelinelabs/leads-finder-with-emails-apollo-lusha-zoominfo` | Verified B2B leads with emails, LinkedIn URLs & phone numbers from a 250M+ contact database — Apollo / ZoomInfo / Lusha alternative |
-| Facebook posts            | `apify_facebook_posts_scraper`      | `apify/facebook-posts-scraper`               | Facebook posts from pages or profiles                                              |
-| Facebook comments         | `apify_facebook_comments_scraper`   | `apify/facebook-comments-scraper`            | Comments from Facebook post URLs                                                   |
-| Google Search results     | `apify_google_search_scraper`       | `apify/google-search-scraper`                | Google Search results for a query                                                  |
-| Real estate listings      | `apify_real_estate_aggregator`      | `tri_angle/real-estate-aggregator`           | Real estate listings by location across providers                                  |
-| Y Combinator companies    | `apify_ycombinator_scraper`         | `michael.g/y-combinator-scraper`             | YC company listings, optionally with founders and jobs                             |
-| G2 reviews                | `apify_g2_scraper`                  | `crawlerbros/g2-scraper`                     | G2 product reviews and product details                                             |
-| Perplexity search         | `apify_perplexity_ai_scraper`       | `zhorex/perplexity-ai-scraper`               | Perplexity AI search-query results                                                 |
-| PitchBook investor data   | `apify_pitchbook_data_extractor`    | `kawsar/pitchbook-data-extractor`            | Public PitchBook investor profiles — firm details, deal counts, contact info, social links, recent investments |
-| Google Maps + contacts    | `apify_google_maps_contact_details` | `lukaskrivka/google-maps-with-contact-details` | Google Maps places with website contact extraction: emails, phones, social links, and optional employee leads enrichment |
+| Facebook posts            | `apify_facebook_posts_scraper`      | `apify/facebook-posts-scraper`                                | Facebook posts from pages or profiles                                                                                               |
+| Facebook comments         | `apify_facebook_comments_scraper`   | `apify/facebook-comments-scraper`                             | Comments from Facebook post URLs                                                                                                    |
+| Google Search results     | `apify_google_search_scraper`       | `apify/google-search-scraper`                                 | Google Search results for a query                                                                                                   |
+| Real estate listings      | `apify_real_estate_aggregator`      | `tri_angle/real-estate-aggregator`                            | Real estate listings by location across providers                                                                                   |
+| Y Combinator companies    | `apify_ycombinator_scraper`         | `michael.g/y-combinator-scraper`                              | YC company listings, optionally with founders and jobs                                                                              |
+| G2 reviews                | `apify_g2_scraper`                  | `crawlerbros/g2-scraper`                                      | G2 product reviews and product details                                                                                              |
+| Perplexity search         | `apify_perplexity_ai_scraper`       | `zhorex/perplexity-ai-scraper`                                | Perplexity AI search-query results                                                                                                  |
+| PitchBook investor data   | `apify_pitchbook_data_extractor`    | `kawsar/pitchbook-data-extractor`                             | Public PitchBook investor profiles — firm details, deal counts, contact info, social links, recent investments                      |
+| Google Maps + contacts    | `apify_google_maps_contact_details` | `lukaskrivka/google-maps-with-contact-details`                | Google Maps places with website contact extraction: emails, phones, social links, and optional employee leads enrichment            |
 
 Important implementation constraints:
 
@@ -184,7 +184,11 @@ Ask Sushidata to use the leads finder capability when you need validated prospec
 
 ```json
 {
-  "companyDomainIncludes": ["sailpoint.com", "crowdstrike.com", "databricks.com"],
+  "companyDomainIncludes": [
+    "sailpoint.com",
+    "crowdstrike.com",
+    "databricks.com"
+  ],
   "personTitleIncludes": [
     "chief marketing officer",
     "cmo",
@@ -194,7 +198,7 @@ Ask Sushidata to use the leads finder capability when you need validated prospec
     "marketing director",
     "director of marketing"
   ],
-  "emailStatusIncludes": ["verified", "deliverable"],
+  "emailStatusIncludes": ["verified"],
   "totalResults": 200
 }
 ```
@@ -207,11 +211,10 @@ Ask Sushidata to use the leads finder capability when you need validated prospec
   "functionIncludes": ["marketing"],
   "personLocationCountryIncludes": ["United States"],
   "companyIndustryIncludes": [
-    "computer software",
-    "saas",
-    "information technology & services"
+    "Computer Software",
+    "Information Technology & Services"
   ],
-  "emailStatusIncludes": ["verified", "deliverable"],
+  "emailStatusIncludes": ["verified"],
   "totalResults": 200
 }
 ```
@@ -222,20 +225,21 @@ Ask Sushidata to use the leads finder capability when you need validated prospec
 {
   "personTitleIncludes": ["CTO", "Head of Engineering", "VP Engineering"],
   "personLocationCityIncludes": ["Amsterdam"],
-  "emailStatusIncludes": ["verified", "deliverable", "catch_all"],
+  "emailStatusIncludes": ["verified", "unverified"],
   "totalResults": 200
 }
 ```
 
 Field notes:
 
-- `emailStatusIncludes`: prefer `["verified", "deliverable"]` for outbound-ready lists; add `"catch_all"` to increase volume.
+- `emailStatusIncludes`: valid values are `"verified"` and `"unverified"` only. Use `["verified"]` for outbound-ready lists; add `"unverified"` to increase volume.
 - Person location: use `personLocationCountryIncludes` for country, `personLocationStateIncludes` for state, `personLocationCityIncludes` for city. Do not combine country and city — pick the most specific level.
 - `seniorityIncludes` / `seniorityExcludes` enum values: `c_suite`, `vp`, `director`, `manager`, `senior`, `entry`, `owner`, `partner`.
-- `functionIncludes` / `functionExcludes` enum values: `engineering`, `sales`, `marketing`, `finance`, `operations`, `hr`, `it`, `business_development`.
+- `functionIncludes` / `functionExcludes` enum values: `engineering`, `sales`, `marketing`, `finance`, `operations`, `hr`, `business_development`. **Do not use `"it"` — it conflicts with the actor's schema; use `companyIndustryIncludes` for IT industry targeting instead.**
+- `companyIndustryIncludes` / `companyIndustryExcludes`: values must be **title-cased** exactly as the actor expects (e.g. `"Computer Software"`, `"Information Technology & Services"`, `"Internet"`, `"Computer & Network Security"`). Lowercase values will return no results.
 - `companySizeIncludes` / `companySizeExcludes`: preset ranges (e.g. `"51-200"`, `"201-500"`, `"501-1000"`). Use `companyEmployeeMin` / `companyEmployeeMax` for exact bounds instead.
 - `fundingStageIncludes` / `fundingStageExcludes` values: `"seed"`, `"series_a"`, `"series_b"`, `"series_c"`, etc.
-- `annualRevenueIncludes` / `annualRevenueExcludes` values: `"lt_1m"`, `"1m_10m"`, `"10m_50m"`, `"50m_100m"`, `"100m_500m"`, `"gt_500m"`.
+- `annualRevenueIncludes` / `annualRevenueExcludes` values: `"lt_1m"`, `"1m_10m"`, `"10m_50m"`, `"50m_200m"`, `"200m_1b"`, `"gt_1b"`.
 - `technologiesIncludes` / `technologiesExcludes`: filter by tech stack (e.g. `["Salesforce", "HubSpot"]`) — 2,100+ values supported.
 - `companyDomainMatchMode`: `"strict"` for exact domain match, `"contains"` for substring.
 - Use `companyIndustryExcludes` / `companyKeywordExcludes` to quickly filter out irrelevant segments.
@@ -314,9 +318,7 @@ Ask Sushidata to use the Google Maps contact details capability when you need to
 
 ```json
 {
-  "startUrls": [
-    { "url": "https://www.google.com/maps/place/Acme+Corp/@..." }
-  ]
+  "startUrls": [{ "url": "https://www.google.com/maps/place/Acme+Corp/@..." }]
 }
 ```
 

@@ -4,6 +4,24 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.0] — 2026-06-18
+
+### Fixed
+
+**Corrected `apify_leads_finder` field values based on live actor validation**
+
+Four issues discovered through live testing:
+
+1. **`emailStatusIncludes`**: removed invalid `"deliverable"` and `"catch_all"` values. Valid values are `"verified"` and `"unverified"` only.
+2. **`companyIndustryIncludes`**: values must be title-cased (e.g. `"Computer Software"`, `"Information Technology & Services"`). Lowercase values return no results. Also removed `"saas"` which is not a valid actor enum.
+3. **`annualRevenueIncludes`**: corrected enum values from `"50m_100m"`, `"100m_500m"`, `"gt_500m"` to `"50m_200m"`, `"200m_1b"`, `"gt_1b"`.
+4. **`functionIncludes` `"it"`**: flagged as conflicting with the actor's schema. Added warning to avoid `"it"` and use `companyIndustryIncludes` for IT industry targeting instead.
+
+Updated files:
+- `sushi-research/provider-playbooks/apify.md` — all three example JSON blocks and the field notes section
+
+---
+
 ## [0.4.9] — 2026-06-18
 
 ### Changed
@@ -13,6 +31,7 @@ All notable changes to the sushidata-gtm plugin are documented here.
 Replaced old `code_crafter/leads-finder` actor reference with the correct `pipelinelabs/leads-finder-with-emails-apollo-lusha-zoominfo` actor and updated the capability description to match.
 
 Updated files:
+
 - `sushi-research/provider-playbooks/apify.md` — corrected actor ID and description in the capabilities table
 
 ---
@@ -26,6 +45,7 @@ Updated files:
 Adds `lukaskrivka/google-maps-with-contact-details` as a new Apify-backed tool. Scrapes Google Maps places and extracts contact details from their websites: email addresses, phone numbers, and social media links. Supports keyword + location search, direct Maps URLs, star-rating and website filters, and an optional per-place employee leads enrichment add-on.
 
 Updated files:
+
 - `sushi-research/provider-playbooks/apify.md` — added capability table row, Capability Selection Guide row, and full Google Maps Contact Details workflow section with three example patterns (keyword search, direct URL, leads enrichment)
 
 ---
@@ -39,6 +59,7 @@ Updated files:
 `/swarm/summary/` has been removed from the workflow. It was slow and added unnecessary latency. Claude now synthesizes results directly from the `output` fields collected on completed workers during the `/swarm/status/` polling loop — no extra API call required.
 
 Updated files:
+
 - `sushi-research/SKILL.md` — replaced section 5 (swarm/summary) with a direct synthesis step; updated polling rules and decision flow diagram
 - `sushi-research-quickstart/SKILL.md` — updated post-poll step to synthesize from worker outputs
 - `sushi-sales-quickstart/SKILL.md` — updated ICP prospecting recipe to synthesize from worker outputs
@@ -74,22 +95,26 @@ Updated files:
 ### Changed
 
 **`sushi-research` SKILL.md**
+
 - BASE URL updated to `https://dashboard.sushidata.ai/public/019dff6e-988f-71e2-8aa0-1be949e8421b/`
 - Tenant updated to `Sushidata`, Dataspace set to `Sushidata Internal`
 - Frontmatter description expanded to cover: community signals, campaign performance, competitor battlecards, GTM competitor reports, outreach copy, and document accuracy review
 - Recipes routing table updated with two new entries: `gtm-competitor-report.md` and `document-accuracy-review.md`
 
 **Context lake audit — all actionable docs**
+
 - Added `POST /context/` save blocks to every recipe, playbook, quickstart, and job doc
 - Each save is tailored to that workflow's output (domain lists, contact counts, campaign IDs, actor names, etc.)
 - Pattern: save the user's request before starting, save results with evidence links after completing
 
 **`niche-signal-discovery` reference docs**
+
 - `keyword-catalog.md`: prompt examples use `Sushidata swarm:` equivalents
 - `quality-gate.md`: enrichment timing guidance uses "WebFetch and Apify actor runs complete synchronously..."
 - `pitfalls.md`: buffer flush note updated for Sushidata tooling
 
 **`plugin.json`**
+
 - Added `homepage`, `repository`, and `license` fields (required for validation)
 - Version bumped to `0.2.1`
 
@@ -108,12 +133,14 @@ Initial plugin build for Sushidata GTM workflows.
 **`sushi-research` skill** — Core research and GTM execution skill. Covers the full Sushidata API workflow: `/context/` (save), `/query/` (fast lookup), `/swarm/deploy/` + `/swarm/status/` + `/swarm/summary/` (parallel research), `/verify/` (link validation). Includes decision flow, context saving rules, and transparency guidelines.
 
 **Provider playbooks**
+
 - `hunter.md` — domain search → email finder → email verify chain
 - `heyreach.md` — LinkedIn campaign insertion (≤50 contacts per call, list-first pattern)
 - `hubspot.md` — contact/company/note upsert patterns, deal creation
 - `apify.md` — curated Sushidata MCP actor tools exposed by `ApifyTools`
 
 **Recipes**
+
 - `account-orgchart.md` — Map decision makers and warm intro paths for a target account
 - `build-tam.md` — Build a total addressable market list from ICP criteria
 - `linkedin-url-lookup.md` — Resolve LinkedIn profile URLs from names and companies
@@ -121,6 +148,7 @@ Initial plugin build for Sushidata GTM workflows.
 - `small-business-prospecting.md` — Find local small businesses using Maps-style search
 
 **Validation scripts**
+
 - `validate-emails.py` — Flag rows where enriched email domain doesn't match company domain
 - `validate-linkedin-names.py` — Validate scraped LinkedIn profile names against source names (handles accents, hyphenated names, 50+ nickname pairs, initials); includes eval mode against 52 fixture test cases
 
