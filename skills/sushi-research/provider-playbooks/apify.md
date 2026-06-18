@@ -19,7 +19,7 @@ The available Apify-backed capabilities are:
 | YouTube                   | `apify_youtube_scraper`             | `streamers/youtube-scraper`                  | YouTube search results or direct video URLs, including subtitles                   |
 | Instagram posts/details   | `apify_instagram_scraper`           | `apify/instagram-scraper`                    | Instagram posts, comments, profile details, or stories from direct URLs            |
 | Instagram Reels           | `apify_instagram_reel_scraper`      | `apify/instagram-reel-scraper`               | Instagram Reels by username                                                        |
-| Leads                     | `apify_leads_finder`                | `code_crafter/leads-finder`                  | Validated prospect leads with email addresses                                      |
+| Leads                     | `apify_leads_finder`                | `pipelinelabs/leads-finder-with-emails-apollo-lusha-zoominfo` | Verified B2B leads with emails, LinkedIn URLs & phone numbers from a 250M+ contact database — Apollo / ZoomInfo / Lusha alternative |
 | Facebook posts            | `apify_facebook_posts_scraper`      | `apify/facebook-posts-scraper`               | Facebook posts from pages or profiles                                              |
 | Facebook comments         | `apify_facebook_comments_scraper`   | `apify/facebook-comments-scraper`            | Comments from Facebook post URLs                                                   |
 | Google Search results     | `apify_google_search_scraper`       | `apify/google-search-scraper`                | Google Search results for a query                                                  |

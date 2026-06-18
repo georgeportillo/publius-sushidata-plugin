@@ -4,6 +4,19 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.4.9] — 2026-06-18
+
+### Changed
+
+**Updated `apify_leads_finder` actor ID**
+
+Replaced old `code_crafter/leads-finder` actor reference with the correct `pipelinelabs/leads-finder-with-emails-apollo-lusha-zoominfo` actor and updated the capability description to match.
+
+Updated files:
+- `sushi-research/provider-playbooks/apify.md` — corrected actor ID and description in the capabilities table
+
+---
+
 ## [0.4.8] — 2026-06-18
 
 ### Added
