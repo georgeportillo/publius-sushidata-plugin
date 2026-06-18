@@ -18,8 +18,8 @@ Tools are called **directly** (no swarm needed for individual lookups). For pros
 | `lusha_search_enrich_companies`| Search + enrich companies in one call                                                               |
 | `lusha_prospect_contacts`      | Prospect contacts by ICP filters (title, seniority, dept, industry, location, headcount, etc.)      |
 | `lusha_prospect_companies`     | Prospect companies by ICP filters (industry, size, revenue, tech stack, location)                  |
-| `lusha_lookalike_contacts`     | Find contacts similar to a given LinkedIn URL or Lusha contact ID                                   |
-| `lusha_lookalike_companies`    | Find companies similar to a given domain, Lusha company ID, or company name                         |
+| `lusha_lookalike_contacts`     | Find contacts similar to one or more known Lusha contact IDs                                        |
+| `lusha_lookalike_companies`    | Find companies similar to one or more known Lusha company IDs                                       |
 | `lusha_signals_contacts`       | Find contacts showing buying intent signals (job changes, hiring, promotions)                       |
 | `lusha_signals_companies`      | Find companies showing buying intent signals (headcount growth, new hires, tech changes)            |
 | `lusha_account_usage`          | Check Lusha credit usage and remaining balance                                                      |
@@ -59,16 +59,18 @@ Returns: email, phone, full profile.
 
 ### ICP Prospecting
 
-Use `lusha_prospect_contacts` for building a filtered list:
+Use `lusha_prospect_contacts` for building a filtered list. All filter criteria must be nested under the required `filters` object, and keys are **plural** (`titles`, `seniorities`, `departments`, `industries`, `locations`, `companySizes`, `companyDomains`, `technologies`, `signals`):
 
 ```json
 {
-  "title": "VP Sales",
-  "seniority": ["VP", "Director"],
-  "department": ["Sales"],
-  "industry": ["SaaS", "Fintech"],
-  "location": ["United States"],
-  "companySize": { "min": 50, "max": 500 }
+  "filters": {
+    "titles": ["VP Sales"],
+    "seniorities": ["VP", "Director"],
+    "departments": ["Sales"],
+    "industries": ["SaaS", "Fintech"],
+    "locations": ["United States"],
+    "companySizes": [{ "min": 50, "max": 500 }]
+  }
 }
 ```
 
@@ -76,34 +78,33 @@ Returns: list of matching contacts with LinkedIn URLs. Follow up with `lusha_enr
 
 ### Lookalike Search
 
-Find contacts similar to a known champion or ideal customer:
+Find contacts similar to a known champion. Lookalike search takes an array of **Lusha contact IDs** (`ids`) — not LinkedIn URLs. Run `lusha_search_contacts` first to resolve a profile to its Lusha contact ID:
 
 ```json
-{ "linkedinUrl": "https://www.linkedin.com/in/janedoe" }
+{ "ids": ["<lushaContactId>"] }
 ```
 
 This returns people with similar titles, industries, company sizes, and locations. Ideal for cloning a high-value ICP.
 
-For companies:
+For companies (array of **Lusha company IDs**):
 ```json
-{ "domain": "stripe.com" }
+{ "ids": ["<lushaCompanyId>"] }
 ```
 
 Returns companies similar in size, industry, and tech stack to the input company.
 
 ### Intent Signals
 
-Find contacts or companies showing behavioral buying signals:
+Find contacts showing behavioral buying signals. Use `signalTypes` (an array) and optionally nest other criteria under `filters`:
 
 ```json
 {
-  "signal": "job_change",
-  "industry": ["SaaS"],
-  "location": ["United States"]
+  "signalTypes": ["promotion", "companyChange"],
+  "filters": { "industries": ["SaaS"], "locations": ["United States"] }
 }
 ```
 
-Signal types include: `job_change`, `promotion`, `new_hire`, `company_growth`, `tech_adoption`.
+Valid `signalTypes` values are exactly: `promotion`, `companyChange`, `allSignals`.
 
 Use intent signals to prioritize outreach timing — a new VP of Sales is 5x more likely to buy than an established one.
 
@@ -124,7 +125,7 @@ Use intent signals to prioritize outreach timing — a new VP of Sales is 5x mor
 ## Rules
 
 - Use `lusha_search_enrich_contacts` for individual contacts — it's one call instead of two
-- For lookalike runs, start with one known high-value contact LinkedIn URL and expand from there
+- Lookalike search needs Lusha IDs, not URLs — resolve a champion via `lusha_search_contacts` first to get its `id`, then pass it in `ids`
 - Lusha signals are time-sensitive — run them weekly for the best timing window
 - Check credits with `lusha_account_usage` before large prospecting runs
 - Verify emails with `zerobounce_validate_email` before outbound

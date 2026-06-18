@@ -11,7 +11,7 @@ Tools are called **directly** (no swarm needed for individual lookups). For list
 | Tool name                       | What it does                                                                                    | Cost |
 |---------------------------------|-------------------------------------------------------------------------------------------------|------|
 | `contactout_linkedin_profile`   | Full profile + email + phone from a LinkedIn URL                                                | Email credit + phone credit if found |
-| `contactout_email_enrich`       | Emails + profile data from a known email address                                                | 1 search credit |
+| `contactout_email_enrich`       | Emails + profile data from a known email address                                                | 1 email credit + 1 phone credit if found |
 | `contactout_people_enrich`      | Profile enrichment from name + company/domain or LinkedIn URL or email or phone                | 1 search credit |
 | `contactout_people_search`      | Search contacts by name, title, company, location                                               | 1 search credit per result |
 | `contactout_contact_info`       | Email + phone from a LinkedIn URL (single contact)                                             | Email/phone credits |
@@ -56,14 +56,14 @@ Returns pre-ranked contacts by seniority. Supplement with `lusha_prospect_contac
 
 ### People search
 
-Use `contactout_people_search` with filters:
+Use `contactout_people_search` with filters. `job_title`, `company`, and `location` are **arrays** of strings; only `name` is a bare string:
 
 ```json
 {
   "name": "Jane",
-  "title": "VP Sales",
-  "company": "Acme",
-  "location": "San Francisco"
+  "job_title": ["VP Sales"],
+  "company": ["Acme"],
+  "location": ["San Francisco"]
 }
 ```
 

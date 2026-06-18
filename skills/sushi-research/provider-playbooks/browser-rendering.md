@@ -42,17 +42,17 @@ Takes a screenshot of a rendered page. Use for:
 ```json
 {
   "url": "https://example.com",
-  "fullPage": true,
-  "waitUntil": "networkidle2"
+  "waitUntil": ["networkidle2"],
+  "screenshotOptions": { "fullPage": true }
 }
 ```
 
 **Key options:**
-- `fullPage` — captures the entire scrollable page (default: false)
-- `waitUntil` — `load`, `domcontentloaded`, `networkidle0`, `networkidle2` — use `networkidle2` for SPAs
-- `waitForTimeout` — milliseconds to wait before capturing (max 120,000ms)
+- `screenshotOptions.fullPage` — captures the entire scrollable page (nested under `screenshotOptions`; default: false)
+- `waitUntil` — an **array** of `load`, `domcontentloaded`, `networkidle0`, `networkidle2` (default `["domcontentloaded"]`) — use `["networkidle2"]` for SPAs
+- `waitForTimeout` — milliseconds to wait before capturing (top-level; max 120,000ms)
 - `viewport.width` / `viewport.height` — customize viewport size
-- `omitBackground` — set true to capture transparent backgrounds
+- `screenshotOptions.omitBackground` — set true to capture transparent backgrounds (nested under `screenshotOptions`)
 
 ---
 
@@ -71,6 +71,6 @@ Takes a screenshot of a rendered page. Use for:
 ## Rules
 
 - Always try `web-search` first for general lookups — browser rendering costs more
-- Use `waitUntil: "networkidle2"` for React/Vue/Angular apps that load content after the initial HTML
+- Use `waitUntil: ["networkidle2"]` for React/Vue/Angular apps that load content after the initial HTML
 - For source verification in `sushi-verify`, use `get_url_markdown` to confirm claims are present in the page text
-- If `get_url_markdown` returns empty or minimal content, try again with `waitUntil: "networkidle2"` and/or `waitForTimeout: 3000`
+- If `get_url_markdown` returns empty or minimal content, try again with `waitUntil: ["networkidle2"]` and/or `waitForTimeout: 3000`

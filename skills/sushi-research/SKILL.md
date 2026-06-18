@@ -363,18 +363,20 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **Profile / LinkedIn resolution:** `aiark_people_search`, `contactout_people_search`, `limadata_find_profiles`, `pdl_person_identify`
 
-**Deep profile enrichment:** `pdl_person_enrich`, `limadata_enrich_person`, `contactout_people_enrich`, `lusha_search_enrich_contacts`
+**Deep profile enrichment:** `pdl_person_enrich`, `limadata_enrich_person`, `contactout_people_enrich`, `lusha_search_enrich_contacts`, `hunter_combined_enrichment` (person + company from email), `hunter_email_enrichment`
 
 **Personal email:** `wiza_find_email` (set `accept_personal: true`), `contactout_linkedin_profile`  
 **Wiza is async** — start all reveals first, then poll each with `wiza_get_reveal`
 
 **Email verification (always verify before outbound):** `zerobounce_validate_email` (primary), `dropleads_email_verifier` (catch-all second opinion)
 
-**Company enrichment:** `limadata_enrich_company`, `pdl_company_enrich`, `contactout_domain_enrich`
+**Company enrichment:** `limadata_enrich_company`, `pdl_company_enrich`, `contactout_domain_enrich`, `hunter_company_enrichment`, `lusha_search_enrich_companies`
 
 **Decision makers at a company:** `contactout_decision_makers` (by domain), supplement with `lusha_prospect_contacts`, `aiark_people_search`
 
 **Prospecting by ICP criteria:** `aiark_people_search`, `pdl_person_search`, `lusha_prospect_contacts`, `limadata_prospect_people_search_url`, `lusha_lookalike_contacts`
+
+**Company prospecting by ICP criteria:** `aiark_company_search`, `pdl_company_search`, `lusha_prospect_companies`, `lusha_lookalike_companies`, `limadata_prospect_companies_filter`, `contactout_company_search`
 
 ---
 

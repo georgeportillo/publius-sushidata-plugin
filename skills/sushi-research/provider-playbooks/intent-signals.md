@@ -183,7 +183,7 @@ POST /swarm/deploy/
 | Job signal prospecting (job title patterns) | TheirStack (richer job filters) |
 | Job signal for a single company | PredictLeads (per-company API) |
 | Financing events history | PredictLeads |
-| Discover new companies to prospect by signal | Both — PredictLeads `discover_companies` + TheirStack `company_search` |
+| Discover new companies to prospect by signal | Both — PredictLeads `predictleads_discover_companies` + TheirStack `theirstack_company_search` |
 
 ---
 

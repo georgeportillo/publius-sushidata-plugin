@@ -29,49 +29,52 @@ FullEnrich enrichment is always async. Use this two-step pattern:
 ```json
 {
   "name": "Q3 Target Accounts",
-  "inputs": [
+  "data": [
     { "linkedin_url": "https://www.linkedin.com/in/janedoe" },
     { "linkedin_url": "https://www.linkedin.com/in/johnsmith" }
   ]
 }
 ```
 
-The `name` appears in the FullEnrich dashboard. Returns a `job_id`.
+The `name` appears in the FullEnrich dashboard. The contacts array field is `data` (max 100 per request). Each item accepts `first_name` + `last_name` + `domain`/`company_name`, OR `linkedin_url`. Returns an `enrichment_id`.
 
 ### Step 2 — Poll for results
 
 ```json
-{ "job_id": "abc123" }
+{ "enrichment_id": "abc123" }
 ```
 
-Poll every 10 seconds until status is `completed`. Returns enriched profiles with email and phone when found.
+Poll every 10 seconds until `status` is `FINISHED` (other statuses: `CREATED`, `IN_PROGRESS`). Returns enriched profiles with email and phone when found.
 
 ---
 
 ## Reverse Email Lookup
 
-Find a person profile from a known email address. Also async:
+Find a person profile from a known email address. Also async. Requires a `name` label plus a `data` array of `{ email }` objects:
 
 **Start:**
 ```json
-{ "email": "jane@example.com" }
+{
+  "name": "Reverse email batch",
+  "data": [{ "email": "jane@example.com" }]
+}
 ```
 
 **Poll:**
 ```json
-{ "job_id": "xyz789" }
+{ "enrichment_id": "xyz789" }
 ```
 
 ---
 
 ## People Search
 
-Search by filter criteria synchronously:
+Search by filter criteria synchronously. Every filter is an array of `{ value }` objects (optionally `exact_match`/`exclude`); within a category values are OR, across categories logic is AND:
 
 ```json
 {
-  "title": "VP Sales",
-  "company_domain": "stripe.com"
+  "current_position_titles": [{ "value": "VP Sales" }],
+  "current_company_domains": [{ "value": "stripe.com" }]
 }
 ```
 
@@ -81,11 +84,13 @@ Returns LinkedIn URLs + basic profile data. Feed results into `fullenrich_start_
 
 ## Company Search
 
+Filters are arrays of `{ value }` objects; headcount/year filters are arrays of `{ min, max }` ranges:
+
 ```json
 {
-  "name": "Stripe",
-  "industry": ["fintech"],
-  "size": { "min": 100, "max": 1000 }
+  "names": [{ "value": "Stripe" }],
+  "industries": [{ "value": "Financial Services" }],
+  "headcounts": [{ "min": 100, "max": 1000 }]
 }
 ```
 

@@ -4,6 +4,28 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.1] — 2026-06-18
+
+### Fixed
+
+**Aligned provider playbooks with actual MCP tool schemas to prevent invalid payloads**
+
+Audited every provider playbook against the live zod tool schemas and corrected field names, payload shapes, enum values, and costs that would otherwise cause Claude to send invalid requests:
+
+- **FullEnrich** — `inputs` → `data`; `job_id` → `enrichment_id`; terminal status `completed` → `FINISHED`; reverse-email requires `name` + `data: [{ email }]`; people/company search use `{ value }` filter arrays (`current_position_titles`, `current_company_domains`, `names`, `industries`, `headcounts`).
+- **LimaData** — `find_profiles` uses `full_name` + `company_domain`; `prospect_people_search_url` takes a `search_url` and returns people (it does not generate URLs from filters); `search_posts` paginates with `page` (there is no `limit`); corrected capability descriptions.
+- **Datagma** — `job_change_detection` uses name + required `companyName` (no `data` field); forward phone uses `email` / social URL; reverse phone uses `number` (not `phone`).
+- **AI ARK** — company filters must be nested under `account`; `reverse_people_lookup` uses a single `search` field; `mobile_phone_finder` uses `linkedin` / `name` (not `linkedin_url` / `full_name`).
+- **Lusha** — `prospect_contacts` requires the `filters` wrapper with plural keys; `lookalike_contacts` / `lookalike_companies` require an `ids` array; `signals_contacts` uses `signalTypes` array with valid enums (`promotion`, `companyChange`, `allSignals`).
+- **ContactOut** — `people_search` uses `job_title` / `company` / `location` arrays; corrected `email_enrich` cost.
+- **Adyntel** — `search_facebook_ads` uses `country_code`; `search_google_ads` uses `company_domain`.
+- **Browser Rendering** — screenshot `fullPage` / `omitBackground` nested under `screenshotOptions`; `waitUntil` is an array.
+- **Dropleads** — corrected email-verifier cost (0.1 credits, not 1).
+- **PDL** — corrected record-count claim (3B+ person records).
+- **Tool reference** — fully-qualified `predictleads_discover_companies` / `theirstack_company_search`; added Hunter, Lusha company-enrich, and company-prospecting tools to the SKILL.md reference and the enrichment-waterfall tables.
+
+---
+
 ## [0.5.0] — 2026-06-18
 
 ### Fixed

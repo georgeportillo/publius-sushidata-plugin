@@ -1,6 +1,6 @@
 {
   "name": "creatorwood-sushidata-gtm",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Sushidata is a context data lake for long-term AI memory. This plugin turns Claude into a Sushidata-native agent: ingest community signals from Discord, Slack, and forums; run GTM prospecting and outbound with HeyReach, Hunter, and Apify; build competitor battlecards for PMMs; analyze campaign performance with research swarms; discover ICP signals from won/lost account data; and generate personalized outreach copy. Every finding is saved to the Sushidata context lake so future sessions have full memory of what was learned.",
   "author": {
     "name": "Sushidata"

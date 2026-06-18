@@ -22,7 +22,7 @@ AI ARK tools are called **directly** (no swarm needed for single lookups). For b
 
 Search across 70M+ enriched company profiles.
 
-**Filters available:**
+**Filters available** (all company filters must be nested under the top-level `account` object):
 - `name` — company name
 - `domain` — company domain
 - `linkedin` — company LinkedIn URL
@@ -37,11 +37,15 @@ Search across 70M+ enriched company profiles.
 **Example — SaaS companies in NYC with 50–500 employees:**
 ```json
 {
-  "industry": ["saas"],
-  "location": { "city": ["New York"] },
-  "employeeSize": { "start": 50, "end": 500 }
+  "account": {
+    "industry": ["saas"],
+    "location": { "city": ["New York"] },
+    "employeeSize": { "start": 50, "end": 500 }
+  }
 }
 ```
+
+> The top-level input only accepts `account` (and `lookalikeDomains`). Filters placed at the top level are silently dropped and the search runs unfiltered.
 
 ---
 
@@ -79,14 +83,14 @@ Search 500M+ person profiles. Combine contact filters with account (company) fil
 
 ## `aiark_reverse_people_lookup`
 
-Look up a full person profile from a known email or phone number.
+Look up a full person profile from a known email or phone number. Pass it as a single `search` string:
 
 ```json
-{ "email": "jane@example.com" }
+{ "search": "jane@example.com" }
 ```
 or
 ```json
-{ "phone": "+15551234567" }
+{ "search": "+15551234567" }
 ```
 
 Returns: full name, title, company, LinkedIn URL, and profile data.
@@ -95,14 +99,14 @@ Returns: full name, title, company, LinkedIn URL, and profile data.
 
 ## `aiark_mobile_phone_finder`
 
-Find a mobile phone number. Best results with LinkedIn URL; also works with name + domain.
+Find a mobile phone number. Best results with a LinkedIn URL; also works with name + domain.
 
 ```json
-{ "linkedin_url": "https://www.linkedin.com/in/janedoe" }
+{ "linkedin": "https://www.linkedin.com/in/janedoe" }
 ```
 or
 ```json
-{ "full_name": "Jane Doe", "domain": "example.com" }
+{ "name": "Jane Doe", "domain": "example.com" }
 ```
 
 ---

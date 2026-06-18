@@ -1,6 +1,6 @@
 # People Data Labs (PDL) Playbook
 
-Use this playbook for high-volume, high-confidence B2B data using People Data Labs. PDL has one of the largest person and company databases available (1.5B+ person records, 100M+ companies). It is particularly strong for SQL-style search queries with complex filter combinations.
+Use this playbook for high-volume, high-confidence B2B data using People Data Labs. PDL has one of the largest person and company databases available (3B+ person records, 100M+ companies). It is particularly strong for SQL-style search queries with complex filter combinations.
 
 A unique capability: `pdl_ip_enrich` — reverse-IP to company identification, useful for de-anonymizing website traffic.
 
@@ -13,7 +13,7 @@ Tools are called **directly** (no swarm needed for individual lookups). For bulk
 | Tool name            | What it does                                                                                          |
 |----------------------|-------------------------------------------------------------------------------------------------------|
 | `pdl_person_enrich`  | Enrich a person profile from email, LinkedIn URL, name + company, or phone                           |
-| `pdl_person_search`  | Search 1.5B+ person profiles with SQL-style filter queries                                           |
+| `pdl_person_search`  | Search 3B+ person profiles with SQL-style filter queries                                           |
 | `pdl_person_identify`| Identify a person from a fuzzy combination of signals (name, email, phone, social handles)           |
 | `pdl_company_enrich` | Enrich a company from domain, name, LinkedIn URL, or ticker symbol                                   |
 | `pdl_company_search` | Search 100M+ companies with SQL-style filter queries                                                 |
@@ -108,7 +108,7 @@ Returns: company name, domain, industry, size, and location. Use this for websit
 
 | Task | Prefer |
 |------|--------|
-| High-volume person search with complex filters | PDL (SQL-style, 1.5B records) |
+| High-volume person search with complex filters | PDL (SQL-style, 3B records) |
 | Reverse-IP to company | PDL (unique capability) |
 | Person enrichment from email | PDL or ContactOut |
 | Company enrichment from domain | PDL or LimaData |

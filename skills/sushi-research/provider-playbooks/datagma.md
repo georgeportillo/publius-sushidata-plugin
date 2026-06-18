@@ -13,8 +13,8 @@ Tools are called **directly** (no swarm needed for single lookups).
 | `datagma_find_work_email`        | Find work email from first name + last name + company domain/name                                    |
 | `datagma_enrich`                 | Enrich a person or company from email, LinkedIn URL, company name, website, or SIREN number          |
 | `datagma_find_people`            | Find people at a company by name                                                                     |
-| `datagma_job_change_detection`   | Detect job changes for a person by LinkedIn URL or profile data                                      |
-| `datagma_search_phone_numbers`   | Forward phone lookup — find phone number(s) for a person                                             |
+| `datagma_job_change_detection`   | Detect job changes for a person by name + last known company                                         |
+| `datagma_search_phone_numbers`   | Forward phone lookup — find phone number(s) from an email or social media URL                       |
 | `datagma_search_by_phone`        | Reverse phone lookup — identify a person from a phone number                                         |
 | `datagma_get_twitter_by_username`| Look up Twitter/X profile by username (handle)                                                       |
 | `datagma_get_twitter_by_email`   | Look up Twitter/X profile by email address                                                           |
@@ -56,26 +56,32 @@ Use `countryCode` to improve accuracy and avoid disambiguating namesakes. Use `c
 
 ### Job change detection
 
-```json
-{ "data": "https://www.linkedin.com/in/janedoe" }
-```
+Provide the person's name and last known company. `companyName` is required:
 
-Returns current and previous positions, detects recent role changes. Useful for timing outreach around career transitions.
-
-### Phone lookup
-
-**Forward** (name → phone):
 ```json
 {
-  "firstName": "Jane",
-  "lastName": "Doe",
-  "company": "example.com"
+  "fullName": "Jane Doe",
+  "companyName": "Stripe"
 }
 ```
 
-**Reverse** (phone → person):
+Returns whether the contact still works at the company or has moved. Add `jobTitle` to disambiguate namesakes. Useful for timing outreach around career transitions.
+
+### Phone lookup
+
+**Forward** (email / social URL → phone) via `datagma_search_phone_numbers`:
 ```json
-{ "phone": "+15551234567" }
+{
+  "email": "jane@example.com",
+  "username": "https://www.linkedin.com/in/janedoe"
+}
+```
+
+Provide `email`, a social media `username` URL, or both to improve the match. (Name + company is not accepted here — use `datagma_find_work_email` first if you only have a name, then look up phone.)
+
+**Reverse** (phone → person) via `datagma_search_by_phone`:
+```json
+{ "number": "+15551234567" }
 ```
 
 Reverse phone via `datagma_search_by_phone` is unique to Datagma — not available in most other enrichment providers.

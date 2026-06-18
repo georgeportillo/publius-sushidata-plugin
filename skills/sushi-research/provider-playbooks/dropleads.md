@@ -12,7 +12,7 @@ Tools are called **directly** (no swarm required for individual lookups).
 |-----------------------------|---------------------------------------------------------------------------|---------|
 | `dropleads_email_finder`    | Find work email from first name + last name + company domain/name          | 1 (valid), 0 (catch-all or not found) |
 | `dropleads_mobile_finder`   | Find mobile phone from LinkedIn profile URL                                | 3       |
-| `dropleads_email_verifier`  | Verify deliverability of an email address                                  | 1       |
+| `dropleads_email_verifier`  | Verify deliverability of an email address                                  | 0.1 (valid/invalid), 0 (catch-all or unknown) |
 
 ---
 
@@ -54,7 +54,7 @@ Returns mobile phone number if found. Costs 3 credits per call.
 **Mobile phone waterfall:**
 1. `aiark_mobile_phone_finder` (broader coverage, lower cost)
 2. `dropleads_mobile_finder` (3 credits, LinkedIn URL required)
-3. `datagma_search_phone_numbers` (forward lookup by name)
+3. `datagma_search_phone_numbers` (forward lookup by email / social URL)
 
 ---
 
@@ -66,7 +66,7 @@ Quick email deliverability check.
 { "email": "jane.doe@example.com" }
 ```
 
-For 7-status comprehensive validation (including spamtrap/abuse detection), prefer `zerobounce_validate_email`.
+Costs 0.1 credits for a valid/invalid result, 0 for catch-all/unknown. For 7-status comprehensive validation (including spamtrap/abuse detection), prefer `zerobounce_validate_email`.
 
 ---
 

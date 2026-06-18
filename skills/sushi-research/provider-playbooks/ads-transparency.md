@@ -16,8 +16,8 @@ Adyntel provides direct access to Facebook (Meta), Google, and LinkedIn ad libra
 
 | Tool name | Channel | Input |
 | --- | --- | --- |
-| `search_facebook_ads` | Facebook / Meta Ad Library | `keyword` (search term), `country` code (e.g. `"US"`) |
-| `search_google_ads` | Google Ads Transparency | `domain` (e.g. `"hubspot.com"`) |
+| `search_facebook_ads` | Facebook / Meta Ad Library | `keyword` (search term), `country_code` (2-letter, e.g. `"US"`) |
+| `search_google_ads` | Google Ads Transparency | `company_domain` (e.g. `"hubspot.com"`) |
 | `search_linkedin_ads` | LinkedIn Ad Library | `company_domain` OR `linkedin_page_id` |
 
 ### Adyntel: Facebook Ads
@@ -26,8 +26,8 @@ Adyntel provides direct access to Facebook (Meta), Google, and LinkedIn ad libra
 - Use when you need to see what messaging a brand is running on Meta
 
 ### Adyntel: Google Ads
-- Direct query to Google Ads Transparency by domain
-- Faster alternative to `ads_transparency` (Apify scraper) for quick lookups
+- Direct query to Google Ads Transparency by `company_domain`
+- Faster alternative to `ads_transparency` for quick lookups
 
 ### Adyntel: LinkedIn Ads
 - Returns sponsored content creatives, commentary, images, and carousel details
@@ -41,7 +41,7 @@ To get a full paid media picture of a competitor, run all three Adyntel calls in
 ```json
 POST /swarm/deploy/
 {
-  "query": "Run a full paid ad sweep for [company]. In parallel: (1) search_google_ads with domain = '[domain]', (2) search_linkedin_ads with company_domain = '[domain]', (3) search_facebook_ads with keyword = '[brand name]' and country = 'US'. For each channel: count of active creatives, recurring themes and messaging angles, format types used, and any evergreen (long-running) ads. Return a cross-channel comparison: where is this company most active? What messages are they repeating across channels? What CTAs recur?",
+  "query": "Run a full paid ad sweep for [company]. In parallel: (1) search_google_ads with company_domain = '[domain]', (2) search_linkedin_ads with company_domain = '[domain]', (3) search_facebook_ads with keyword = '[brand name]' and country_code = 'US'. For each channel: count of active creatives, recurring themes and messaging angles, format types used, and any evergreen (long-running) ads. Return a cross-channel comparison: where is this company most active? What messages are they repeating across channels? What CTAs recur?",
   "swarmSize": 3
 }
 ```
@@ -82,7 +82,7 @@ Sushidata's `chainfuse-api` MCP server exposes Google Ads Transparency through `
 
 Claude should infer what the user needs, then run the appropriate ad intelligence tools.
 
-**For a quick ad lookup on a single competitor**: call `search_linkedin_ads`, `search_google_ads`, and `search_facebook_ads` directly (or via a swarm) — no need for the Apify-backed `ads_transparency` scraper for a fast lookup.
+**For a quick ad lookup on a single competitor**: call `search_linkedin_ads`, `search_google_ads`, and `search_facebook_ads` directly (or via a swarm) — no need for the `ads_transparency` deep-history tool for a fast lookup.
 
 **For deep Google creative history** (precise longevity, `total_days_shown`, complete output fields): use a swarm with `ads_transparency`.
 

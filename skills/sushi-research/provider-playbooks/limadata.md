@@ -11,11 +11,11 @@ Tools are called **directly** (no swarm needed for individual lookups). For pros
 | Tool name                              | What it does                                                                                         |
 |----------------------------------------|------------------------------------------------------------------------------------------------------|
 | `limadata_enrich_person`               | Enrich a person from email, LinkedIn URL, name + company                                             |
-| `limadata_enrich_company`              | Enrich a company from domain, LinkedIn URL, or name                                                  |
-| `limadata_find_work_email`             | Find work email from LinkedIn URL, name, or email                                                    |
-| `limadata_find_phone`                  | Find phone number (requires email + LinkedIn URL for best results)                                   |
-| `limadata_find_profiles`               | Find LinkedIn profile URLs from name + domain                                                        |
-| `limadata_prospect_people_search_url`  | Generate a LinkedIn Sales Navigator search URL from filters (no credits consumed)                    |
+| `limadata_enrich_company`              | Enrich a company from domain or LinkedIn URL                                                         |
+| `limadata_find_work_email`             | Find work email from a LinkedIn URL                                                                  |
+| `limadata_find_phone`                  | Find phone number from LinkedIn URL, or name + company                                               |
+| `limadata_find_profiles`               | Find LinkedIn profile URLs from full name + company domain                                           |
+| `limadata_prospect_people_search_url`  | Return people from a LinkedIn / Sales Navigator search URL                                           |
 | `limadata_prospect_companies_filter`   | Filter and return matching company profiles from LinkedIn                                            |
 | `limadata_prospect_people_filter`      | Filter and return matching person profiles from LinkedIn                                             |
 | `limadata_search_posts`                | Search LinkedIn posts by keyword or topic                                                            |
@@ -71,8 +71,8 @@ Returns: company name, description, industry, headcount, HQ location, LinkedIn d
 
 ```json
 {
-  "name": "Jane Doe",
-  "domain": "stripe.com"
+  "full_name": "Jane Doe",
+  "company_domain": "stripe.com"
 }
 ```
 
@@ -80,18 +80,15 @@ Returns LinkedIn profile URLs for further enrichment.
 
 ### Prospecting
 
-Generate a Sales Navigator URL for manual review (free, no credits):
+Return people directly from an existing LinkedIn / Sales Navigator search URL (paginate with `page`):
 ```json
 {
-  "titles": ["VP Sales", "Head of Sales"],
-  "industries": ["SaaS"],
-  "locations": ["United States"]
+  "search_url": "https://www.linkedin.com/sales/search/people?query=...",
+  "page": 1
 }
 ```
 
-Use the returned URL in `get_url_screenshot` or share with the user.
-
-For actual filtered results, use `limadata_prospect_people_filter` or `limadata_prospect_companies_filter` with similar filter criteria.
+For filter-based prospecting, use `limadata_prospect_people_filter` or `limadata_prospect_companies_filter`.
 
 ---
 
@@ -104,11 +101,11 @@ These tools are **not available in any other enrichment provider** in this stack
 ```json
 {
   "query": "AI-powered sales automation",
-  "limit": 20
+  "page": 1
 }
 ```
 
-Returns: post content, author, engagement counts, LinkedIn post URL.
+Returns: post content, author, engagement counts, LinkedIn post URL. Paginate with `page` (there is no `limit` parameter).
 
 ### Get post comments
 

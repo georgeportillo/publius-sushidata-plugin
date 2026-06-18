@@ -15,6 +15,9 @@ The core principle: **no single provider has complete coverage**. Run multiple p
 | `aiark_people_search` | AI ARK | Search 500M+ person profiles by name, title, seniority, department, company, location |
 | `aiark_reverse_people_lookup` | AI ARK | Reverse lookup by email or phone → full person profile |
 | `aiark_mobile_phone_finder` | AI ARK | Mobile phone from LinkedIn URL or name+domain |
+| `hunter_email_finder` | Hunter | Work email from first name + last name + domain/company |
+| `hunter_email_enrichment` | Hunter | Profile enrichment from an email address or LinkedIn handle |
+| `hunter_combined_enrichment` | Hunter | Person + company enrichment from an email address |
 | `contactout_linkedin_profile` | ContactOut | Full profile + email + phone from a LinkedIn URL (costs email + phone credit) |
 | `contactout_email_enrich` | ContactOut | Emails + profile from an email address |
 | `contactout_people_enrich` | ContactOut | Profile enrichment from name + company/domain |
@@ -24,7 +27,7 @@ The core principle: **no single provider has complete coverage**. Run multiple p
 | `contactout_email_to_linkedin` | ContactOut | Reverse: email → LinkedIn URL |
 | `datagma_find_work_email` | Datagma | Work email from first name + last name + domain/LinkedIn slug |
 | `datagma_find_people` | Datagma | People search by name, title, company |
-| `datagma_search_phone_numbers` | Datagma | Phone from name + company |
+| `datagma_search_phone_numbers` | Datagma | Phone from email or social media URL |
 | `datagma_enrich` | Datagma | Person enrichment from email or LinkedIn |
 | `datagma_job_change_detection` | Datagma | Detect recent job changes for a contact |
 | `dropleads_email_finder` | Dropleads | Work email from first + last name + domain (1 credit valid result, 0 for catch-all) |
