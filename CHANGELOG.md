@@ -4,6 +4,19 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.4.8] — 2026-06-18
+
+### Added
+
+**New Apify capability: Google Maps Email Extractor (`apify_google_maps_contact_details`)**
+
+Adds `lukaskrivka/google-maps-with-contact-details` as a new Apify-backed tool. Scrapes Google Maps places and extracts contact details from their websites: email addresses, phone numbers, and social media links. Supports keyword + location search, direct Maps URLs, star-rating and website filters, and an optional per-place employee leads enrichment add-on.
+
+Updated files:
+- `sushi-research/provider-playbooks/apify.md` — added capability table row, Capability Selection Guide row, and full Google Maps Contact Details workflow section with three example patterns (keyword search, direct URL, leads enrichment)
+
+---
+
 ## [0.4.7] — 2026-06-09
 
 ### Changed

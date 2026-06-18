@@ -169,6 +169,14 @@ Polling rules:
 - `errored` and `unknown` workers count as pending — do not treat them as done until `allDone` is `true`
 - If the 5-minute limit is reached before `allDone`, stop polling and synthesize from whatever worker outputs are available
 
+**When to spawn a new swarm instead of continuing to wait:**
+
+- After the 5-minute limit, if **zero workers completed** (no `output` fields populated), discard the stale swarm and deploy a fresh one. Do not re-poll dead workers.
+- If synthesis produces no useful answer (e.g. all workers errored, outputs are empty or irrelevant), spawn a new swarm with a refined query — do not re-poll the old one.
+- If a swarm's results are clearly insufficient and you would need to run another swarm anyway, start fresh immediately — do not stay stuck looping on the previous swarm's IDs.
+- When spawning a replacement swarm, tell the user: *"The previous swarm didn't return enough data — spinning up a new one with a refined approach."*
+- Treat old swarm IDs as abandoned once you move on. Never mix old and new swarm worker IDs in the same `/swarm/status/` poll call.
+
 ---
 
 #### 5. Synthesize results from `/swarm/status/` output
