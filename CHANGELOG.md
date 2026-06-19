@@ -4,6 +4,17 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.2] — 2026-06-19
+
+### Changed
+
+**Updated the Y Combinator Apify actor and playbook**
+
+- Switched `apify_ycombinator_scraper` to the `memo23/y-combinator-scraper` actor (from `michael.g/y-combinator-scraper`).
+- Documented the new schema in the Apify provider playbook: companies and jobs modes, `startUrls` URL auto-routing, filter fields (`mode`, `queries`, `batch`, `role`, `location`), and `scrapeFounderDetails` / `scrapeOpenJobs` enrichment.
+
+---
+
 ## [0.5.1] — 2026-06-18
 
 ### Fixed

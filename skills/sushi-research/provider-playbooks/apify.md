@@ -24,7 +24,7 @@ The available Apify-backed capabilities are:
 | Facebook comments         | `apify_facebook_comments_scraper`   | `apify/facebook-comments-scraper`                             | Comments from Facebook post URLs                                                                                                    |
 | Google Search results     | `apify_google_search_scraper`       | `apify/google-search-scraper`                                 | Google Search results for a query                                                                                                   |
 | Real estate listings      | `apify_real_estate_aggregator`      | `tri_angle/real-estate-aggregator`                            | Real estate listings by location across providers                                                                                   |
-| Y Combinator companies    | `apify_ycombinator_scraper`         | `michael.g/y-combinator-scraper`                              | YC company listings, optionally with founders and jobs                                                                              |
+| Y Combinator companies & jobs | `apify_ycombinator_scraper`     | `memo23/y-combinator-scraper`                                | YC companies (Startup Directory) and jobs (Work at a Startup) — paste any YC URL (auto-routed) or compose from filters, with optional founder/socials and open-jobs enrichment |
 | G2 reviews                | `apify_g2_scraper`                  | `crawlerbros/g2-scraper`                                      | G2 product reviews and product details                                                                                              |
 | Perplexity search         | `apify_perplexity_ai_scraper`       | `zhorex/perplexity-ai-scraper`                                | Perplexity AI search-query results                                                                                                  |
 | PitchBook investor data   | `apify_pitchbook_data_extractor`    | `kawsar/pitchbook-data-extractor`                             | Public PitchBook investor profiles — firm details, deal counts, contact info, social links, recent investments                      |
@@ -108,7 +108,7 @@ POST /swarm/deploy/
 | Instagram account/content research             | Instagram scraper and/or Instagram Reels capability                                           |
 | Facebook page/comment research                 | Facebook posts and/or Facebook comments capability                                            |
 | Search result scraping                         | Google Search scraping capability                                                             |
-| YC portfolio/company sourcing                  | Y Combinator company capability                                                               |
+| YC portfolio/company or job sourcing           | Y Combinator company and jobs capability                                                      |
 | Real estate listing research                   | Real estate aggregator capability                                                             |
 | Generic lead scraping                          | Leads finder capability, plus Hunter-backed verification when emails may be used for outbound |
 | VC/PE investor research or portfolio mapping   | PitchBook investor data capability                                                            |
@@ -247,16 +247,40 @@ Field notes:
 - Actor is capped at `totalResults=200` by Sushidata. Use `customOffset` to paginate across runs.
 - Combine with Hunter-backed email verification before any outbound activation.
 
-### YC Company Sourcing
+### YC Company & Job Sourcing
 
-Ask Sushidata to use YC company extraction for YC batch or category sourcing:
+Ask Sushidata to use YC extraction for batch, category, or role sourcing. Paste any YC URL (auto-routed) via `startUrls`, or compose a run from filters with `mode` set to `companies` or `jobs`.
+
+Companies mode (keyword + batch with founder enrichment):
 
 ```json
 {
-  "url": "https://www.ycombinator.com/companies?batch=Winter%202026",
-  "scrape_all_companies": false,
-  "scrape_founders": true,
-  "scrape_open_jobs": false
+  "mode": "companies",
+  "queries": ["developer tools"],
+  "batch": ["Winter 2026"],
+  "scrapeFounderDetails": true,
+  "scrapeOpenJobs": false,
+  "maxItems": 100
+}
+```
+
+Jobs mode (role + location):
+
+```json
+{
+  "mode": "jobs",
+  "role": "software-engineer",
+  "location": "san-francisco",
+  "maxItems": 100
+}
+```
+
+Or paste any YC URL directly:
+
+```json
+{
+  "startUrls": ["https://www.ycombinator.com/companies?batch=Winter%202026"],
+  "scrapeFounderDetails": true
 }
 ```
 
