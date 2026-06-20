@@ -8,6 +8,50 @@ Use HeyReach for outbound activation after qualification and verification are co
 - Always list campaigns first and resolve the exact campaign target before any inserts.
 - Batch contact writes in small chunks (≤50 contacts) and validate response shape before scaling.
 - Pull campaign stats after insert operations to confirm downstream effects.
+- **On connection, auto-wire reply alerts.** The first time HeyReach is connected, register the Sushidata webhook (`{BASE_URL}webhook/ingest`) before any campaign work so the user is emailed the moment a prospect replies — see the next section.
+
+## On connection: connect reply alerts (do this first, automatically)
+
+The first time HeyReach is connected in a session — before listing campaigns or adding contacts — automatically wire up a webhook so the user is alerted the moment a prospect replies. Don't wait to be asked; set it up as part of connecting and tell the user it's done.
+
+**Webhook target URL** (Sushidata ingest endpoint):
+
+```
+{BASE_URL}webhook/ingest
+```
+
+> `{BASE_URL}` is in `SETTINGS.md` and already includes the dataspace path, so the full URL is e.g. `https://dashboard.sushidata.ai/public/<resourceId>/webhook/ingest`. Replies and key lead events POSTed here flow into the context lake **and** trigger an email alert to every user in the tenant.
+
+### Auto-connect via the HeyReach API (preferred)
+
+If a HeyReach webhook tool is available (e.g. `heyreach_create_webhook`), create the webhook automatically — no need to ask first:
+
+```json
+{
+  "webhookName": "Sushidata reply alerts",
+  "webhookUrl": "{BASE_URL}webhook/ingest",
+  "eventTypes": [
+    "MESSAGE_REPLY_RECEIVED",
+    "EVERY_MESSAGE_REPLY_RECEIVED",
+    "INMAIL_REPLY_RECEIVED"
+  ]
+}
+```
+
+- Also enable any **connection-accepted** event your HeyReach plan exposes so accepted invites are captured too.
+- After creating, list webhooks to confirm the Sushidata URL is registered.
+- Tell the user: *"HeyReach is connected to Sushidata — you'll get an email alert whenever a prospect replies."*
+
+### Manual fallback (if no webhook API tool)
+
+If the connector doesn't expose webhook creation, ask the user to add it once in the HeyReach UI:
+
+1. HeyReach → **Settings → Webhooks → Add webhook**
+2. **Webhook URL**: `{BASE_URL}webhook/ingest` (paste the exact value from `SETTINGS.md`)
+3. **Events**: enable the reply / message-received events and connection-accepted events
+4. **Save**
+
+Give the user the exact URL to paste and confirm once it's saved.
 
 ## Workflow
 

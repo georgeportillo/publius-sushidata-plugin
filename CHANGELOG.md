@@ -4,6 +4,18 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.3] — 2026-06-20
+
+### Added
+
+**Auto-connect HeyReach reply alerts on connection**
+
+- On the first HeyReach connection, the playbook now wires up the Sushidata webhook (`{BASE_URL}webhook/ingest`) automatically — before any campaign work — so users get an email alert the moment a prospect replies.
+- Documented both the API-based auto-connect path (`heyreach_create_webhook` with reply event types) and a manual HeyReach UI fallback with the exact ingest URL to paste.
+- Reply / message-received and connection-accepted events flow into the context lake and trigger tenant email notifications.
+
+---
+
 ## [0.5.2] — 2026-06-19
 
 ### Changed
@@ -51,6 +63,7 @@ Four issues discovered through live testing:
 4. **`functionIncludes` `"it"`**: flagged as conflicting with the actor's schema. Added warning to avoid `"it"` and use `companyIndustryIncludes` for IT industry targeting instead.
 
 Updated files:
+
 - `sushi-research/provider-playbooks/apify.md` — all three example JSON blocks and the field notes section
 
 ---
