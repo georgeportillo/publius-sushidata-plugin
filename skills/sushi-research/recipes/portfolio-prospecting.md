@@ -51,7 +51,7 @@ For each company:
 ### Step 4: Find and verify emails
 
 For discovered contacts:
-1. Call `hunter_email_finder` for any named contact not returned by domain search
+1. Use `fullenrich_start_enrichment` for any named contact not returned by domain search, then poll `fullenrich_get_enrichment`
 2. Call `hunter_email_verify` on all emails before outbound — drop non-valid results
 
 ### Step 5: Generate personalized outreach

@@ -33,7 +33,7 @@ When contacts are skipped, the prospect cards still need to ship — they just i
 1. Use the buyer-persona job titles from this run's Step 0/0.5 ecosystem discovery. Do not reuse another vertical's roles.
 2. For each top company, call `hunter_domain_search` with the company domain.
 3. Select likely contacts from returned names, titles, seniority, department, LinkedIn URLs, and email metadata.
-4. For any named contact without an email, call `hunter_email_finder` with first name, last name, and domain.
+4. For any named contact without an email, use `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
 5. Call `hunter_email_verify` on every candidate email before publishing or activating.
 6. For companies where Hunter returns no useful contacts, use WebSearch, Browser Rendering, and focused Sushidata swarms to identify likely personas. If a LinkedIn employee-scraping actor is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
 

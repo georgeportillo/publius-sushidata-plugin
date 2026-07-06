@@ -44,7 +44,7 @@ Escalate only when you need a filter the current step lacks.
 
 1. **WebSearch / WebFetch** — for public directories, event attendee lists, or LinkedIn Sales Navigator exports the user already has.
 2. **`hunter_domain_search`** — structured contact discovery by company domain.
-3. **`hunter_email_finder`** — named-person email lookup when you already know the person and domain/company.
+3. **`fullenrich_start_enrichment`** — named-person email lookup; submit first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
 4. **`hunter_email_verify`** — send gate before outbound.
 5. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
    - **Profile discovery**: `aiark_people_search` (500M+), `contactout_people_search`, `pdl_person_search` (3B+), `limadata_find_profiles`

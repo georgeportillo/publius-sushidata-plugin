@@ -13,7 +13,6 @@ The available Hunter-backed capabilities are:
 | Capability | Sushidata tool name | Hunter endpoint | Use for |
 | --- | --- | --- | --- |
 | Domain contact discovery | `hunter_domain_search` | `domain-search` | Find professional email addresses and domain metadata for a company domain |
-| Named-person email lookup | `hunter_email_finder` | `email-finder` | Find a specific person's professional email from first name, last name, and domain or company |
 | Email verification | `hunter_email_verify` | `email-verifier` | Verify whether an email is valid, deliverable, and safe for outbound |
 | Person enrichment | `hunter_email_enrichment` | `people/find` | Enrich a person by email or LinkedIn handle — returns name, location, employment, social profiles, timezone |
 | Company enrichment | `hunter_company_enrichment` | `companies/find` | Enrich a company by domain — returns industry, HQ, tech stack, funding, social profiles, employee count |
@@ -22,7 +21,6 @@ The available Hunter-backed capabilities are:
 Important implementation constraints:
 
 - `hunter_domain_search` accepts only `domain`.
-- `hunter_email_finder` requires `first_name`, `last_name`, and either `domain` or `company`.
 - `hunter_email_verify` requires `email`.
 - `hunter_email_enrichment` requires either `email` or `linkedin_handle` (or both).
 - `hunter_company_enrichment` requires `domain`.

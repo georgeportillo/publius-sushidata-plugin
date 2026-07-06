@@ -21,7 +21,7 @@ If only a name is given with no company context, ask before proceeding.
 
 | Step | What                        | Source                                              | Cost    |
 | ---- | --------------------------- | --------------------------------------------------- | ------- |
-| 1    | Resolve target identity     | WebSearch, Browser Rendering, Sushidata swarm, or `hunter_email_finder` for known names | Low     |
+| 1    | Resolve target identity     | WebSearch, Browser Rendering, Sushidata swarm, or `fullenrich_start_enrichment` for known names | Low     |
 | 2a   | LinkedIn company enrichment | `apify_linkedin_company_scraper` when a company URL is known | Low     |
 | 2b   | Hunter domain search        | `hunter_domain_search`                              | Low     |
 | 2c   | Sushidata swarm (gap fill)  | Research swarm for execs and key roles              | Free    |

@@ -30,7 +30,7 @@ Two phases:
 |---|---|
 | Context lake CRUD | `sushi-research` SKILL → endpoints `/context/`, `/query/`, `/swarm/deploy/`, `/swarm/status/` |
 | Company & contact discovery order | `sushi-research/finding-companies-and-contacts.md` |
-| Email discovery & verification | `provider-playbooks/hunter.md` → `hunter_domain_search`, `hunter_email_finder`, `hunter_email_verify` |
+| Email discovery & verification | `provider-playbooks/hunter.md` → `hunter_domain_search`, `hunter_email_verify`; `provider-playbooks/fullenrich.md` → `fullenrich_start_enrichment`, `fullenrich_get_enrichment` |
 | LinkedIn campaign activation | `provider-playbooks/heyreach.md` → `heyreach_list_campaigns`, `heyreach_add_to_campaign` |
 | CRM sync | `provider-playbooks/hubspot.md` |
 | Web scraping | `provider-playbooks/apify.md` + exposed Apify MCP tools |

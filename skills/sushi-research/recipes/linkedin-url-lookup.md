@@ -67,7 +67,7 @@ If previous steps fail and you have a strong identity seed, Hunter can help find
 }
 ```
 
-Use `hunter_email_finder` only when email discovery is also useful. Do not use Hunter as the primary path for LinkedIn URL resolution.
+Use `fullenrich_start_enrichment` only when email discovery is also useful. Do not use Hunter as the primary path for LinkedIn URL resolution.
 
 ## Scenarios
 
@@ -82,7 +82,7 @@ Use `hunter_email_finder` only when email discovery is also useful. Do not use H
 
 1. WebSearch: `"Jane Smith" "Acme Corp" site:linkedin.com/in` → validate the candidate profile
 2. Sushidata swarm if WebSearch misses
-3. If email is also needed, use `hunter_email_finder` with company domain
+3. If email is also needed, use `fullenrich_start_enrichment` with company domain (or linkedin_url), then poll `fullenrich_get_enrichment`
 
 ### Name only (event attendees, RSVP lists)
 

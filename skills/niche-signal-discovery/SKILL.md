@@ -12,7 +12,7 @@ Discover differential signals between Closed Won and Closed Lost accounts by ext
 - **Sushidata swarm** — Company research via `/swarm/deploy/` (BASE URL in sushi-research SKILL.md)
 - **WebSearch + WebFetch** — Website page discovery and content extraction. Free.
 - **Apify MCP tools** — Use exposed Sushidata Apify tools only; do not use dynamic actor discovery.
-- **Hunter MCP tools** — Email discovery and verification: `hunter_domain_search`, `hunter_email_finder`, `hunter_email_verify`.
+- **Hunter MCP tools** — Email discovery and verification: `hunter_domain_search`, `hunter_email_verify`.
 - **Python 3** stdlib only — no pip dependencies for any shipped script.
 - **Estimated cost** — ~$0.50–1.00/company (WebFetch free + Apify jobs ~$0.25–0.50 + Hunter email varies by plan). Step 7 contact discovery is additional. **Always get user approval before paid steps.**
 
@@ -258,7 +258,7 @@ Ask for approval, then for each of the top 10 companies:
 
 1. **Hunter domain search** — `hunter_domain_search domain={{domain}}` → returns known contacts with titles
 2. **Filter by persona** — Keep only titles matching buyer persona job titles from Step 0.5
-3. **Hunter email finder** — `hunter_email_finder domain={{domain}} first_name={{first}} last_name={{last}}`
+3. **FullEnrich email finder** — `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`
 4. **Hunter email verify** — `hunter_email_verify email={{email}}` — non-send states: `invalid`, `accept_all`, `webmail`, `disposable`, blocked, or otherwise non-valid → mark "(email not found)"
 5. **LinkedIn supplement** — if Hunter returns <2 contacts at a company, use WebSearch, Browser Rendering, and focused Sushidata swarms for role discovery. If bulk LinkedIn employee scraping is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
 

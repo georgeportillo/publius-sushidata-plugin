@@ -15,7 +15,6 @@ The core principle: **no single provider has complete coverage**. Run multiple p
 | `aiark_people_search` | AI ARK | Search 500M+ person profiles by name, title, seniority, department, company, location |
 | `aiark_reverse_people_lookup` | AI ARK | Reverse lookup by email or phone → full person profile |
 | `aiark_mobile_phone_finder` | AI ARK | Mobile phone from LinkedIn URL or name+domain |
-| `hunter_email_finder` | Hunter | Work email from first name + last name + domain/company |
 | `hunter_email_enrichment` | Hunter | Profile enrichment from an email address or LinkedIn handle |
 | `hunter_combined_enrichment` | Hunter | Person + company enrichment from an email address |
 | `contactout_linkedin_profile` | ContactOut | Full profile + email + phone from a LinkedIn URL (costs email + phone credit) |
@@ -105,7 +104,7 @@ Output: `{ linkedin_url, full_name, title, company }` per contact
 #### Agent 2 — Email Waterfall (Work Email)
 **Goal**: Find work emails for all contacts using 4–5 providers in sequence per contact. Stop per contact when one provider returns a verified or high-confidence result.
 
-Sequence: `hunter_email_finder` → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
+Sequence: `fullenrich_start_enrichment` (poll `fullenrich_get_enrichment`) → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
 
 For bulk (20+ contacts): use `fullenrich_start_enrichment` instead — submit all at once, poll with `fullenrich_get_enrichment`.
 
@@ -171,7 +170,7 @@ When deploying agents for enrichment, structure each swarm worker with a narrow,
 ```json
 POST /swarm/deploy/
 {
-  "query": "Email discovery waterfall for the following contacts: [list of name + domain pairs]. For each contact, try these providers in order and stop when one returns a result: (1) hunter_email_finder with first_name + last_name + domain, (2) datagma_find_work_email with firstName + lastName + company domain, (3) dropleads_email_finder with first_name + last_name + company_domain, (4) limadata_find_work_email with name + company_domain. Return per contact: email found, provider that found it, and confidence or status if available. Leave email blank if all providers return nothing.",
+  "query": "Email discovery waterfall for the following contacts: [list of name + domain pairs]. For each contact, try these providers in order and stop when one returns a result: (1) fullenrich_start_enrichment with first_name + last_name + domain (or linkedin_url), poll fullenrich_get_enrichment until done, (2) datagma_find_work_email with firstName + lastName + company domain, (3) dropleads_email_finder with first_name + last_name + company_domain, (4) limadata_find_work_email with name + company_domain. Return per contact: email found, provider that found it, and confidence or status if available. Leave email blank if all providers return nothing.",
   "swarmSize": 4
 }
 ```

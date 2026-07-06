@@ -57,7 +57,7 @@ Build the company seed list as a CSV: `company_name`, `domain`, `source`.
 For each company in the seed list:
 1. Call `hunter_domain_search` with the domain
 2. Select likely contacts from returned names, titles, seniority, department, and email metadata
-3. If a specific named contact is known but missing an email, call `hunter_email_finder` with first name, last name, and domain
+3. If a specific named contact is known but missing an email, use `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`
 4. For companies with poor Hunter coverage, use Sushidata swarms, WebSearch, and Browser Rendering for role discovery. If LinkedIn employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md), because that actor is not currently exposed.
 
 ### Step 5: Verify emails

@@ -355,7 +355,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 #### Contact & Email Enrichment — [`enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
 
 **Email discovery (waterfall — try in order, stop on first hit):**
-`hunter_email_finder` → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
+`fullenrich_start_enrichment` (poll `fullenrich_get_enrichment`) → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
 
 **Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
 

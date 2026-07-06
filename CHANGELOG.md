@@ -4,6 +4,18 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.4] — 2026-07-06
+
+### Changed
+
+**Removed `hunter_email_finder` — email discovery now routes through FullEnrich**
+
+- Removed all `hunter_email_finder` references from skill files; email finder capability now uses `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` throughout.
+- Updated enrichment-waterfall.md, niche-signal-discovery SKILL.md, finding-companies-and-contacts.md, sushi-research SKILL.md, sushi-sales-onboarding SKILL.md, and all recipe files (account-orgchart, build-tam, linkedin-url-lookup, portfolio-prospecting).
+- Removed `hunter_email_finder` from the Hunter playbook capabilities table and constraints list.
+
+---
+
 ## [0.5.3] — 2026-06-20
 
 ### Added
