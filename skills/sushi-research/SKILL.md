@@ -8,7 +8,7 @@ description: >
   classifying ICP fit, discovering niche buyer signals from won/lost accounts, community feedback
   analysis (Discord, Slack, forums), competitor battlecards, GTM competitor reports, and document accuracy review. Governs the full Sushidata workflow:
   context-lake queries, deep swarm research, verification, context saving, and GTM execution routing
-  through provider playbooks for HeyReach, HubSpot, Hunter, and Apify. When in doubt, trigger.
+  through provider playbooks for HeyReach, HubSpot, Hunter, Apify, FullEnrich, and Massive. When in doubt, trigger.
 ---
 
 # Sushidata GTM Research Assistant
@@ -99,7 +99,7 @@ POST /swarm/deploy/
 
 > **Keep each worker's task small and focused.** Claude has a hard ~45-second execution limit per turn. Workers that are given broad, multi-part tasks (e.g. "research all of Salesforce's product offerings, pricing, and integrations") will time out before finishing. Each worker's `taskDescription` should be a **single, specific question** that can be answered in one focused lookup — not a compound task. If a research goal requires many angles, use more workers each with a narrow scope rather than fewer workers with wide scope.
 
-> **Always name specific tools in enrichment and signal worker tasks.** When a swarm worker's job involves enrichment (email, phone, profile) or signal intelligence (buying signals, tech stack, hiring), the worker's task description **must name the exact tools to use** — not just describe the goal. Vague queries like "find the email for this person" give the agent no instruction on which providers to call. Instead write: "Use `datagma_find_work_email` with firstName + lastName + domain, then `dropleads_email_finder` as fallback." Consult [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) and [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md) for the full tool list and recommended sequences before writing any swarm worker tasks.
+> **Always name specific tools in enrichment worker tasks.** When a swarm worker's job involves enrichment (email, profile, company), the worker's task description **must name the exact tools to use** — not just describe the goal. Vague queries like "find the email for this person" give the agent no instruction on which providers to call. Instead write: "Use `fullenrich_start_enrichment` with firstName + lastName + domain (or linkedin_url), then poll `fullenrich_get_enrichment`." Consult [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) for the full tool list and recommended sequences before writing any swarm worker tasks.
 
 Response includes `plan`, `swarmSize`, and `workers[]` (each with `doId`, `label`, `taskDescription`).
 
@@ -331,7 +331,7 @@ Use this section when the task involves prospecting, enrichment, outbound activa
 
 - Route GTM decisions and provider selection before execution.
 - Use Sushidata swarms for research-heavy tasks (company profiling, ICP sizing, signal discovery).
-- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery (Hunter), and web automation (Apify).
+- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery (Hunter), bulk enrichment (FullEnrich), web automation (Apify), and residential browser fetching (Massive).
 
 ### Goal
 
@@ -344,69 +344,35 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 1** (`SKILL.md`): routing, guardrails, and links to sub-docs.
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
-- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify, Google Ads Transparency, and Clay.
+- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify, FullEnrich, Google Ads Transparency, Massive, and Clay.
 
 ---
 
 ### Active Tool Reference — Enrichment & Signal Tools
 
-> **Read this before writing any swarm worker tasks involving contacts, emails, phones, companies, or signals.** Swarm workers must name specific tools — not describe goals vaguely. Use these tool names directly in worker task descriptions. Full usage details and multi-agent strategies are in the linked playbooks.
+> **Read this before writing any swarm worker tasks involving contacts, emails, or companies.** Swarm workers must name specific tools — not describe goals vaguely. Use these tool names directly in worker task descriptions. Full usage details and multi-agent strategies are in the linked playbooks.
 
 #### Contact & Email Enrichment — [`enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
 
-**Email discovery (waterfall — try in order, stop on first hit):**
-`fullenrich_start_enrichment` (poll `fullenrich_get_enrichment`) → `datagma_find_work_email` → `dropleads_email_finder` → `limadata_find_work_email` → `zerobounce_email_finder`
+**Email discovery:** `fullenrich_start_enrichment` (first name + last name + domain or linkedin_url) → poll `fullenrich_get_enrichment`
 
-**Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
+**Email verification (mandatory before outbound):** `hunter_email_verify` — treat anything other than `valid` as non-send
 
-**Mobile phone:** `aiark_mobile_phone_finder` → `dropleads_mobile_finder` → `wiza_find_phone` → `limadata_find_phone` → `datagma_search_phone_numbers`
+**Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`. Include `enrich_fields` **inside each contact object** in the `data` array, not at the top level.
 
-**Profile / LinkedIn resolution:** `aiark_people_search`, `contactout_people_search`, `limadata_find_profiles`, `pdl_person_identify`
+**Deep profile enrichment:** `hunter_combined_enrichment` (person + company from email), `hunter_email_enrichment` (from email or LinkedIn handle), `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email`
 
-**Deep profile enrichment:** `pdl_person_enrich`, `limadata_enrich_person`, `contactout_people_enrich`, `lusha_search_enrich_contacts`, `hunter_combined_enrichment` (person + company from email), `hunter_email_enrichment`
+**People search:** `fullenrich_search_people` (rich filters)
 
-**Personal email:** `wiza_find_email` (set `accept_personal: true`), `contactout_linkedin_profile`  
-**Wiza is async** — start all reveals first, then poll each with `wiza_get_reveal`
+**Company enrichment:** `hunter_company_enrichment` (from domain), `fullenrich_search_company`
 
-**Email verification (always verify before outbound):** `zerobounce_validate_email` (primary), `dropleads_email_verifier` (catch-all second opinion)
-
-**Company enrichment:** `limadata_enrich_company`, `pdl_company_enrich`, `contactout_domain_enrich`, `hunter_company_enrichment`, `lusha_search_enrich_companies`
-
-**Decision makers at a company:** `contactout_decision_makers` (by domain), supplement with `lusha_prospect_contacts`, `aiark_people_search`
-
-**Prospecting by ICP criteria:** `aiark_people_search`, `pdl_person_search`, `lusha_prospect_contacts`, `limadata_prospect_people_search_url`, `lusha_lookalike_contacts`
-
-**Company prospecting by ICP criteria:** `aiark_company_search`, `pdl_company_search`, `lusha_prospect_companies`, `lusha_lookalike_companies`, `limadata_prospect_companies_filter`, `contactout_company_search`
-
----
-
-#### Signal Intelligence — [`intent-signals.md`](provider-playbooks/intent-signals.md)
-
-**Company news events (funding, hires, launches, partnerships):** `predictleads_news_events` — filter by: `receives_financing`, `hires`, `increases_headcount_by`, `launches`, `expands_offices_in`, `partners_with`, `wins_contract`
-
-**Hiring signals:** `predictleads_job_openings` (per-company), `theirstack_job_search` (cross-company with title/tech filters)
-
-**Technology stack:** `theirstack_technographics` (current stack by domain), `predictleads_technology_detections` (active tools, first/last seen)
-
-**Technology adoption history:** `predictleads_extended_technology_detection`
-
-**Buying intent:** `theirstack_buying_intents` (domain-level intent scoring)
-
-**Company discovery by signal:** `predictleads_discover_companies`, `theirstack_company_search` (by tech slug, hiring, firmographics), `predictleads_companies_using_technology`
-
-**Financing events:** `predictleads_financing_events`
-
-**Signal scoring:** Financing (last 30d) +5 · Sales/mktg hiring +3 · Competitor tech detected +3 · Tech recently removed +4 · Active buying intent +5 · Office expansion +2 · Partnership/launch +2. Tier A ≥ 12, Tier B 6–11, Tier C < 6.
+**Domain contacts:** `hunter_domain_search` (all contacts at a domain)
 
 ---
 
 #### Web & Page Fetching
 
-**General web search:** `web-search`
-
-**Standard page rendering (docs, blogs, help centers):** `get_url_markdown` (text/markdown), `get_url_screenshot` (visual)
-
-**Bot-protected pages (PitchBook, LinkedIn, CAPTCHA/403 errors):** `massive_browser_render` — use when `get_url_markdown` fails or returns empty. Formats: `markdown`, `text`, `rendered`. Set `country` for geo-targeted fetches. See [`provider-playbooks/massive.md`](provider-playbooks/massive.md).
+**Bot-protected pages (PitchBook, LinkedIn, CAPTCHA/403 errors):** `massive_browser_render` — use when standard fetching fails or returns empty. Formats: `markdown`, `text`, `rendered`. Set `country` for geo-targeted fetches. See [`provider-playbooks/massive.md`](provider-playbooks/massive.md).
 
 ---
 
@@ -419,27 +385,15 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                         | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
 | Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                         | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
 | Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                  | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
-| Email verification or discovery at known contacts                                                                                | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
+| Email discovery, email verification before outbound, domain contact lookup                                                       | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
 | LinkedIn scraping, web automation, actor-based extraction                                                                        | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
 | CRM sync, HubSpot writes, contact/deal/note creation                                                                             | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
 | Outbound activation, LinkedIn campaign insertion                                                                                 | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
 | Researching competitor ad creatives on Google, Facebook/Meta, or LinkedIn                                                        | [`provider-playbooks/ads-transparency.md`](provider-playbooks/ads-transparency.md)         |
 | Querying Clay audience data, enriching companies/contacts, running Clay subroutines                                              | [`provider-playbooks/clay.md`](provider-playbooks/clay.md)                                 |
 | Extracting a Clay table config or records via script or MCP browser                                                              | [`references/clay-extraction.md`](references/clay-extraction.md)                           |
-| Finding or enriching emails, phones, person profiles, or company data — multi-provider waterfall strategy                        | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
-| AI ARK — people search (500M+), company search (70M+), reverse lookup, mobile phone from LinkedIn URL                            | [`provider-playbooks/ai-ark.md`](provider-playbooks/ai-ark.md)                             |
-| ContactOut — LinkedIn profile → email/phone, decision makers, people search, bulk contact info                                   | [`provider-playbooks/contactout.md`](provider-playbooks/contactout.md)                     |
-| Datagma — work email finder, person/company enrichment, reverse phone, Twitter/X lookups, job change detection                   | [`provider-playbooks/datagma.md`](provider-playbooks/datagma.md)                           |
-| Dropleads — email finder, mobile phone from LinkedIn URL, email verifier                                                         | [`provider-playbooks/dropleads.md`](provider-playbooks/dropleads.md)                       |
+| Finding or enriching emails, person profiles, or company data — multi-provider waterfall strategy                                | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
 | FullEnrich — bulk async email + phone enrichment (15+ providers waterfall), reverse email, people + company search               | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                     |
-| LimaData — person/company enrichment, LinkedIn post search, post comments + reactions, prospecting                               | [`provider-playbooks/limadata.md`](provider-playbooks/limadata.md)                         |
-| Lusha — contact/company enrichment, lookalike search, ICP prospecting, intent signals (job changes, growth)                      | [`provider-playbooks/lusha.md`](provider-playbooks/lusha.md)                               |
-| People Data Labs (PDL) — person/company search + enrichment, fuzzy identity resolution, reverse-IP to company                    | [`provider-playbooks/pdl.md`](provider-playbooks/pdl.md)                                   |
-| Wiza — async email/phone/profile reveals from LinkedIn URL, bulk reveal pattern                                                  | [`provider-playbooks/wiza.md`](provider-playbooks/wiza.md)                                 |
-| ZeroBounce — email validation (7 statuses), email finder, domain email pattern search                                            | [`provider-playbooks/zerobounce.md`](provider-playbooks/zerobounce.md)                     |
-| Buying signals, hiring signals, technology stack intelligence, news events (PredictLeads, TheirStack)                            | [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)             |
-| Searching the public web for general information, competitor content, or sourcing URLs                                           | [`provider-playbooks/web-search.md`](provider-playbooks/web-search.md)                     |
-| Fetching rendered page content (markdown or screenshot) from a URL, verifying claims on live pages                               | [`provider-playbooks/browser-rendering.md`](provider-playbooks/browser-rendering.md)       |
 | Fetching pages that block standard crawlers (PitchBook, LinkedIn, Crunchbase, CAPTCHA/403 pages) via residential browser network | [`provider-playbooks/massive.md`](provider-playbooks/massive.md)                           |
 | Saving session outputs to the context lake on demand                                                                             | `sushi-save` skill — user says "save" or "save to sushidata"                               |
 | Pulling prior session memory at the start of a new conversation                                                                  | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
@@ -535,7 +489,9 @@ python3 scripts/validate-linkedin-names.py --fixtures scripts/fixtures_name_vali
 
 - [HeyReach playbook](provider-playbooks/heyreach.md) — LinkedIn outbound campaign activation
 - [HubSpot playbook](provider-playbooks/hubspot.md) — CRM reads, writes, and campaign tools
-- [Hunter playbook](provider-playbooks/hunter.md) — Email discovery and verification
+- [Hunter playbook](provider-playbooks/hunter.md) — Email discovery and domain contact lookup
 - [Apify playbook](provider-playbooks/apify.md) — Web scraping and actor-based automation
+- [FullEnrich playbook](provider-playbooks/fullenrich.md) — Bulk async email + phone enrichment, reverse email, people + company search
 - [Google Ads Transparency playbook](provider-playbooks/ads-transparency.md) — Competitor ad creative research, paid channel analysis, creative longevity signals
+- [Massive playbook](provider-playbooks/massive.md) — Residential browser network for bot-protected pages
 - [Clay playbook](provider-playbooks/clay.md) — Audience queries, company/contact enrichment, subroutines (direct MCP — no swarm needed)

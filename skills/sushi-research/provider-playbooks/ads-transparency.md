@@ -168,4 +168,4 @@ If `total_results` is 0, note it explicitly: *"No Google ad creatives on record 
 - **Don't treat 0 results as no paid activity** — the company may be active on LinkedIn Ads, Meta, or programmatic channels
 - **Don't skip the maturity classification** — raw creative counts without context aren't useful in a report
 - **Don't claim an ad is "active" without checking last_shown_datetime** — total_results can be high even for a company that paused paid 6 months ago
-- **Don't paginate unless asked** — for most GTM research, the first 100 creatives are sufficient
+- **Pagination is not supported** — `ads_transparency` returns up to 100 creatives per call with no way to fetch subsequent pages. The response may include a `next_page_token` field but there is no corresponding input parameter — additional pages cannot be requested

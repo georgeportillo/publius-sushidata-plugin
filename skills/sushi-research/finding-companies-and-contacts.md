@@ -29,15 +29,10 @@ Escalate only when you need a filter the current step lacks.
 1. **Web fetch / known source URL** — if the data lives on a public page (VC portfolio, accelerator directory, conference attendee list), fetch it directly with WebFetch before using any paid provider. This is faster, cheaper, and more complete.
 2. **Sushidata swarm** — for concept-based or niche discovery ("find companies that use X technology", "find startups in this space").
 3. **Exposed Sushidata Apify MCP tools** — use only when a supported actor fits the source, such as `apify_ycombinator_scraper`, `apify_g2_scraper`, `apify_google_search_scraper`, or `apify_perplexity_ai_scraper`.
-4. **Direct enrichment providers for company data** — use when you need firmographics, tech stack, or structured company profiles:
-   - `aiark_company_search` — 70M+ companies, filter by industry, size, revenue, tech stack, funding
-   - `pdl_company_search` — 3B+ person/company database, Elasticsearch or SQL queries
-   - `lusha_prospect_companies` — ICP-filter prospecting with seniority + industry + size
-   - `limadata_enrich_company` — company firmographics, funding, traffic, tech stack from domain
-   - `contactout_company_search` — company search by name, domain, or industry
-   - `theirstack_company_search` — technology-driven company discovery; rich tech-stack + hiring filters
-   - `predictleads_discover_companies` — signal-driven discovery (companies showing buying signals, tech adoption, hiring)
-   - For full detail, read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) and [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md)
+4. **Direct enrichment providers for company data** — use when you need firmographics or structured company profiles:
+   - `fullenrich_search_company` — company search with rich filters
+   - `hunter_company_enrichment` — company enrichment from domain
+   - For full detail, read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
 5. **Missing actor feedback** — if the needed scraper is not exposed, follow `provider-playbooks/apify.md` instead of improvising actor IDs.
 
 ## People search: provider escalation order
@@ -45,30 +40,21 @@ Escalate only when you need a filter the current step lacks.
 1. **WebSearch / WebFetch** — for public directories, event attendee lists, or LinkedIn Sales Navigator exports the user already has.
 2. **`hunter_domain_search`** — structured contact discovery by company domain.
 3. **`fullenrich_start_enrichment`** — named-person email lookup; submit first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
-4. **`hunter_email_verify`** — send gate before outbound.
-5. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
-   - **Profile discovery**: `aiark_people_search` (500M+), `contactout_people_search`, `pdl_person_search` (3B+), `limadata_find_profiles`
-   - **Work email**: `datagma_find_work_email`, `dropleads_email_finder`, `limadata_find_work_email`, `zerobounce_email_finder`
-   - **Personal email + mobile**: `wiza_find_email` (async), `aiark_mobile_phone_finder`, `dropleads_mobile_finder`, `wiza_find_phone` (async), `limadata_find_phone`
-   - **Decision makers**: `contactout_decision_makers` (by domain), `lusha_prospect_contacts`, `aiark_people_search` filtered by company + seniority
+4. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
+   - **Work email**: `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
    - **Bulk enrichment (20–100 contacts)**: `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
-   - **Email verification (mandatory send gate)**: `zerobounce_validate_email` → `dropleads_email_verifier` for catch-all
-6. **Intent-signal prospecting** — for signal-driven lists (companies showing buying signals, hiring for relevant roles, using specific tech), read [`provider-playbooks/intent-signals.md`](provider-playbooks/intent-signals.md):
-   - `predictleads_discover_job_openings`, `theirstack_job_search` — hiring signal prospecting
-   - `predictleads_companies_using_technology`, `theirstack_company_search` — tech-based company discovery
-   - `predictleads_news_events`, `theirstack_buying_intents` — trigger-based outreach
-7. **Sushidata swarm** — for researching who the right contacts are at a target company (roles, reporting structure, influence mapping).
-8. **Missing actor feedback** — if bulk LinkedIn employee scraping is required, follow `provider-playbooks/apify.md`.
+5. **Sushidata swarm** — for researching who the right contacts are at a target company (roles, reporting structure, influence mapping).
+6. **Missing actor feedback** — if bulk LinkedIn employee scraping is required, follow `provider-playbooks/apify.md`.
 
 ## Discovery workflow
 
-| Step | What to do                                                      | Why                                  |
-| ---- | --------------------------------------------------------------- | ------------------------------------ |
-| 0    | Check if the data exists on a known public URL                  | Avoid unnecessary provider calls     |
-| 1    | Shortlist 1–2 providers from the table above                    | Prevent random provider thrash       |
-| 2    | Run a count-like or narrow first pass                           | Cheaply confirm fit before full pull |
-| 3    | Execute the full discovery pass                                 | Build the seed list                  |
-| 4    | Hand off to enrichment/contact-finding phase with the seed list | Keep phases clean                    |
+| Step | What to do                                                              | Why                                        |
+| ---- | ----------------------------------------------------------------------- | ------------------------------------------ |
+| 0    | Check if the data exists on a known public URL                          | Avoid unnecessary provider calls           |
+| 1    | Shortlist 1–2 providers from the table above                            | Prevent random provider thrash             |
+| 2    | Run a count-like or narrow first pass                                   | Cheaply confirm fit before full pull       |
+| 3    | Execute the full discovery pass                                         | Build the seed list                        |
+| 4    | Hand off to enrichment/contact-finding phase with the seed list         | Keep phases clean                          |
 
 ## Anti-patterns
 
@@ -86,23 +72,23 @@ Deliver a CSV or structured list with at minimum: `company_name`, `domain`, and 
 
 Whenever returning a list of people (prospects, leads, contacts, enriched rows), **always include these four columns first, in this order**:
 
-| #   | Column         | Notes                                                               |
-| --- | -------------- | ------------------------------------------------------------------- |
-| 1   | `linkedin_url` | Full profile URL. Leave blank if not found — never fabricate.       |
-| 2   | `email`        | Address + a status emoji (see key below). Leave blank if not found. |
-| 3   | `first_name`   | Given name only. Split from full name if needed.                    |
-| 4   | `last_name`    | Family name only. Split from full name if needed.                   |
+| # | Column | Notes |
+| --- | --- | --- |
+| 1 | `linkedin_url` | Full profile URL. Leave blank if not found — never fabricate. |
+| 2 | `email` | Address + a status emoji (see key below). Leave blank if not found. |
+| 3 | `first_name` | Given name only. Split from full name if needed. |
+| 4 | `last_name` | Family name only. Split from full name if needed. |
 
 Additional columns (title, company, domain, phone, seniority, etc.) follow after these four. You decide which additional columns are useful for the task — but the four above are **always present and always first**.
 
 **Email status emoji key** — append directly after the address, no space:
 
-| Emoji | Meaning                                                                 |
-| ----- | ----------------------------------------------------------------------- |
-| ✅    | Verified — safe for outbound                                            |
-| ⚠️    | Catch-all — deliverable but domain accepts everything; use with caution |
-| ❓    | Unknown — not yet verified                                              |
-| ❌    | Invalid — bad address, do not send                                      |
+| Emoji | Meaning |
+| --- | --- |
+| ✅ | Verified — safe for outbound |
+| ⚠️ | Catch-all — deliverable but domain accepts everything; use with caution |
+| ❓ | Unknown — not yet verified |
+| ❌ | Invalid — bad address, do not send |
 
 ---
 

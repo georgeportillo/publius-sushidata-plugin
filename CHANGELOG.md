@@ -4,6 +4,16 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.5] — 2026-07-06
+
+### Changed
+
+**Sync skill files with sushidata-plugin baseline**
+
+- Synced SKILL.md, finding-companies-and-contacts.md, ads-transparency.md, apify.md, enrichment-waterfall.md, fullenrich.md, and massive.md to match sushidata-plugin v0.5.5.
+
+---
+
 ## [0.5.4] — 2026-07-06
 
 ### Changed

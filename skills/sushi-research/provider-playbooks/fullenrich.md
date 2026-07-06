@@ -30,13 +30,21 @@ FullEnrich enrichment is always async. Use this two-step pattern:
 {
   "name": "Q3 Target Accounts",
   "data": [
-    { "linkedin_url": "https://www.linkedin.com/in/janedoe" },
-    { "linkedin_url": "https://www.linkedin.com/in/johnsmith" }
+    {
+      "linkedin_url": "https://www.linkedin.com/in/janedoe",
+      "enrich_fields": ["contact.work_emails", "contact.personal_emails", "contact.phones"]
+    },
+    {
+      "first_name": "John",
+      "last_name": "Smith",
+      "domain": "example.com",
+      "enrich_fields": ["contact.work_emails"]
+    }
   ]
 }
 ```
 
-The `name` appears in the FullEnrich dashboard. The contacts array field is `data` (max 100 per request). Each item accepts `first_name` + `last_name` + `domain`/`company_name`, OR `linkedin_url`. Returns an `enrichment_id`.
+The `name` appears in the FullEnrich dashboard. The contacts array field is `data` (max 100 per request). Each item accepts `first_name` + `last_name` + `domain`/`company_name`, OR `linkedin_url`. **Always include `enrich_fields` inside each contact object** — it controls which field types are enriched and which credits are charged. Omitting it may charge for all three types (work email + personal email + phone). Returns an `enrichment_id`.
 
 ### Step 2 — Poll for results
 
@@ -44,7 +52,19 @@ The `name` appears in the FullEnrich dashboard. The contacts array field is `dat
 { "enrichment_id": "abc123" }
 ```
 
-Poll every 10 seconds until `status` is `FINISHED` (other statuses: `CREATED`, `IN_PROGRESS`). Returns enriched profiles with email and phone when found.
+Poll every 10 seconds until `status` is `FINISHED`. All possible status values:
+
+| Status | Meaning |
+|--------|---------|
+| `CREATED` | Job queued, not yet started |
+| `IN_PROGRESS` | Job running — keep polling |
+| `FINISHED` | Complete — results are ready |
+| `CANCELED` | Job was canceled — stop polling, report to user |
+| `CREDITS_INSUFFICIENT` | Not enough credits to complete — stop polling, check balance with `fullenrich_get_credits` |
+| `RATE_LIMIT` | Rate limited — wait 60 seconds before retrying |
+| `UNKNOWN` | Unexpected state — stop polling, report to user |
+
+For terminal statuses other than `FINISHED` (`CANCELED`, `CREDITS_INSUFFICIENT`, `UNKNOWN`), stop polling immediately and surface the status to the user rather than retrying.
 
 ---
 
@@ -96,14 +116,15 @@ Filters are arrays of `{ value }` objects; headcount/year filters are arrays of 
 
 ---
 
-## When to Use FullEnrich vs Others
+## When to Use FullEnrich vs Hunter
 
 | Task | Prefer |
 |------|--------|
 | Bulk 10+ contacts email + phone | FullEnrich (most cost-efficient at scale) |
-| Single contact enrichment | ContactOut or Lusha (faster, synchronous) |
-| Reverse email → profile | FullEnrich or Datagma |
-| Finding emails from names only | Hunter or Datagma (no LinkedIn URL needed) |
+| Single contact — known name + domain | FullEnrich `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` |
+| Reverse email → full profile | FullEnrich `fullenrich_reverse_email` |
+| Finding emails from names only (no LinkedIn URL) | FullEnrich `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` |
+| People or company search with rich filters | FullEnrich `fullenrich_search_people` / `fullenrich_search_company` |
 
 ---
 
@@ -112,5 +133,5 @@ Filters are arrays of `{ value }` objects; headcount/year filters are arrays of 
 - Never start a FullEnrich job and immediately return — always poll `fullenrich_get_enrichment` until done
 - For bulk runs, kick off multiple jobs simultaneously via parallel swarm workers — each worker handles one batch and polls its own job
 - Check credits before large runs with `fullenrich_get_credits`
-- Verify returned emails with `zerobounce_validate_email` before outbound (FullEnrich aggregates — quality varies by provider)
+- Verify returned emails before outbound — FullEnrich aggregates from multiple providers so quality varies; spot-check a sample before launching a campaign
 - FullEnrich handles its own internal waterfall — no need to manually loop other providers if you use it

@@ -35,7 +35,7 @@ Important implementation constraints:
 - Apify capabilities are fixed and named. Do not request dynamic actor discovery or generic run management.
 - Sushidata handles actor execution, polling, hidden defaults, proxy settings, dataset fetching, and progress notifications.
 - Infrastructure knobs are not exposed. Do not ask the user for proxy, memory, build, timeout, version, dataset, or run settings.
-- Actor-backed runs are capped by Sushidata with `maxTotalChargeUsd=0.2` and `maxItems=200`.
+- Actor-backed runs are capped by Sushidata with `maxTotalChargeUsd=5` per run. There is no global `maxItems` cap — use actor-level `maxItems` or `totalResults` to control result volume.
 - Some actors have hidden default inputs, such as proxy configuration. Treat these as Sushidata-managed.
 
 ## Agent Behavior
@@ -114,7 +114,7 @@ POST /swarm/deploy/
 | VC/PE investor research or portfolio mapping   | PitchBook investor data capability                                                            |
 | Local business email/phone/contact extraction  | Google Maps contact details capability                                                        |
 
-Prefer Sushidata research swarms, WebSearch, Browser Rendering, Hunter, or first-party sources when they are more specific to the user's goal. Use Apify-backed capabilities when the task specifically benefits from a supported actor.
+Prefer Sushidata research swarms, `massive_browser_render`, Hunter, or first-party sources when they are more specific to the user's goal. Use Apify-backed capabilities when the task specifically benefits from a supported actor.
 
 ## Common Workflow Packages
 
@@ -308,7 +308,7 @@ Field notes:
 - `requestTimeoutSecs`: per-request timeout in seconds (default 30, max 120). Increase to 60–120 if profiles are large.
 - Returns structured JSON per investor: firm name, description, location, deal counts, contact info, social links, website, and a sample of recent investments.
 - This scrapes **public** PitchBook profile pages only — it cannot access paywalled deal details or financials.
-- Combine with `web-search` or `get_url_markdown` to fill gaps if a profile has limited public data.
+- Combine with `massive_browser_render` to fill gaps if a profile has limited public data.
 
 Example swarm request for VC firm research:
 
@@ -402,11 +402,11 @@ Ask Sushidata to return Apify-backed results in a structured shape:
 | `confidence_notes` | yes            |
 | `errors_or_gaps`   | when present   |
 
-For research deliverables, ask Sushidata to cross-check important claims with source URLs, WebSearch, Browser Rendering, or first-party pages before presenting them as facts.
+For research deliverables, ask Sushidata to cross-check important claims with source URLs, `massive_browser_render`, or first-party pages before presenting them as facts.
 
 ## Recommended Order
 
-1. Ask Sushidata whether first-party pages, WebSearch, or Browser Rendering can answer the task cleanly.
+1. Ask Sushidata whether first-party pages or `massive_browser_render` can answer the task cleanly.
 2. If a supported actor-backed source is useful, include the relevant Apify-backed capability in the swarm request.
 3. If multiple capabilities fit, ask Sushidata to use all relevant capabilities and merge the evidence.
 4. Ask Sushidata to dedupe records, preserve source URLs, and flag extraction errors or gaps.
@@ -419,7 +419,7 @@ For research deliverables, ask Sushidata to cross-check important claims with so
 - Requesting dynamic actor discovery or generic run-management calls.
 - Asking the user for infrastructure inputs such as proxy settings, run IDs, datasets, memory, build, or timeout.
 - Treating actor output as verified truth. Cross-check important claims.
-- Using Apify when a first-party page, Sushidata swarm, WebSearch, or Browser Rendering is a cleaner source.
+- Using Apify when a first-party page, Sushidata swarm, or `massive_browser_render` is a cleaner source.
 
 ---
 

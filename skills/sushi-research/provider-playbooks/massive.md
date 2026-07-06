@@ -34,19 +34,18 @@ Use this **instead of** `get_url_markdown` / `get_url_screenshot` when those too
 
 ---
 
-## When to Use Massive vs Other Browser Tools
+## When to Use Massive
 
 | Situation | Tool |
 |-----------|------|
-| Standard docs, blog posts, help center pages | `get_url_markdown` (cheaper) |
+| Standard docs, blog posts, help center pages | WebFetch (built-in, no proxy overhead) |
 | Pages returning CAPTCHA, 403, or empty content | `massive_browser_render` |
 | PitchBook investor/company profiles | `massive_browser_render` |
 | LinkedIn profiles or company pages | `massive_browser_render` |
 | Crunchbase, G2, or similar gated/bot-protected pages | `massive_browser_render` |
-| Visual layout / screenshot needed | `get_url_screenshot` (Cloudflare) |
 | Need a specific country's version of a page | `massive_browser_render` (set `country`) |
 
-> **Always try `get_url_markdown` first.** Only escalate to `massive_browser_render` if the first attempt returns an error, CAPTCHA, or clearly insufficient content.
+> **Always try WebFetch first for standard public pages.** Only escalate to `massive_browser_render` if the first attempt returns an error, CAPTCHA, or clearly insufficient content.
 
 ---
 
@@ -101,4 +100,4 @@ Use `massive_browser_render` for PitchBook when:
 - The tool returns full page content — extract only what you need before saving to the context lake
 - Do not loop over large lists of URLs in a single agent turn — distribute across swarm workers (one URL or small batch per worker)
 - For bulk PitchBook/LinkedIn research, use `apify_pitchbook_data_extractor` or the Apify LinkedIn actors first; fall back to Massive for gaps
-- Verify important claims from rendered pages with `web-search` before presenting as facts
+- Verify important claims from rendered pages with a follow-up Sushidata swarm search before presenting as facts
