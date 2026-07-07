@@ -8,7 +8,7 @@ description: >
   classifying ICP fit, discovering niche buyer signals from won/lost accounts, community feedback
   analysis (Discord, Slack, forums), competitor battlecards, GTM competitor reports, and document accuracy review. Governs the full Sushidata workflow:
   context-lake queries, deep swarm research, verification, context saving, and GTM execution routing
-  through provider playbooks for HeyReach, HubSpot, Hunter, Apify, FullEnrich, and Massive. When in doubt, trigger.
+  through provider playbooks for HeyReach, HubSpot, Apify, FullEnrich, and Massive. When in doubt, trigger.
 ---
 
 # Sushidata GTM Research Assistant
@@ -331,7 +331,7 @@ Use this section when the task involves prospecting, enrichment, outbound activa
 
 - Route GTM decisions and provider selection before execution.
 - Use Sushidata swarms for research-heavy tasks (company profiling, ICP sizing, signal discovery).
-- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery (Hunter), bulk enrichment (FullEnrich), web automation (Apify), and residential browser fetching (Massive).
+- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery and enrichment (FullEnrich), web automation (Apify), and residential browser fetching (Massive).
 
 ### Goal
 
@@ -344,7 +344,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 1** (`SKILL.md`): routing, guardrails, and links to sub-docs.
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
-- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Hunter, Apify, FullEnrich, Google Ads Transparency, Massive, and Clay.
+- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Apify, FullEnrich, Google Ads Transparency, Massive, and Clay.
 
 ---
 
@@ -356,17 +356,17 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **Email discovery:** `fullenrich_start_enrichment` (first name + last name + domain or linkedin_url) → poll `fullenrich_get_enrichment`
 
-**Email verification (mandatory before outbound):** `hunter_email_verify` — treat anything other than `valid` as non-send
+**Email verification (mandatory before outbound):** FullEnrich confidence scores — treat low-confidence results as non-send
 
 **Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`. Include `enrich_fields` **inside each contact object** in the `data` array, not at the top level.
 
-**Deep profile enrichment:** `hunter_combined_enrichment` (person + company from email), `hunter_email_enrichment` (from email or LinkedIn handle), `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email`
+**Deep profile enrichment:** `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email` (email → full profile)
 
 **People search:** `fullenrich_search_people` (rich filters)
 
-**Company enrichment:** `hunter_company_enrichment` (from domain), `fullenrich_search_company`
+**Company enrichment:** `fullenrich_search_company` (from domain), `fullenrich_search_company`
 
-**Domain contacts:** `hunter_domain_search` (all contacts at a domain)
+**Domain contacts:** `fullenrich_search_people` (all contacts at a domain)
 
 ---
 
@@ -385,7 +385,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                         | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
 | Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                         | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
 | Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                  | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
-| Email discovery, email verification before outbound, domain contact lookup                                                       | [`provider-playbooks/hunter.md`](provider-playbooks/hunter.md)                             |
+| Email discovery, email verification before outbound, domain contact lookup                                                       | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                             |
 | LinkedIn scraping, web automation, actor-based extraction                                                                        | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
 | CRM sync, HubSpot writes, contact/deal/note creation                                                                             | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
 | Outbound activation, LinkedIn campaign insertion                                                                                 | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
@@ -489,7 +489,7 @@ python3 scripts/validate-linkedin-names.py --fixtures scripts/fixtures_name_vali
 
 - [HeyReach playbook](provider-playbooks/heyreach.md) — LinkedIn outbound campaign activation
 - [HubSpot playbook](provider-playbooks/hubspot.md) — CRM reads, writes, and campaign tools
-- [Hunter playbook](provider-playbooks/hunter.md) — Email discovery and domain contact lookup
+- [FullEnrich playbook](provider-playbooks/fullenrich.md) — Email discovery and contact enrichment
 - [Apify playbook](provider-playbooks/apify.md) — Web scraping and actor-based automation
 - [FullEnrich playbook](provider-playbooks/fullenrich.md) — Bulk async email + phone enrichment, reverse email, people + company search
 - [Google Ads Transparency playbook](provider-playbooks/ads-transparency.md) — Competitor ad creative research, paid channel analysis, creative longevity signals

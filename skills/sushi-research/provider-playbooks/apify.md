@@ -63,7 +63,7 @@ When Apify is needed, deploy a Sushidata swarm with a concrete task description.
 - limits or scope, such as number of posts, reviews, companies, or search results
 - validation and dedupe requirements
 - output schema
-- fallback sources, such as WebSearch, Browser Rendering, Hunter, or first-party pages
+- fallback sources, such as WebSearch, Browser Rendering, FullEnrich, or first-party pages
 
 Example:
 
@@ -110,11 +110,11 @@ POST /swarm/deploy/
 | Search result scraping                         | Google Search scraping capability                                                             |
 | YC portfolio/company or job sourcing           | Y Combinator company and jobs capability                                                      |
 | Real estate listing research                   | Real estate aggregator capability                                                             |
-| Generic lead scraping                          | Leads finder capability, plus Hunter-backed verification when emails may be used for outbound |
+| Generic lead scraping                          | Leads finder capability, plus FullEnrich email discovery when emails may be used for outbound |
 | VC/PE investor research or portfolio mapping   | PitchBook investor data capability                                                            |
 | Local business email/phone/contact extraction  | Google Maps contact details capability                                                        |
 
-Prefer Sushidata research swarms, `massive_browser_render`, Hunter, or first-party sources when they are more specific to the user's goal. Use Apify-backed capabilities when the task specifically benefits from a supported actor.
+Prefer Sushidata research swarms, `massive_browser_render`, FullEnrich, or first-party sources when they are more specific to the user's goal. Use Apify-backed capabilities when the task specifically benefits from a supported actor.
 
 ## Common Workflow Packages
 
@@ -245,7 +245,7 @@ Field notes:
 - Use `companyIndustryExcludes` / `companyKeywordExcludes` to quickly filter out irrelevant segments.
 - If merging multiple runs, dedupe downstream by: email → linkedin → (full_name, company_domain).
 - Actor is capped at `totalResults=200` by Sushidata. Use `customOffset` to paginate across runs.
-- Combine with Hunter-backed email verification before any outbound activation.
+- Combine with FullEnrich email discovery before any outbound activation.
 
 ### YC Company & Job Sourcing
 
@@ -410,7 +410,7 @@ For research deliverables, ask Sushidata to cross-check important claims with so
 2. If a supported actor-backed source is useful, include the relevant Apify-backed capability in the swarm request.
 3. If multiple capabilities fit, ask Sushidata to use all relevant capabilities and merge the evidence.
 4. Ask Sushidata to dedupe records, preserve source URLs, and flag extraction errors or gaps.
-5. For outbound workflows, combine Apify-backed enrichment with Hunter-backed verification before activation.
+5. For outbound workflows, combine Apify-backed enrichment with FullEnrich email discovery before activation.
 
 ## Pitfalls
 

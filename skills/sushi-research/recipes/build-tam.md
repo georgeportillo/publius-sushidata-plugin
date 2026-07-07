@@ -48,21 +48,21 @@ Follow the escalation order in `finding-companies-and-contacts.md`:
 2. Use Sushidata research swarms, WebSearch, and Browser Rendering to expand company discovery from known sources
 3. Use exposed Sushidata Apify MCP tools when they fit the source, such as `apify_ycombinator_scraper`, `apify_g2_scraper`, `apify_google_search_scraper`, or `apify_perplexity_ai_scraper`
 
-Do not use unsupported Hunter discovery tools or dynamic Apify actor discovery. If the required scraper is not exposed as a Sushidata Apify MCP tool, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md).
+Do not use unsupported discovery tools or dynamic Apify actor discovery. If the required scraper is not exposed as a Sushidata Apify MCP tool, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md).
 
 Build the company seed list as a CSV: `company_name`, `domain`, `source`.
 
 ### Step 4: Find contacts at each company
 
 For each company in the seed list:
-1. Call `hunter_domain_search` with the domain
+1. Call `fullenrich_search_people` with the domain
 2. Select likely contacts from returned names, titles, seniority, department, and email metadata
 3. If a specific named contact is known but missing an email, use `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`
-4. For companies with poor Hunter coverage, use Sushidata swarms, WebSearch, and Browser Rendering for role discovery. If LinkedIn employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md), because that actor is not currently exposed.
+4. For companies with poor FullEnrich coverage, use Sushidata swarms, WebSearch, and Browser Rendering for role discovery. If LinkedIn employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md), because that actor is not currently exposed.
 
 ### Step 5: Verify emails
 
-For all discovered emails, call `hunter_email_verify` before any outbound activation. Drop `invalid`, `accept_all`, `webmail`, `disposable`, blocked, and otherwise non-valid results.
+For all discovered emails, spot-check FullEnrich confidence scores before outbound activation. Drop low-confidence results.
 
 ### Step 6: Activate in HeyReach (if outbound is the goal)
 

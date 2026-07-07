@@ -17,7 +17,7 @@ digests, prospect list refreshes, email verification runs, or any repeating inte
 
 Cowork's scheduler runs a task prompt on a cron schedule or at a specific future time. Each
 scheduled task calls back into this same session context, so it has access to all connected
-tools (Sushidata, HeyReach, HubSpot, Hunter, Apify).
+tools (Sushidata, HeyReach, HubSpot, Apify).
 
 **Two modes:**
 - **Recurring** — runs on a cron schedule (e.g., every Monday at 9am, daily at 6am)
@@ -78,8 +78,8 @@ Tool: create_scheduled_task
 cronExpression: "0 7 * * 1-5"   ← weekdays at 7am
 prompt: "Run a daily prospect refresh for [COMPANY].
   ICP: [definition]. Goal: find [N] net-new verified contacts not already in HeyReach campaign [ID].
-  Steps: (1) Use hunter_domain_search for ICP-matching domains found via WebSearch or Sushidata query.
-  (2) Verify emails with hunter_email_verify — drop invalid/catch-all.
+  Steps: (1) Use fullenrich_search_people for ICP-matching domains found via WebSearch or Sushidata query.
+  (2) Check FullEnrich confidence scores — drop low-confidence results before outbound.
   (3) Add verified contacts to HeyReach campaign [ID] via heyreach_add_to_campaign.
   (4) Save a summary of contacts added to the Sushidata context lake.
   Report how many contacts were added and any issues."

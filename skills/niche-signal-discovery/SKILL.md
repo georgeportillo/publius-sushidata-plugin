@@ -12,9 +12,9 @@ Discover differential signals between Closed Won and Closed Lost accounts by ext
 - **Sushidata swarm** — Company research via `/swarm/deploy/` (BASE URL in sushi-research SKILL.md)
 - **WebSearch + WebFetch** — Website page discovery and content extraction. Free.
 - **Apify MCP tools** — Use exposed Sushidata Apify tools only; do not use dynamic actor discovery.
-- **Hunter MCP tools** — Email discovery and verification: `hunter_domain_search`, `hunter_email_verify`.
+- **FullEnrich MCP tools** — Email discovery and contact enrichment: `fullenrich_search_people`, `fullenrich_start_enrichment`.
 - **Python 3** stdlib only — no pip dependencies for any shipped script.
-- **Estimated cost** — ~$0.50–1.00/company (WebFetch free + Apify jobs ~$0.25–0.50 + Hunter email varies by plan). Step 7 contact discovery is additional. **Always get user approval before paid steps.**
+- **Estimated cost** — ~$0.50–1.00/company (WebFetch free + Apify jobs ~$0.25–0.50 + FullEnrich credits vary by plan). Step 7 contact discovery is additional. **Always get user approval before paid steps.**
 
 ## Input requirements
 
@@ -252,15 +252,15 @@ python3 scripts/dedupe_utils.py \
     --out-actionable prospects_actionable.csv --out-matched already_known.csv
 ```
 
-**Companies + contacts + emails (Hunter credits required):**
+**Companies + contacts + emails (FullEnrich credits required):**
 
 Ask for approval, then for each of the top 10 companies:
 
-1. **Hunter domain search** — `hunter_domain_search domain={{domain}}` → returns known contacts with titles
+1. **FullEnrich people search** — `fullenrich_search_people current_company_domains=[{"value":"{{domain}}"}]` → returns contacts with titles
 2. **Filter by persona** — Keep only titles matching buyer persona job titles from Step 0.5
 3. **FullEnrich email finder** — `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`
-4. **Hunter email verify** — `hunter_email_verify email={{email}}` — non-send states: `invalid`, `accept_all`, `webmail`, `disposable`, blocked, or otherwise non-valid → mark "(email not found)"
-5. **LinkedIn supplement** — if Hunter returns <2 contacts at a company, use WebSearch, Browser Rendering, and focused Sushidata swarms for role discovery. If bulk LinkedIn employee scraping is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
+4. **FullEnrich quality check** — review confidence scores from `fullenrich_get_enrichment` — treat low-confidence or blank results as non-send → mark "(email not found)"
+5. **LinkedIn supplement** — if FullEnrich returns <2 contacts at a company, use WebSearch, Browser Rendering, and focused Sushidata swarms for role discovery. If bulk LinkedIn employee scraping is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
 
 **Read `references/step-7-prospects.md`** for the required output fields, prospect-card skeleton, and the "10 is a ceiling, not a floor" guidance.
 

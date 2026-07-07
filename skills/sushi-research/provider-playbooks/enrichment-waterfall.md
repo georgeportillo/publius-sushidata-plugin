@@ -10,9 +10,6 @@ Use this playbook when you need to find or enrich email addresses, person profil
 
 | Tool name | Provider | Best for |
 | --- | --- | --- |
-| `hunter_email_verify` | Hunter | Verify whether an email is valid, deliverable, and safe for outbound |
-| `hunter_email_enrichment` | Hunter | Profile enrichment from an email address or LinkedIn handle |
-| `hunter_combined_enrichment` | Hunter | Person + company enrichment from an email address |
 | `fullenrich_start_enrichment` | FullEnrich | **Bulk** enrichment: work email + personal email + mobile for up to 100 contacts at once |
 | `fullenrich_get_enrichment` | FullEnrich | Poll results from a bulk enrichment started with `fullenrich_start_enrichment` |
 | `fullenrich_reverse_email` | FullEnrich | Start reverse email enrichment (email → person profile) |
@@ -23,8 +20,7 @@ Use this playbook when you need to find or enrich email addresses, person profil
 
 | Tool name | Provider | Best for |
 | --- | --- | --- |
-| `hunter_domain_search` | Hunter | Structured contact discovery by company domain |
-| `hunter_company_enrichment` | Hunter | Company enrichment from domain |
+| `fullenrich_search_people` | FullEnrich | Contact discovery by company domain or filters |
 | `fullenrich_search_company` | FullEnrich | Company search with rich filters |
 
 ---
@@ -46,20 +42,20 @@ For lists of 5+ contacts, **do not enrich serially** — deploy parallel swarm w
 
 FullEnrich costs: work email = 1 credit, personal email = 3 credits, mobile phone = 10 credits per contact found. Only request the fields you need.
 
-#### Agent 2 — Email Verification (mandatory before outbound)
-**Goal**: Verify all discovered emails before any outbound activation.
+#### Agent 2 — Email Quality Check (mandatory before outbound)
+**Goal**: Review FullEnrich confidence scores on all discovered emails before any outbound activation.
 
-Use: `hunter_email_verify` with each email address. Treat anything other than `valid` as non-send by default — flag `accept_all`, `webmail`, `disposable`, `block`, and `smtp_check: false` as risky.
+Use: Review confidence scores from `fullenrich_get_enrichment` results. Treat low-confidence results as non-send by default — flag results without a work email or with no confident match as risky. Spot-check a sample with `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email` when confidence is uncertain.
 
 #### Agent 3 — Deep Profile Enrichment
 **Goal**: Fill in title, seniority, department, employment history, and any missing firmographic data.
 
-Use: `hunter_combined_enrichment` (from email), `hunter_email_enrichment` (from email or LinkedIn handle), `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email` (email → full profile)
+Use: `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email` (email → full profile), `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` (email + phone from LinkedIn)
 
 #### Agent 4 — Company Enrichment
 **Goal**: Enrich all companies on the list with firmographics.
 
-Use: `hunter_company_enrichment` (from domain), `fullenrich_search_company`
+Use: `fullenrich_search_company` (from domain or filters)
 
 ---
 
@@ -69,10 +65,10 @@ After all agents complete, merge per-contact using this priority order:
 
 | Field | Priority |
 | --- | --- |
-| `email` (work) | Hunter verified first; then FullEnrich highest confidence; drop invalid |
+| `email` (work) | FullEnrich highest confidence first; drop low-confidence results |
 | `email` (personal) | FullEnrich |
-| `title` | FullEnrich → Hunter |
-| `company` firmographics | Hunter → FullEnrich |
+| `title` | FullEnrich |
+| `company` firmographics | FullEnrich |
 
 Dedupe contacts by: `email` → `linkedin_url` → `(full_name + company_domain)` in that order.
 
@@ -118,7 +114,7 @@ When you have ICP criteria and need a list of matching contacts or companies:
 
 | Goal | Use |
 | --- | --- |
-| Search contacts by domain | `hunter_domain_search` |
+| Search contacts by domain | `fullenrich_search_people` |
 | Search people with rich filters | `fullenrich_search_people` |
 | Search companies with rich filters | `fullenrich_search_company` |
 

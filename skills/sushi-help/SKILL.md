@@ -59,7 +59,7 @@ Show this card exactly:
 | "Write outreach for [person/company]" | Drafts personalized LinkedIn or email copy   |
 | "Add these leads to HeyReach"         | Pushes contacts into a HeyReach campaign     |
 | "Enrich these contacts in HubSpot"    | Updates HubSpot records with researched data |
-| "Find emails for [list]"              | Runs Hunter to find verified email addresses |
+| "Find emails for [list]"              | Runs FullEnrich to find email addresses      |
 
 ---
 

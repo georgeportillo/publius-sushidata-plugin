@@ -4,25 +4,46 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.6] — 2026-07-07
+
+### Changed
+
+**Consolidated email discovery and enrichment exclusively to FullEnrich**
+
+- Replaced all legacy email-tool references with FullEnrich equivalents across all skill files.
+- Domain contact discovery now uses `fullenrich_search_people` throughout.
+- Company enrichment now uses `fullenrich_search_company` throughout.
+- Person/profile enrichment now uses `fullenrich_reverse_email` / `fullenrich_start_enrichment`.
+- Email verification step replaced with FullEnrich confidence score review across all recipes and playbooks.
+- Removed the deprecated email-tool playbook from `provider-playbooks/`.
+- Updated `enrichment-waterfall.md` Agent 2 to reflect FullEnrich-based quality checking.
+- Updated `plugin.json` description and keywords.
+
+---
+
 ## [0.5.5] — 2026-07-06
 
 ### Changed
 
-**Sync skill files with sushidata-plugin baseline**
+**Email discovery routes through FullEnrich**
 
-- Synced SKILL.md, finding-companies-and-contacts.md, ads-transparency.md, apify.md, enrichment-waterfall.md, fullenrich.md, and massive.md to match sushidata-plugin v0.5.5.
+- Email finder capability uses `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` throughout.
+- Updated enrichment-waterfall.md, niche-signal-discovery SKILL.md, finding-companies-and-contacts.md, sushi-research SKILL.md, sushi-sales-onboarding SKILL.md, fullenrich.md, and all recipe files (account-orgchart, build-tam, linkedin-url-lookup, portfolio-prospecting).
+- Cleaned up email discovery references in provider playbooks.
 
 ---
 
-## [0.5.4] — 2026-07-06
+## [0.5.4] — 2026-06-24
 
-### Changed
+### Fixed
 
-**Removed `hunter_email_finder` — email discovery now routes through FullEnrich**
+**Playbook accuracy audit — removed tools, cost cap, and polling**
 
-- Removed all `hunter_email_finder` references from skill files; email finder capability now uses `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment` throughout.
-- Updated enrichment-waterfall.md, niche-signal-discovery SKILL.md, finding-companies-and-contacts.md, sushi-research SKILL.md, sushi-sales-onboarding SKILL.md, and all recipe files (account-orgchart, build-tam, linkedin-url-lookup, portfolio-prospecting).
-- Removed `hunter_email_finder` from the Hunter playbook capabilities table and constraints list.
+- Removed all references to deleted tools (`web-search`, `get_url_markdown`, `get_url_screenshot`, Browser Rendering) from `apify.md` and `massive.md`. Replaced with `massive_browser_render` or WebFetch as appropriate.
+- Corrected Apify cost cap in `apify.md`: was documented as `$0.20` with a global `maxItems=200` — actual cap is `$5` per run with no global item limit.
+- Expanded FullEnrich polling status table in `fullenrich.md` from 3 to 7 statuses: added `CANCELED`, `CREDITS_INSUFFICIENT`, `RATE_LIMIT`, and `UNKNOWN` with explicit stop-poll instructions for terminal error states.
+- Fixed `ads-transparency.md` pagination pitfall: "Don't paginate unless asked" replaced with a clear note that pagination is not supported — `ads_transparency` has no pagination input parameter despite the response schema including `next_page_token`.
+- Updated `massive.md` comparison table: removed `get_url_markdown` and `get_url_screenshot` rows; updated fallback guidance to WebFetch for standard public pages.
 
 ---
 
@@ -67,7 +88,7 @@ Audited every provider playbook against the live zod tool schemas and corrected 
 - **Browser Rendering** — screenshot `fullPage` / `omitBackground` nested under `screenshotOptions`; `waitUntil` is an array.
 - **Dropleads** — corrected email-verifier cost (0.1 credits, not 1).
 - **PDL** — corrected record-count claim (3B+ person records).
-- **Tool reference** — fully-qualified `predictleads_discover_companies` / `theirstack_company_search`; added Hunter, Lusha company-enrich, and company-prospecting tools to the SKILL.md reference and the enrichment-waterfall tables.
+- **Tool reference** — fully-qualified `predictleads_discover_companies` / `theirstack_company_search`; added FullEnrich, Lusha company-enrich, and company-prospecting tools to the SKILL.md reference and the enrichment-waterfall tables.
 
 ---
 
@@ -142,7 +163,7 @@ Updated files:
 
 **New skills**
 
-- `sushi-sales-quickstart` — Three hardcoded live-demo recipes: ICP prospecting (swarm → Hunter email waterfall → HeyReach offer), single-account deep dive (swarm → org chart → account brief), and competitor displacement (swarm → tier scoring → contacts for Tier 1). Uses Sushidata API endpoints throughout. Every recipe saves its request and results to the context lake.
+- `sushi-sales-quickstart` — Three hardcoded live-demo recipes: ICP prospecting (swarm → FullEnrich email waterfall → HeyReach offer), single-account deep dive (swarm → org chart → account brief), and competitor displacement (swarm → tier scoring → contacts for Tier 1). Uses Sushidata API endpoints throughout. Every recipe saves its request and results to the context lake.
 
 - `sushi-research-quickstart` — Competitive intelligence entry point for new users. Given a company name, deploys a Sushidata research swarm to identify and profile at least three competitors, then delivers a structured battlecard. Designed to demonstrate Sushidata value in under five minutes.
 
@@ -202,7 +223,7 @@ Initial plugin build for Sushidata GTM workflows.
 
 **Provider playbooks**
 
-- `hunter.md` — domain search → email finder → email verify chain
+- `fullenrich.md` — email enrichment, people search, and company search via FullEnrich
 - `heyreach.md` — LinkedIn campaign insertion (≤50 contacts per call, list-first pattern)
 - `hubspot.md` — contact/company/note upsert patterns, deal creation
 - `apify.md` — curated Sushidata MCP actor tools exposed by `ApifyTools`

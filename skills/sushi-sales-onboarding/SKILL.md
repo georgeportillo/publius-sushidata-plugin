@@ -30,7 +30,7 @@ Two phases:
 |---|---|
 | Context lake CRUD | `sushi-research` SKILL → endpoints `/context/`, `/query/`, `/swarm/deploy/`, `/swarm/status/` |
 | Company & contact discovery order | `sushi-research/finding-companies-and-contacts.md` |
-| Email discovery & verification | `provider-playbooks/hunter.md` → `hunter_domain_search`, `hunter_email_verify`; `provider-playbooks/fullenrich.md` → `fullenrich_start_enrichment`, `fullenrich_get_enrichment` |
+| Email discovery & verification | `provider-playbooks/fullenrich.md` → `fullenrich_start_enrichment`, `fullenrich_get_enrichment`, `fullenrich_search_people` |
 | LinkedIn campaign activation | `provider-playbooks/heyreach.md` → `heyreach_list_campaigns`, `heyreach_add_to_campaign` |
 | CRM sync | `provider-playbooks/hubspot.md` |
 | Web scraping | `provider-playbooks/apify.md` + exposed Apify MCP tools |
@@ -838,7 +838,7 @@ askQuestions([
     header: "Contact enrichment depth",
     question: "What contact information do you need for outreach?",
     options: [
-      { label: "Email only", description: "Business email verified via Hunter" },
+      { label: "Email only", description: "Business email verified via FullEnrich" },
       { label: "Email + LinkedIn", recommended: true, description: "Email + LinkedIn profile URL" },
       { label: "Email + LinkedIn + Phone", description: "Full enrichment (may cost more credits)" }
     ],
@@ -849,7 +849,7 @@ askQuestions([
 
 For each persona match, the daily run will extract:
 - Full name, current title, LinkedIn profile URL
-- Business email (via Hunter — see `provider-playbooks/hunter.md`)
+- Business email (via FullEnrich — see `provider-playbooks/fullenrich.md`)
 - Phone (if selected above)
 - Time in current role (tenure signal)
 - Recent activity signals (posts, job changes, publications)
@@ -985,17 +985,17 @@ If fewer than 40 pass:
 
 For each of the 40 confirmed accounts, find buyer personas using the provider escalation order from `finding-companies-and-contacts.md`:
 
-1. `hunter_domain_search domain={domain}` — structured contact discovery
+1. `fullenrich_search_people current_company_domains=[{"value":"{domain}"}]` — structured contact discovery
 2. Filter results by titles/departments/seniority from `context.buyer_personas`
-3. `hunter_email_verify email={email}` — **mandatory** before any outbound
-4. If Hunter returns <2 contacts, supplement with WebSearch + Sushidata swarm for role discovery
+3. Spot-check FullEnrich confidence scores — **mandatory** before any outbound
+4. If FullEnrich returns <2 contacts, supplement with WebSearch + Sushidata swarm for role discovery
 
 Prioritize: **economic buyer → champion → technical evaluator.**
 
 Run `sushi-research/scripts/validate-emails.py` on the final enriched set to flag domain mismatches.
 Run `sushi-research/scripts/validate-linkedin-names.py` on LinkedIn URLs to confirm name consistency.
 
-**Approval gate:** Before scaling Hunter calls beyond the first 10 accounts, show cost estimate and get explicit approval (per `sushi-research` policy).
+**Approval gate:** Before scaling enrichment calls beyond the first 10 accounts, show cost estimate and get explicit approval (per `sushi-research` policy).
 
 ---
 
@@ -1168,9 +1168,9 @@ Formatting requirements:
 2. **Companies first, then people.** Follow `finding-companies-and-contacts.md` discovery order.
 3. **Over-provision, then filter.** Search for ~1.5× target count to absorb disqualification falloff.
 4. **Never skip deduplication.** Zero overlap with previous runs is mandatory. Use `dedupe_utils.py` for apex-domain matching.
-5. **Approval gate for paid actions.** Before scaling Hunter/HeyReach calls beyond the first batch, show cost estimate and get explicit approval.
+5. **Approval gate for paid actions.** Before scaling enrichment/HeyReach calls beyond the first batch, show cost estimate and get explicit approval.
 6. **Save every run.** Both the request and results go to the context lake. Future sessions must retrieve what was delivered without re-running.
-7. **Use existing playbooks.** Route to `provider-playbooks/hunter.md` for email, `provider-playbooks/heyreach.md` for activation, `provider-playbooks/hubspot.md` for CRM sync. Do not re-implement provider logic.
+7. **Use existing playbooks.** Route to `provider-playbooks/fullenrich.md` for email enrichment, `provider-playbooks/heyreach.md` for activation, `provider-playbooks/hubspot.md` for CRM sync. Do not re-implement provider logic.
 8. **Leverage niche-signal-discovery.** If the customer provides won/lost domain lists during Step 3, invoke the `niche-signal-discovery` skill for automated differential analysis.
-9. **Validate before outbound.** Every email must pass `hunter_email_verify` + `validate-emails.py`. Every LinkedIn URL must pass `validate-linkedin-names.py`.
+9. **Validate before outbound.** Every email must pass `validate-emails.py`. Every LinkedIn URL must pass `validate-linkedin-names.py`.
 10. **HeyReach exclusion is non-negotiable.** Contacts in active sequences are never double-touched.

@@ -7,7 +7,7 @@ A signal report without a companion prospect list is incomplete. The signals tel
 | Output                                                                                     | Status                      | Why                                                                                                                                                                                                 |
 | ------------------------------------------------------------------------------------------ | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **10 net-new companies** with descriptions, signal scores, matched signals, cited evidence | **REQUIRED** — every run    | A signal report without target companies forces the user to do their own prospecting pass, which is the expensive thing they wanted to skip.                                                        |
-| **Contacts + corporate emails** at those companies                                         | **OPTIONAL** — credit-aware | Contact discovery uses Hunter calls and additional research. Always offer it; only run it if the user approves the spend. Default to companies-only if the user hasn't said. |
+| **Contacts + corporate emails** at those companies                                         | **OPTIONAL** — credit-aware | Contact discovery uses FullEnrich calls and additional research. Always offer it; only run it if the user approves the spend. Default to companies-only if the user hasn't said. |
 
 When contacts are skipped, the prospect cards still need to ship — they just include "(contacts not enriched — ask to add contacts)" in place of the contact bullets.
 
@@ -31,11 +31,11 @@ When contacts are skipped, the prospect cards still need to ship — they just i
 **Companies + contacts + emails (only after user approval):**
 
 1. Use the buyer-persona job titles from this run's Step 0/0.5 ecosystem discovery. Do not reuse another vertical's roles.
-2. For each top company, call `hunter_domain_search` with the company domain.
+2. For each top company, call `fullenrich_search_people` with the company domain.
 3. Select likely contacts from returned names, titles, seniority, department, LinkedIn URLs, and email metadata.
 4. For any named contact without an email, use `fullenrich_start_enrichment` with first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
-5. Call `hunter_email_verify` on every candidate email before publishing or activating.
-6. For companies where Hunter returns no useful contacts, use WebSearch, Browser Rendering, and focused Sushidata swarms to identify likely personas. If a LinkedIn employee-scraping actor is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
+5. Spot-check FullEnrich confidence scores before publishing or activating — treat low-confidence results as non-send.
+6. For companies where FullEnrich returns no useful contacts, use WebSearch, Browser Rendering, and focused Sushidata swarms to identify likely personas. If a LinkedIn employee-scraping actor is required, follow the missing-actor feedback workflow in `skills/sushi-research/provider-playbooks/apify.md`.
 
 Vertical examples for persona-role targeting:
 

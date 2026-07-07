@@ -1,6 +1,6 @@
 # Clay Playbook
 
-Use this playbook when a GTM task requires pulling audience data, enriching companies or contacts, or running custom Clay subroutines. Clay is a **direct MCP tool** — unlike Hunter, Apify, and HeyReach, Claude calls Clay tools directly without routing through a Sushidata swarm.
+Use this playbook when a GTM task requires pulling audience data, enriching companies or contacts, or running custom Clay subroutines. Clay is a **direct MCP tool** — unlike Apify and HeyReach, Claude calls Clay tools directly without routing through a Sushidata swarm.
 
 ---
 

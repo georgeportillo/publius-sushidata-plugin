@@ -31,14 +31,14 @@ Escalate only when you need a filter the current step lacks.
 3. **Exposed Sushidata Apify MCP tools** — use only when a supported actor fits the source, such as `apify_ycombinator_scraper`, `apify_g2_scraper`, `apify_google_search_scraper`, or `apify_perplexity_ai_scraper`.
 4. **Direct enrichment providers for company data** — use when you need firmographics or structured company profiles:
    - `fullenrich_search_company` — company search with rich filters
-   - `hunter_company_enrichment` — company enrichment from domain
+   - `fullenrich_search_company` — company enrichment from domain
    - For full detail, read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
 5. **Missing actor feedback** — if the needed scraper is not exposed, follow `provider-playbooks/apify.md` instead of improvising actor IDs.
 
 ## People search: provider escalation order
 
 1. **WebSearch / WebFetch** — for public directories, event attendee lists, or LinkedIn Sales Navigator exports the user already has.
-2. **`hunter_domain_search`** — structured contact discovery by company domain.
+2. **`fullenrich_search_people`** — structured contact discovery by company domain.
 3. **`fullenrich_start_enrichment`** — named-person email lookup; submit first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
 4. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
    - **Work email**: `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`

@@ -117,7 +117,7 @@ Present the findings as a clean, scannable brief:
 After delivering the brief, offer targeted CTAs by filling in actual names from the restored context. Choose the most relevant 3–4:
 
 > 💬 **"Go deeper on [Company Name]"** — Deploy a fresh research swarm on an account already in your context
-> 💬 **"Find contacts at [Company Name]"** — Run Hunter on a previously researched account
+> 💬 **"Find contacts at [Company Name]"** — Enrich contacts at a previously researched account via FullEnrich
 > 💬 **"Build a battlecard for [Competitor Name]"** — Competitive card with live GTM signals
 > 💬 **"Run a matrix on [Competitor A, Competitor B, ...]"** — Compare restored competitors across categories
 > 💬 **"Tell me everything about [Company Name]"** — Full account brief: signals, org chart, outreach angle

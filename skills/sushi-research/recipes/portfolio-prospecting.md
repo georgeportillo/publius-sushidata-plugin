@@ -15,7 +15,7 @@ Every major VC and accelerator publishes their portfolio online. **Do NOT try to
 
 - Trying to find portfolio companies via paid search tools (wastes turns and budget)
 - Starting with people-search before having the company list
-- Using Hunter as the primary email finder for companies with fewer than 50 employees (poor fill rate)
+- Using a single provider as the primary email finder for companies with fewer than 50 employees (low fill rate)
 
 ## Proven approach
 
@@ -44,7 +44,7 @@ POST /swarm/deploy/
 ### Step 3: Find contacts at each company
 
 For each company:
-1. Call `hunter_domain_search` with the company domain
+1. Call `fullenrich_search_people` with the company domain
 2. Select likely contacts from returned names, titles, seniority, department, and email metadata
 3. For small companies (<50 employees), use Sushidata swarms, WebSearch, and Browser Rendering to identify founders or relevant operators. If LinkedIn employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md), because that actor is not currently exposed.
 
@@ -52,7 +52,7 @@ For each company:
 
 For discovered contacts:
 1. Use `fullenrich_start_enrichment` for any named contact not returned by domain search, then poll `fullenrich_get_enrichment`
-2. Call `hunter_email_verify` on all emails before outbound — drop non-valid results
+2. Spot-check FullEnrich confidence scores before outbound — drop low-confidence results
 
 ### Step 5: Generate personalized outreach
 
@@ -78,7 +78,7 @@ See [`provider-playbooks/heyreach.md`](../provider-playbooks/heyreach.md) — cr
 | ---------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
 | Searching for portfolio companies via paid tools     | Wastes turns; incomplete coverage               | Fetch the public portfolio page directly          |
 | Searching with strict titles at small startups       | 0 results — person hasn't been hired yet        | Remove title filter; get broader roles            |
-| Using Hunter as primary finder for <50-person companies | Low fill rate                               | Use Sushidata swarms, WebSearch, and Browser Rendering for role discovery; follow the missing-actor feedback workflow only if LinkedIn employee scraping is required |
+| Using a single provider as primary finder for <50-person companies | Low fill rate                               | Use Sushidata swarms, WebSearch, and Browser Rendering for role discovery; follow the missing-actor feedback workflow only if LinkedIn employee scraping is required |
 
 ---
 

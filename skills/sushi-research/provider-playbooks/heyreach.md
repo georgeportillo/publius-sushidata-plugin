@@ -94,7 +94,7 @@ After inserting, call `heyreach_get_campaign_stats` (or equivalent) to confirm t
 - Attempting to create campaigns via API (not supported — always use the UI).
 - Inserting contacts without resolving the campaign ID first.
 - Skipping stat verification after inserts — downstream sync issues are silent.
-- Passing catch-all or unverified emails; use Hunter to verify first.
+- Passing catch-all or unverified emails; spot-check FullEnrich confidence scores before activating.
 
 ---
 

@@ -116,7 +116,7 @@ Filters are arrays of `{ value }` objects; headcount/year filters are arrays of 
 
 ---
 
-## When to Use FullEnrich vs Hunter
+## When to Use FullEnrich
 
 | Task | Prefer |
 |------|--------|

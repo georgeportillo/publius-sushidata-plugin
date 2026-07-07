@@ -55,9 +55,9 @@ POST /swarm/deploy/
 
 Verify any URLs returned by the swarm using the validation process in Step 2.
 
-### Step 4: Hunter email finder (paid, email only)
+### Step 4: FullEnrich email finder (paid, email only)
 
-If previous steps fail and you have a strong identity seed, Hunter can help find an email for a named person, but Sushidata's Hunter MCP does not expose a combined finder that returns LinkedIn URLs.
+If previous steps fail and you have a strong identity seed, FullEnrich can find an email for a named person, but email lookup does not return LinkedIn URLs directly.
 
 ```json
 {
@@ -67,7 +67,7 @@ If previous steps fail and you have a strong identity seed, Hunter can help find
 }
 ```
 
-Use `fullenrich_start_enrichment` only when email discovery is also useful. Do not use Hunter as the primary path for LinkedIn URL resolution.
+Use `fullenrich_start_enrichment` only when email discovery is also useful. Do not use email finders as the primary path for LinkedIn URL resolution.
 
 ## Scenarios
 
@@ -115,7 +115,7 @@ Rules:
 - WebSearch first — free, fast, usually sufficient.
 - Validate every URL — name match is mandatory.
 - Sushidata swarm for disambiguation — better than random provider calls.
-- Hunter only for email discovery on named contacts when you have a strong domain seed.
+- FullEnrich only for email discovery on named contacts when you have a strong domain seed.
 - **Name-validate every URL.** Company/title matching alone is not enough.
 - Extract the `/in/username` slug — strip query params and trailing slashes.
 - Without company context, add role keywords to the search query to disambiguate.

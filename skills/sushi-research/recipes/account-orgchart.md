@@ -23,12 +23,12 @@ If only a name is given with no company context, ask before proceeding.
 | ---- | --------------------------- | --------------------------------------------------- | ------- |
 | 1    | Resolve target identity     | WebSearch, Browser Rendering, Sushidata swarm, or `fullenrich_start_enrichment` for known names | Low     |
 | 2a   | LinkedIn company enrichment | `apify_linkedin_company_scraper` when a company URL is known | Low     |
-| 2b   | Hunter domain search        | `hunter_domain_search`                              | Low     |
+| 2b   | FullEnrich people search    | `fullenrich_search_people`                              | Low     |
 | 2c   | Sushidata swarm (gap fill)  | Research swarm for execs and key roles              | Free    |
 | 3    | Classify + infer hierarchy  | Title-based seniority + tenure signals              | 0       |
 | 4    | Generate HTML org chart     | Write output file                                   | 0       |
 
-**Cost-optimal order:** WebSearch / Browser Rendering for public identity resolution, then Hunter for email discovery, then Sushidata swarm for executive gap-fill. Use `apify_linkedin_company_scraper` for company profile enrichment, not employee scraping.
+**Cost-optimal order:** WebSearch / Browser Rendering for public identity resolution, then FullEnrich for email discovery, then Sushidata swarm for executive gap-fill. Use `apify_linkedin_company_scraper` for company profile enrichment, not employee scraping.
 
 ## Pipeline
 
@@ -53,11 +53,11 @@ Then call `apify_linkedin_company_scraper`:
 }
 ```
 
-Use returned company profile data as context for the org chart. Sushidata does not currently expose a LinkedIn employee-list scraper. For employee discovery, use WebSearch, Browser Rendering, Sushidata swarms, and Hunter domain search. If bulk employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md).
+Use returned company profile data as context for the org chart. Sushidata does not currently expose a LinkedIn employee-list scraper. For employee discovery, use WebSearch, Browser Rendering, Sushidata swarms, and FullEnrich people search. If bulk employee scraping is required, follow the missing-actor feedback workflow in [`provider-playbooks/apify.md`](../provider-playbooks/apify.md).
 
-**Source 2: Hunter domain search (low cost)**
+**Source 2: FullEnrich people search (low cost)**
 
-Call `hunter_domain_search` with the company domain. The Sushidata schema exposes only `domain`; do not pass department or seniority filters. Use returned titles, seniority, department, and email metadata to identify GTM roles (Sales, Marketing, RevOps, CS).
+Call `fullenrich_search_people` with the company domain. The Sushidata schema exposes only `domain`; do not pass department or seniority filters. Use returned titles, seniority, department, and email metadata to identify GTM roles (Sales, Marketing, RevOps, CS).
 
 ```json
 {

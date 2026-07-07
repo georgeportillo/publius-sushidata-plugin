@@ -40,7 +40,7 @@ If they don't answer or say "just show me," proceed with Recipe 1 using the defa
 
 **Goal:** Discover 10 companies matching the user's ICP, find the right buyer at each, verify their email, and offer HeyReach activation.
 
-**Data sources:** Sushidata research swarm → Hunter domain search → Hunter email verifier
+**Data sources:** Sushidata research swarm → FullEnrich people search → FullEnrich email enrichment
 
 **Steps:**
 
@@ -78,22 +78,23 @@ Once complete, synthesize results directly from the `output` fields of completed
 
 Show the user a quick preview: "Found 12 candidates — filtering to the 10 strongest fits..."
 
-### Step 3 — Find buyer contacts via Hunter
+### Step 3 — Find buyer contacts via FullEnrich
 
-For each of the 10 companies, call Hunter domain search:
+For each of the 10 companies, search for contacts via FullEnrich:
 
 ```
-hunter_domain_search domain={{domain}}
+fullenrich_search_people current_company_domains=[{"value":"{{domain}}"}]
 ```
 
-Filter results by the buyer persona title from the ICP. If Hunter returns 0 contacts for a company, note it and move on — do not retry with alternative providers. Over-provision at Step 2 means you have spares.
+Filter results by the buyer persona title from the ICP. If FullEnrich returns 0 contacts for a company, note it and move on — do not retry with alternative providers. Over-provision at Step 2 means you have spares.
 
 ### Step 4 — Verify emails
 
 For each contact with a found email:
 
 ```
-hunter_email_verify email={{email}}
+# Spot-check FullEnrich confidence scores before outbound activation
+fullenrich_get_enrichment enrichment_id={{enrichment_id}}
 ```
 
 Mark emails with non-send status (`invalid`, `accept_all`, `webmail`, `disposable`) as "(unverified — use with caution)" in the output. Do not drop them — let the user decide.
@@ -138,7 +139,7 @@ Then offer:
 
 **Goal:** Build a complete account brief for one company — org chart, key personas, pain signals, personalized outreach angle — ready to hand to an AE in under 3 minutes.
 
-**Data sources:** Sushidata research swarm → Hunter domain search → Apify LinkedIn scraper
+**Data sources:** Sushidata research swarm → FullEnrich people search → Apify LinkedIn scraper
 
 **When to use:** User names a specific company ("tell me everything about Acme Corp"), preparing for a discovery call, or following up on Recipe 1 results.
 
@@ -174,15 +175,15 @@ POST /swarm/deploy/
 
 Poll and show progress. Present the synthesized research after `/verify/`.
 
-### Step 3 — Find the org chart via Hunter
+### Step 3 — Find the org chart via FullEnrich
 
 ```
-hunter_domain_search domain={{domain}}
+fullenrich_search_people current_company_domains=[{"value":"{{domain}}"}]
 ```
 
 Group contacts by seniority (C-suite, VP, Director, Manager). Flag the likely economic buyer and champion based on the research from Step 2.
 
-### Step 4 — LinkedIn supplement (if Hunter returns <5 contacts)
+### Step 4 — LinkedIn supplement (if FullEnrich returns <5 contacts)
 
 Sushidata does not currently expose a LinkedIn employee-list Apify actor. Use WebSearch, Browser Rendering, and focused Sushidata swarms to identify likely personas and validate names. If bulk LinkedIn employee scraping is required, follow the missing-actor feedback workflow in `sushi-research/provider-playbooks/apify.md`.
 
@@ -268,9 +269,9 @@ Run `/verify/` on all evidence URLs. Drop any company where the evidence link do
 
 For each verified company, ask: does this company match the user's ICP profile (size, vertical, pain, tech maturity)? Score as Tier 1 / Tier 2 / Tier 3 based on ICP criteria.
 
-### Step 4 — Find displacement contacts via Hunter
+### Step 4 — Find displacement contacts via FullEnrich
 
-For Tier 1 companies only, run `hunter_domain_search` to find the buyer persona contacts. These are your highest-priority outreach targets — they have confirmed budget (they're paying a competitor), confirmed pain (they're in the category), and you have a migration angle.
+For Tier 1 companies only, run `fullenrich_search_people` to find the buyer persona contacts. These are your highest-priority outreach targets — they have confirmed budget (they're paying a competitor), confirmed pain (they're in the category), and you have a migration angle.
 
 ### Step 5 — Save everything to context lake
 

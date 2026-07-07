@@ -29,8 +29,8 @@ Use WebSearch, Browser Rendering, and Sushidata `/query/` to collect local busin
 
 For businesses where you need email:
 1. Use WebFetch on the business website to find contact pages
-2. Call `hunter_domain_search` with the business domain if available
-3. Call `hunter_email_verify` on any emails before outbound
+2. Call `fullenrich_search_people` with the business domain if available
+3. Spot-check FullEnrich confidence scores on any emails before outbound
 
 ### Step 4: Outbound activation
 
@@ -40,7 +40,7 @@ See [`provider-playbooks/heyreach.md`](../provider-playbooks/heyreach.md) for Li
 
 1. WebSearch or Sushidata `/query/` — for discovery and query tuning
 2. WebSearch / Browser Rendering — for the structured list with phone, address, rating, website
-3. Hunter — for email discovery and verification at known domains
+3. FullEnrich — for email discovery at known domains
 
 Pilot first on one query and a small limit before scaling.
 
