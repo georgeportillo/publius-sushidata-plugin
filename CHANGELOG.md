@@ -4,20 +4,17 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
-## [0.5.6] — 2026-07-07
+## [0.5.8] — 2026-07-09
 
-### Changed
+### Fixed
 
-**Removed all Hunter references — email discovery and enrichment now exclusively via FullEnrich**
+**Corrected `apify_leads_finder` field notes in `apify.md`**
 
-- Removed all `hunter_domain_search`, `hunter_email_verify`, `hunter_email_enrichment`, `hunter_company_enrichment`, and `hunter_combined_enrichment` references from all skill files.
-- `hunter_domain_search` replaced with `fullenrich_search_people` throughout.
-- `hunter_company_enrichment` replaced with `fullenrich_search_company` throughout.
-- `hunter_email_enrichment` and `hunter_combined_enrichment` replaced with `fullenrich_reverse_email` / `fullenrich_start_enrichment`.
-- Email verification step replaced with FullEnrich confidence score review across all recipes and playbooks.
-- Removed `provider-playbooks/hunter.md` playbook.
-- Updated `enrichment-waterfall.md` Agent 2 to reflect FullEnrich-based quality checking.
-- Updated `plugin.json` description and keywords to remove Hunter references.
+Three schema mismatches caught against the live zod tool definition in `apify.mts`:
+
+1. **`functionIncludes` / `functionExcludes`**: `"hr"` is not a valid enum value — corrected to `"human_resources"`. Added missing values: `information_technology`, `support`, `education`, `consulting`.
+2. **`seniorityIncludes` / `seniorityExcludes`**: added missing `"intern"` enum value.
+3. **`totalResults` cap**: removed incorrect "capped at 200 by Sushidata" note. Actual cap is `$5` per run in charge (`maxTotalChargeUsd`). Default is 1,000; maximum is 50,000. `customOffset` can be used to paginate across runs.
 
 ---
 

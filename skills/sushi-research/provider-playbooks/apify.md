@@ -234,8 +234,8 @@ Field notes:
 
 - `emailStatusIncludes`: valid values are `"verified"` and `"unverified"` only. Use `["verified"]` for outbound-ready lists; add `"unverified"` to increase volume.
 - Person location: use `personLocationCountryIncludes` for country, `personLocationStateIncludes` for state, `personLocationCityIncludes` for city. Do not combine country and city — pick the most specific level.
-- `seniorityIncludes` / `seniorityExcludes` enum values: `c_suite`, `vp`, `director`, `manager`, `senior`, `entry`, `owner`, `partner`.
-- `functionIncludes` / `functionExcludes` enum values: `engineering`, `sales`, `marketing`, `finance`, `operations`, `hr`, `business_development`. **Do not use `"it"` — it conflicts with the actor's schema; use `companyIndustryIncludes` for IT industry targeting instead.**
+- `seniorityIncludes` / `seniorityExcludes` enum values: `c_suite`, `vp`, `director`, `manager`, `senior`, `entry`, `owner`, `partner`, `intern`.
+- `functionIncludes` / `functionExcludes` enum values: `engineering`, `sales`, `marketing`, `finance`, `operations`, `human_resources`, `information_technology`, `business_development`, `support`, `education`, `consulting`.
 - `companyIndustryIncludes` / `companyIndustryExcludes`: values must be **title-cased** exactly as the actor expects (e.g. `"Computer Software"`, `"Information Technology & Services"`, `"Internet"`, `"Computer & Network Security"`). Lowercase values will return no results.
 - `companySizeIncludes` / `companySizeExcludes`: preset ranges (e.g. `"51-200"`, `"201-500"`, `"501-1000"`). Use `companyEmployeeMin` / `companyEmployeeMax` for exact bounds instead.
 - `fundingStageIncludes` / `fundingStageExcludes` values: `"seed"`, `"series_a"`, `"series_b"`, `"series_c"`, etc.
@@ -244,7 +244,7 @@ Field notes:
 - `companyDomainMatchMode`: `"strict"` for exact domain match, `"contains"` for substring.
 - Use `companyIndustryExcludes` / `companyKeywordExcludes` to quickly filter out irrelevant segments.
 - If merging multiple runs, dedupe downstream by: email → linkedin → (full_name, company_domain).
-- Actor is capped at `totalResults=200` by Sushidata. Use `customOffset` to paginate across runs.
+- `totalResults`: default is 1,000; max is 50,000 per run. Runs are capped by Sushidata at `$5` in total charge per run — not by result count. Use `customOffset` to continue from a previous run's position without re-running the same results.
 - Combine with FullEnrich email discovery before any outbound activation.
 
 ### YC Company & Job Sourcing
