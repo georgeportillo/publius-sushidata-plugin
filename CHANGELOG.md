@@ -8,6 +8,38 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ### Changed
 
+**Removed all Hunter references — email discovery and enrichment now exclusively via FullEnrich**
+
+- Removed all `hunter_domain_search`, `hunter_email_verify`, `hunter_email_enrichment`, `hunter_company_enrichment`, and `hunter_combined_enrichment` references from all skill files.
+- `hunter_domain_search` replaced with `fullenrich_search_people` throughout.
+- `hunter_company_enrichment` replaced with `fullenrich_search_company` throughout.
+- `hunter_email_enrichment` and `hunter_combined_enrichment` replaced with `fullenrich_reverse_email` / `fullenrich_start_enrichment`.
+- Email verification step replaced with FullEnrich confidence score review across all recipes and playbooks.
+- Removed `provider-playbooks/hunter.md` playbook.
+- Updated `enrichment-waterfall.md` Agent 2 to reflect FullEnrich-based quality checking.
+- Updated `plugin.json` description and keywords to remove Hunter references.
+
+---
+
+## [0.5.7] — 2026-07-09
+
+### Added
+
+**MoltSets provider integration and `apify_leads_finder` documentation**
+
+- Added `provider-playbooks/moltsets.md` — comprehensive playbook for all MoltSets tools: people search, company search, LinkedIn-to-email conversions (best / business / personal), mobile phone lookup, reverse email and LinkedIn lookups, ad audience identity (MAID, SHA256), IP-to-company, and account management.
+- Documented MoltSets decision matrix (when to use MoltSets vs FullEnrich vs `apify_leads_finder`).
+- Added swarm request patterns and field notes for `moltsets_search_people`, `moltsets_search_companies`, and all LinkedIn-to-contact endpoints.
+- Updated `enrichment-waterfall.md`: added MoltSets to Person/Contact Tools table and Company Tools table; updated Merge and Dedupe Logic and Prospecting tables to include MoltSets and `apify_leads_finder`.
+- Updated `finding-companies-and-contacts.md`: added MoltSets and `apify_leads_finder` to the People search escalation order; added `moltsets_search_companies` to the Company search escalation order.
+- Updated `sushi-research/SKILL.md`: added MoltSets to Level 3 provider list, Contact & Email Enrichment tool reference, sub-doc routing table, and Provider Playbooks index.
+
+---
+
+## [0.5.6] — 2026-07-07
+
+### Changed
+
 **Consolidated email discovery and enrichment exclusively to FullEnrich**
 
 - Replaced all legacy email-tool references with FullEnrich equivalents across all skill files.

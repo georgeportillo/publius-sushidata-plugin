@@ -344,7 +344,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 1** (`SKILL.md`): routing, guardrails, and links to sub-docs.
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
-- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Apify, FullEnrich, Google Ads Transparency, Massive, and Clay.
+- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Apify, FullEnrich, MoltSets, Google Ads Transparency, Massive, and Clay.
 
 ---
 
@@ -356,17 +356,27 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **Email discovery:** `fullenrich_start_enrichment` (first name + last name + domain or linkedin_url) → poll `fullenrich_get_enrichment`
 
-**Email verification (mandatory before outbound):** FullEnrich confidence scores — treat low-confidence results as non-send
+**Email quality check (mandatory before outbound):** FullEnrich confidence scores — treat low-confidence results as non-send
 
 **Bulk email (20–100 contacts):** `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`. Include `enrich_fields` **inside each contact object** in the `data` array, not at the top level.
 
+**LinkedIn → email (synchronous):** `moltsets_linkedin_to_best_email` (business + personal fallback) — use when you have LinkedIn URLs and want a fast synchronous result.
+
+**LinkedIn → full profile + email (synchronous):** `moltsets_reverse_linkedin_lookup` — returns name, title, seniority, business email, personal email, and company firmographics in one call.
+
+**Name + domain → email (synchronous):** `moltsets_search_business_email_by_name` — one call, tokens only charged on hit.
+
 **Deep profile enrichment:** `fullenrich_reverse_email` → poll `fullenrich_get_reverse_email` (email → full profile)
 
-**People search:** `fullenrich_search_people` (rich filters)
+**People search:** `fullenrich_search_people` (async, rich filters) or `moltsets_search_people` (synchronous, up to 25/call)
 
-**Company enrichment:** `fullenrich_search_company` (from domain), `fullenrich_search_company`
+**Company enrichment:** `fullenrich_search_company` or `moltsets_search_companies` (synchronous)
 
-**Domain contacts:** `fullenrich_search_people` (all contacts at a domain)
+**Domain contacts:** `fullenrich_search_people` or `moltsets_search_people` (filter by `company_domain`)
+
+**Mobile phone:** `moltsets_linkedin_to_mobile_phone` (carrier-verified, 10 tokens/result)
+
+**Large-scale ICP prospecting (200–50k leads):** `apify_leads_finder` — see `provider-playbooks/apify.md`
 
 ---
 
@@ -385,7 +395,9 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | Finding companies, people, lead lists, portfolio sourcing, TAM building, contact finding                                         | [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)                   |
 | Researching companies/people, personalizing outreach, writing cold emails, scoring leads                                         | Use Sushidata `/swarm/deploy/` — deploy a research swarm for the task                      |
 | Writing per-row outreach copy, sequences, ICP tier classification, lead scoring                                                  | [`jobs/writing-outreach.md`](jobs/writing-outreach.md)                                     |
-| Email discovery, email verification before outbound, domain contact lookup                                                       | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                             |
+| Email discovery, contact enrichment, domain contact lookup                                                                       | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                             |
+| MoltSets — synchronous LinkedIn-to-email, reverse lookups, people/company search, mobile phone, ad audiences                    | [`provider-playbooks/moltsets.md`](provider-playbooks/moltsets.md)                                 |
+| Large-scale ICP prospecting (200–50k leads, rich person + company filters)                                                       | [`provider-playbooks/apify.md`](provider-playbooks/apify.md) (Leads Finder section)                |
 | LinkedIn scraping, web automation, actor-based extraction                                                                        | [`provider-playbooks/apify.md`](provider-playbooks/apify.md)                               |
 | CRM sync, HubSpot writes, contact/deal/note creation                                                                             | [`provider-playbooks/hubspot.md`](provider-playbooks/hubspot.md)                           |
 | Outbound activation, LinkedIn campaign insertion                                                                                 | [`provider-playbooks/heyreach.md`](provider-playbooks/heyreach.md)                         |
@@ -490,8 +502,8 @@ python3 scripts/validate-linkedin-names.py --fixtures scripts/fixtures_name_vali
 - [HeyReach playbook](provider-playbooks/heyreach.md) — LinkedIn outbound campaign activation
 - [HubSpot playbook](provider-playbooks/hubspot.md) — CRM reads, writes, and campaign tools
 - [FullEnrich playbook](provider-playbooks/fullenrich.md) — Email discovery and contact enrichment
-- [Apify playbook](provider-playbooks/apify.md) — Web scraping and actor-based automation
-- [FullEnrich playbook](provider-playbooks/fullenrich.md) — Bulk async email + phone enrichment, reverse email, people + company search
+- [MoltSets playbook](provider-playbooks/moltsets.md) — Synchronous LinkedIn-to-email, reverse lookups, people/company search, mobile phone, ad audiences
+- [Apify playbook](provider-playbooks/apify.md) — Web scraping, actor-based automation, large-scale B2B leads finder
 - [Google Ads Transparency playbook](provider-playbooks/ads-transparency.md) — Competitor ad creative research, paid channel analysis, creative longevity signals
 - [Massive playbook](provider-playbooks/massive.md) — Residential browser network for bot-protected pages
 - [Clay playbook](provider-playbooks/clay.md) — Audience queries, company/contact enrichment, subroutines (direct MCP — no swarm needed)

@@ -15,6 +15,15 @@ Use this playbook when you need to find or enrich email addresses, person profil
 | `fullenrich_reverse_email` | FullEnrich | Start reverse email enrichment (email → person profile) |
 | `fullenrich_get_reverse_email` | FullEnrich | Poll results from a reverse email enrichment |
 | `fullenrich_search_people` | FullEnrich | Search people with rich filters |
+| `moltsets_search_people` | MoltSets | Synchronous people search by name, title, company domain, industry, country, seniority |
+| `moltsets_linkedin_to_best_email` | MoltSets | LinkedIn URL → best available email (business first, personal fallback) |
+| `moltsets_linkedin_to_business_email` | MoltSets | LinkedIn URL → corporate email only |
+| `moltsets_linkedin_to_personal_email` | MoltSets | LinkedIn URL → personal email (Gmail, iCloud, etc.) |
+| `moltsets_linkedin_to_mobile_phone` | MoltSets | LinkedIn URL → carrier-verified mobile phone (10 tokens/result) |
+| `moltsets_reverse_email_lookup` | MoltSets | Email → full profile: name, title, seniority, company, LinkedIn URL, firmographics |
+| `moltsets_reverse_linkedin_lookup` | MoltSets | LinkedIn URL → complete profile + business email + personal email in one call |
+| `moltsets_search_business_email_by_name` | MoltSets | Name + domain → business email in one synchronous call |
+| `moltsets_search_business_profile_by_name` | MoltSets | Name + domain → full profile: title, company, firmographics |
 
 ### Company Tools
 
@@ -22,6 +31,7 @@ Use this playbook when you need to find or enrich email addresses, person profil
 | --- | --- | --- |
 | `fullenrich_search_people` | FullEnrich | Contact discovery by company domain or filters |
 | `fullenrich_search_company` | FullEnrich | Company search with rich filters |
+| `moltsets_search_companies` | MoltSets | Synchronous company search by name, domain, industry, employee count, revenue range |
 
 ---
 
@@ -65,10 +75,11 @@ After all agents complete, merge per-contact using this priority order:
 
 | Field | Priority |
 | --- | --- |
-| `email` (work) | FullEnrich highest confidence first; drop low-confidence results |
-| `email` (personal) | FullEnrich |
-| `title` | FullEnrich |
-| `company` firmographics | FullEnrich |
+| `email` (work) | FullEnrich highest confidence first; MoltSets business email as secondary; drop low-confidence results |
+| `email` (personal) | MoltSets personal email; FullEnrich |
+| `mobile_phone` | MoltSets |
+| `title` | MoltSets reverse lookup → FullEnrich |
+| `company` firmographics | MoltSets → FullEnrich |
 
 Dedupe contacts by: `email` → `linkedin_url` → `(full_name + company_domain)` in that order.
 
@@ -114,9 +125,10 @@ When you have ICP criteria and need a list of matching contacts or companies:
 
 | Goal | Use |
 | --- | --- |
-| Search contacts by domain | `fullenrich_search_people` |
-| Search people with rich filters | `fullenrich_search_people` |
-| Search companies with rich filters | `fullenrich_search_company` |
+| Search contacts by domain or filters | `fullenrich_search_people` or `moltsets_search_people` (synchronous, up to 25/call) |
+| Search people with rich filters | `fullenrich_search_people` or `moltsets_search_people` |
+| Search companies with rich filters | `fullenrich_search_company` or `moltsets_search_companies` |
+| Large-scale ICP prospecting (200–50k leads) | `apify_leads_finder` — see `provider-playbooks/apify.md` |
 
 ---
 
