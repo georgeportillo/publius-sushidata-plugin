@@ -4,6 +4,22 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.10] — 2026-07-14
+
+### Changed
+
+**`sushi-signals` — added Phase 1 signal config onboarding**
+
+First-time invocation now runs a 4-step elicitation form (via `askQuestions`) before scanning:
+1. Signal history — what's worked and what hasn't
+2. Signal sources — LinkedIn, Reddit, news, job boards, communities
+3. Intelligence goals — what to extract per signal (pain, timing, budget, competitors, etc.)
+4. Signal classification — custom tiers (Motivated Buyer, Buying Signal, Qualification, Watch & Wait, Cold Lead)
+
+Config is saved to the Sushidata context lake and reused on every subsequent run. Scheduled runs skip config entirely.
+
+---
+
 ## [0.5.9] — 2026-07-14
 
 ### Changed
