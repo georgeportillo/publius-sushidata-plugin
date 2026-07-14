@@ -1,10 +1,10 @@
 ---
-name: sushi-sales-onboarding
+name: sushi-sales
 description: >
   Customer onboarding and daily lead generation workflow. Triggers: "onboard me",
-  "set up lead gen", "daily leads", "configure my ICP", "set up signals",
-  "run my daily leads", "generate leads", "morning leads", "lead gen setup",
-  "sales onboarding", "configure prospecting", "run daily", "40 leads",
+  "set up lead gen", "daily leads", "configure my ICP", "run my daily leads",
+  "generate leads", "morning leads", "lead gen setup", "sales onboarding",
+  "configure prospecting", "run daily", "40 leads", "sushi sales",
   or any request to set up or execute automated account discovery and daily
   lead generation. Phase 1 (onboarding) runs once; Phase 2 (daily generation)
   runs on each subsequent invocation once onboarding is complete.
@@ -34,8 +34,7 @@ Two phases:
 | LinkedIn campaign activation | `provider-playbooks/heyreach.md` → `heyreach_list_campaigns`, `heyreach_add_to_campaign` |
 | CRM sync | `provider-playbooks/hubspot.md` |
 | Web scraping | `provider-playbooks/apify.md` + exposed Apify MCP tools |
-| Differential signal analysis | `niche-signal-discovery` skill (when won/lost domain lists are available) |
-| Apex-domain deduplication | `niche-signal-discovery/scripts/dedupe_utils.py` |
+| Buying signal detection | `sushi-signals` skill (LinkedIn signals: job changes, pain posts, hiring) |
 | Email validation | `sushi-research/scripts/validate-emails.py` |
 | LinkedIn name validation | `sushi-research/scripts/validate-linkedin-names.py` |
 | Outreach drafting | `sushi-research/jobs/writing-outreach.md` |

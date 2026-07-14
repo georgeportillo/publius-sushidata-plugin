@@ -4,6 +4,24 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.9] — 2026-07-14
+
+### Changed
+
+**Slash command cleanup — reduced to 6 focused skills**
+
+Removed: `niche-signal-discovery`, `sushi-help`, `sushi-matrix`, `sushi-research-quickstart`, `sushi-sales-quickstart`, `sushi-sequence`, `sushi-verify`.
+
+Renamed: `sushi-sales-onboarding` → `sushi-sales` (shorter trigger, same workflow).
+
+### Added
+
+**`sushi-signals` — LinkedIn buying signal detection**
+
+New scheduled skill that scans LinkedIn posts and comments for ICP accounts showing job change, pain, or hiring signals. Runs Monday–Friday at 9 AM. Maps each prospect to their detected signal with a recommended outreach action. Integrates with `apify_linkedin_post_search`, `apify_leads_finder`, and the Sushidata context lake. Can add flagged prospects directly to a HeyReach campaign or draft outreach on demand.
+
+---
+
 ## [0.5.8] — 2026-07-09
 
 ### Fixed
