@@ -95,29 +95,17 @@ Display and update after each config step in Phase 1:
 
 Use ✅ (complete), ⏳ (in progress), ⬜ (pending). Update after each step.
 
-### Signal Report Card
+### Signal Sheet
 
-One card per matched prospect in Phase 2:
+Always deliver results as a single flat table — never as individual cards. One row per prospect:
 
 ```
----
-
-### 👤 Jane Smith — VP Revenue · Acme Corp
-
-| Field | Value |
-|---|---|
-| **Signal Type** | 🔥 Motivated Buyer |
-| **Signal** | Pain |
-| **Evidence** | "We're drowning in manual reporting — open to suggestions" |
-| **Source** | LinkedIn post · July 14, 2026 |
-| **LinkedIn** | [Profile URL] |
-| **Email** | j.smith@acme.com ✅ |
-| **Recommended Action** | Lead with reporting automation angle · reach out within 24 hrs |
-
----
+| # | Name | Title | Company | Signal Class | Signal Type | Evidence | Source | Post URL | Email | Recommended Action |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Jane Smith | VP Revenue | Acme Corp | 🔥 Motivated Buyer | Pain | "We're drowning in manual reporting" | LinkedIn · Jul 14 | [link] | j.smith@acme.com ✅ | Lead with reporting automation angle |
 ```
 
-Signal type badges: 🔥 Motivated Buyer · 🟢 Buying Signal · 🟡 Qualification Signal · 🔵 Watch & Wait · ⚪ Cold Lead
+Signal class badges: 🔥 Motivated Buyer · 🟢 Buying Signal · 🟡 Qualification Signal · 🔵 Watch & Wait · ⚪ Cold Lead
 
 ---
 
@@ -454,16 +442,27 @@ Pull: full name, title, company, LinkedIn URL, email (if available).
 
 ## Step 6 — Deliver the Report
 
-Show the Phase Detection Banner, then:
+Show the Phase Detection Banner, then the summary line:
 
-**Summary line:**
 ```
 Found X signals across Y prospects — [N] 🔥 Motivated Buyers · [N] 🟢 Buying Signals · [N] 🟡 Qualification · [N] 🔵 Watch & Wait
 ```
 
-Render one **Signal Report Card** per prospect, sorted: 🔥 → 🟢 → 🟡 → 🔵 → ⚪
+**Always deliver results as a sheet — no exceptions.** Render a single flat table with one row per prospect, sorted by signal class priority (🔥 → 🟢 → 🟡 → 🔵 → ⚪):
 
-Call out the **Top 3** with a suggested first outreach line using `signal_config.priority_action` + the specific evidence from the signal.
+| # | Name | Title | Company | Signal Class | Signal Type | Evidence | Source | Post URL | Email | Recommended Action |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Jane Smith | VP Revenue | Acme Corp | 🔥 Motivated Buyer | Pain | "We're drowning in manual reporting" | LinkedIn post · Jul 14 | [link] | j.smith@acme.com ✅ | Lead with reporting automation angle |
+| 2 | Tom Lee | — | BetaCo | 🟡 Qualification | Hiring | Posted Head of RevOps role | LinkedIn Jobs · Jul 13 | [link] | — | Reach out before new hire starts |
+
+Column notes:
+- **Signal Class**: use the emoji tier badge (🔥 🟢 🟡 🔵 ⚪)
+- **Signal Type**: Pain · Job Change · Hiring · Tool Eval · Funding · Competitor Complaint
+- **Evidence**: a direct quote or 1-sentence description — be specific, not generic
+- **Email**: show address if found + ✅ verified / ⚠️ unverified; show `—` if not found
+- **Recommended Action**: pull from `signal_config.priority_action` + tailor to the specific signal
+
+After the sheet, call out the **Top 3 rows** with a suggested first outreach line for each.
 
 Then ask:
 
