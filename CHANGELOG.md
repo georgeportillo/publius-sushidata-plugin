@@ -4,6 +4,19 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.11] — 2026-07-14
+
+### Fixed
+
+**Apify actor cleanup — removed unsupported tools, corrected actor IDs**
+
+- Removed `apify_google_maps_contact_details` from `apify.md` and all routing tables — this actor is not registered in `apify.mts` and was never a valid tool.
+- Corrected `apify_ycombinator_scraper` actor ID: `memo23/y-combinator-scraper` → `michael.g/y-combinator-scraper` (matches live source).
+- Removed `apify_reddit_scraper` from `sushi-research` SKILL.md swarm capabilities list and `sushi-signals` dependencies — does not exist. Reddit queries should use `apify_google_search_scraper` with `site:reddit.com/r/[subreddit]`.
+- Updated `sushi-research` ⚠️ CRITICAL actor list to reflect the full, accurate set of 16 supported Apify actors.
+
+---
+
 ## [0.5.10] — 2026-07-14
 
 ### Changed

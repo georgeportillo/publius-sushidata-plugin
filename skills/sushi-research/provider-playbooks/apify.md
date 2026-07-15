@@ -24,11 +24,10 @@ The available Apify-backed capabilities are:
 | Facebook comments             | `apify_facebook_comments_scraper`   | `apify/facebook-comments-scraper`                             | Comments from Facebook post URLs                                                                                                                                               |
 | Google Search results         | `apify_google_search_scraper`       | `apify/google-search-scraper`                                 | Google Search results for a query                                                                                                                                              |
 | Real estate listings          | `apify_real_estate_aggregator`      | `tri_angle/real-estate-aggregator`                            | Real estate listings by location across providers                                                                                                                              |
-| Y Combinator companies & jobs | `apify_ycombinator_scraper`         | `memo23/y-combinator-scraper`                                 | YC companies (Startup Directory) and jobs (Work at a Startup) — paste any YC URL (auto-routed) or compose from filters, with optional founder/socials and open-jobs enrichment |
+| Y Combinator companies & jobs | `apify_ycombinator_scraper`         | `michael.g/y-combinator-scraper`                              | YC companies (Startup Directory) and jobs (Work at a Startup) — paste any YC URL (auto-routed) or compose from filters, with optional founder/socials and open-jobs enrichment |
 | G2 reviews                    | `apify_g2_scraper`                  | `crawlerbros/g2-scraper`                                      | G2 product reviews and product details                                                                                                                                         |
 | Perplexity search             | `apify_perplexity_ai_scraper`       | `zhorex/perplexity-ai-scraper`                                | Perplexity AI search-query results                                                                                                                                             |
 | PitchBook investor data       | `apify_pitchbook_data_extractor`    | `kawsar/pitchbook-data-extractor`                             | Public PitchBook investor profiles — firm details, deal counts, contact info, social links, recent investments                                                                 |
-| Google Maps + contacts        | `apify_google_maps_contact_details` | `lukaskrivka/google-maps-with-contact-details`                | Google Maps places with website contact extraction: emails, phones, social links, and optional employee leads enrichment                                                       |
 
 Important implementation constraints:
 
@@ -112,7 +111,6 @@ POST /swarm/deploy/
 | Real estate listing research                   | Real estate aggregator capability                                                             |
 | Generic lead scraping                          | Leads finder capability, plus FullEnrich email discovery when emails may be used for outbound |
 | VC/PE investor research or portfolio mapping   | PitchBook investor data capability                                                            |
-| Local business email/phone/contact extraction  | Google Maps contact details capability                                                        |
 
 Prefer Sushidata research swarms, `massive_browser_render`, FullEnrich, or first-party sources when they are more specific to the user's goal. Use Apify-backed capabilities when the task specifically benefits from a supported actor.
 
@@ -322,70 +320,7 @@ POST /swarm/deploy/
 
 ---
 
-### Google Maps Contact Details
-
-Ask Sushidata to use the Google Maps contact details capability when you need to find emails, phone numbers, or social links for local businesses, or to build a list of places matching a search term in a specific location.
-
-**Search by keyword + location:**
-
-```json
-{
-  "searchStringsArray": ["law firm", "accounting firm"],
-  "locationQuery": "Austin, Texas, USA",
-  "maxCrawledPlacesPerSearch": 50,
-  "website": "withWebsite",
-  "skipClosedPlaces": true
-}
-```
-
-**From direct Google Maps URLs:**
-
-```json
-{
-  "startUrls": [{ "url": "https://www.google.com/maps/place/Acme+Corp/@..." }]
-}
-```
-
-**With leads enrichment (employee contacts per place):**
-
-```json
-{
-  "searchStringsArray": ["digital marketing agency"],
-  "locationQuery": "Chicago, Illinois, USA",
-  "maxCrawledPlacesPerSearch": 20,
-  "website": "withWebsite",
-  "maximumLeadsEnrichmentRecords": 3,
-  "leadsEnrichmentDepartments": ["sales", "marketing"],
-  "verifyLeadsEnrichmentEmails": true
-}
-```
-
-Field notes:
-
-- `searchStringsArray` + `locationQuery`: the primary search mode. Use `locationQuery` for city/region and `searchStringsArray` for business type. Use one location per run.
-- `startUrls`: alternative to search — pass direct Google Maps place URLs. Max 300 results per URL.
-- `maxCrawledPlacesPerSearch`: leave empty to scrape all available results, or set a cap for faster runs.
-- `website`: `"withWebsite"` restricts results to places that have a website — strongly recommended for contact extraction.
-- `skipClosedPlaces`: set `true` for outbound to avoid wasting time on closed businesses.
-- `scrapePlaceDetailPage`: set `true` to unlock `openingHours`, `popularTimes`, `reviewsDistribution` — slower, use only when needed.
-- `maximumLeadsEnrichmentRecords`: enables per-place employee contact enrichment (names, titles, emails, LinkedIn). Charged per lead found. Set to 0 to disable.
-- `leadsEnrichmentDepartments`: scope enrichment to specific departments (e.g. `["sales", "marketing"]`).
-- `verifyLeadsEnrichmentEmails`: verifies each enriched email — recommended before any outbound activation.
-- Geo fields: use `locationQuery` for free-text search, or combine `city` + `state` + `countryCode` for structured geo. Do not mix `locationQuery` with `city`/`state`.
-- `countryCode` + `postalCode`: use for zip-code-level targeting — do not combine with `city`.
-- Results include place name, address, phone, website, email (extracted from the website), and social links.
-
-Example swarm request:
-
-```json
-POST /swarm/deploy/
-{
-  "query": "Find contact details for [BUSINESS TYPE] in [LOCATION] using Sushidata's Google Maps contact details capability. Extract business name, address, phone, website, email addresses, and any social links. Filter to places with a website. Skip closed places. Return results as a structured list with one row per business, flagging any places where no email was found.",
-  "swarmSize": 3
-}
-```
-
----
+## Output Expectations
 
 ## Output Expectations
 

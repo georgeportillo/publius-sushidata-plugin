@@ -30,7 +30,7 @@ Two phases:
 | Context lake CRUD | `sushi-research` SKILL → `/context/`, `/query/`, `/swarm/deploy/` |
 | LinkedIn post search | `apify_linkedin_post_search` (via `provider-playbooks/apify.md`) |
 | Lead enrichment | `apify_leads_finder` (via `provider-playbooks/apify.md`) |
-| Reddit scraping | `apify_reddit_scraper` or swarm web search (via `provider-playbooks/apify.md`) |
+| Reddit / web search | `apify_google_search_scraper` — use `site:reddit.com/r/[subreddit]` queries (via `provider-playbooks/apify.md`) |
 | News & press | Swarm web search via `sushi-research` |
 | Session persistence | `sushi-save` skill |
 

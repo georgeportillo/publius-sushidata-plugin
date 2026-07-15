@@ -25,7 +25,7 @@ You are connected to a Sushidata dataspace via API. This skill governs two compl
 > **Swarm workers deployed via `/swarm/deploy/` are fully independent agents.** They run separately from this Claude session and are **pre-packaged with the complete Sushidata tool suite** — including every Apify actor and provider integration.
 >
 > **Apify actors available to swarm workers** (not exhaustive):
-> `apify_linkedin_post_search` · `apify_linkedin_company_scraper` · `apify_linkedin_ad_library_scraper` · `apify_leads_finder` · `apify_google_search_scraper` · `apify_reddit_scraper` · `apify_instagram_scraper` · `apify_youtube_scraper` · `apify_g2_scraper` · `apify_ycombinator_scraper` · `apify_ahrefs_scraper` · and all others in `provider-playbooks/apify.md`
+> `apify_linkedin_post_search` · `apify_linkedin_company_scraper` · `apify_linkedin_ad_library_scraper` · `apify_leads_finder` · `apify_google_search_scraper` · `apify_instagram_scraper` · `apify_instagram_reel_scraper` · `apify_youtube_scraper` · `apify_facebook_posts_scraper` · `apify_facebook_comments_scraper` · `apify_g2_scraper` · `apify_ycombinator_scraper` · `apify_ahrefs_scraper` · `apify_perplexity_ai_scraper` · `apify_pitchbook_data_extractor` · `apify_real_estate_aggregator` · and all others in `provider-playbooks/apify.md`
 >
 > **Provider tools available to swarm workers**: `fullenrich_*` · `moltsets_*` · `heyreach_*` · `hubspot_*` · and all others in the provider playbooks.
 >
