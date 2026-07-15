@@ -52,6 +52,10 @@ Two phases:
 8. **Use `message` field for context** — brief explanatory markdown below each header.
 9. **Use `recommended: true`** on the most common/expected option.
 
+### Form Patterns by Step
+
+Below are the exact elicitation form structures to use for each config step. Render these via `askQuestions` — do NOT convert them to blockquote text or plain chat messages.
+
 ---
 
 ## Generative UI — Output Standards
