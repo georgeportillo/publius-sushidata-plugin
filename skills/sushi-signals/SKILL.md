@@ -348,46 +348,67 @@ askQuestions([
 
 ---
 
-## Step 2 — Build Search Queries
+## Step 2 — Deploy Signal Swarm
 
-Using `signal_config.sources` and `signal_config.keywords`, build queries per active source:
+Build the swarm directive from `signal_config`, then deploy. Each worker must explicitly name the Apify actor it uses — do not write vague task descriptions.
 
-**LinkedIn posts:** One query per signal type that worked:
-- Job change: `"[person name OR company] excited to join"` or `"new role"`
-- Pain: `"[pain keyword]"` + ICP industry modifier
-- Hiring: `"[company name] hiring [buyer persona role]"`
-- Tool eval: `"looking for [product category] alternatives"` or `"alternatives to [competitor]"`
+**Determine swarm size** based on active sources and enabled signal types:
 
-**Reddit:** One query per subreddit from `signal_config.communities`:
-- Search `r/[subreddit]` for configured pain keywords
+| Active Sources | Workers |
+|---|---|
+| LinkedIn posts only | 3–5 |
+| LinkedIn + job postings | 5–7 |
+| LinkedIn + Reddit + news | 7–10 |
+| All sources | 10 |
 
-**News/press:** Swarm web search for `"[company name] funding OR acquisition OR launch"`
+**Swarm query directive** (POST `{BASE_URL}swarm/deploy/`):
 
-Run up to **3 queries per active source**. Start narrow, widen only if results are thin.
-
----
-
-## Step 3 — Scrape Active Sources
-
-For each active source in `signal_config.sources`:
-
-### LinkedIn Posts
 ```json
 {
-  "searchQueries": ["<query>"],
-  "maxPosts": 15,
-  "profileScraperMode": "short",
-  "maxReactions": 10
+  "query": "Buying signal detection scan for ICP accounts. Each worker uses a specific Apify actor to find posts, comments, or job listings showing job change, pain, or hiring signals. Target accounts: [target_accounts from Step 1]. Prioritize signal types: [signal_config.worked]. Exclude: [signal_config.not_worked]. Always flag these keywords: [signal_config.keywords]. For every result, extract: author name, author title, company, post URL, post text excerpt, date, and which signal type it matches.",
+  "swarmSize": <derived above>
 }
 ```
 
-### LinkedIn Job Postings
-Use `apify_leads_finder` with role-based filters or `apify_linkedin_company_scraper` for company job pages.
+**Worker task descriptions to include in the directive** — add one sentence per worker to the query, explicitly naming the tool:
 
-### Reddit / News
-Use swarm web search via `sushi-research` targeting configured communities and keywords.
+| Worker | Task |
+|---|---|
+| Job change (LinkedIn) | `"Use apify_linkedin_post_search with searchQueries: ['[ICP company OR person] excited to join', '[ICP industry] new role', 'starting at [ICP company]']. maxPosts: 20, profileScraperMode: short. Flag posts where the author's title or headline indicates a recent role change."` |
+| Pain posts (LinkedIn) | `"Use apify_linkedin_post_search with searchQueries built from these pain keywords: [signal_config.keywords] combined with [ICP industry]. maxPosts: 20. Flag posts where the author asks for help, describes a struggle, or requests vendor recommendations."` |
+| Hiring signals (LinkedIn) | `"Use apify_linkedin_post_search with searchQueries: ['[ICP company] hiring [buyer persona role]', '[ICP industry] head of [function] job']. maxPosts: 15. Flag posts announcing open roles at ICP-fit companies for buyer persona titles."` |
+| LinkedIn job postings | `"Use apify_linkedin_company_scraper with profileUrls for the top 10 ICP target company LinkedIn pages. Extract open jobs. Flag any role matching these buyer persona titles: [personas]. Include company name, job title, job URL, and date posted."` *(include if LinkedIn job postings is an active source)* |
+| Reddit signals | `"Use apify web search to query r/[subreddit] for posts containing [signal_config.keywords]. Collect post title, author, text, URL, and top comments. Flag posts where the OP asks for tool recommendations or describes a pain this product solves."` *(one worker per 1–2 configured subreddits; omit if Reddit not in sources)* |
+| News / press | `"Use web search to find recent news for these ICP companies: [target_accounts]. Search queries: '[company] funding OR acquisition OR product launch site:techcrunch.com OR crunchbase.com OR businesswire.com'. Flag results showing funding rounds, acquisitions, or strategic hires at ICP-fit companies."` *(include if News is an active source)* |
 
-Collect all results into a raw signal pool. Deduplicate by URL.
+> **Do not apply any self-imposed time limit.** `/swarm/deploy/` is a heavy operation. The only hard limit is **5 minutes total** across deploy + polling.
+
+After deploying, show the orchestrator's plan and each worker's label + task to the user before polling.
+
+---
+
+## Step 3 — Poll Swarm + Collect Results
+
+Poll `POST {BASE_URL}swarm/status/` every ~30 seconds with the `workers` array from the deploy response:
+
+```json
+{ "workers": ["<doId>", "<doId>", ...] }
+```
+
+Show progress after each poll:
+
+```
+⏳ Signal swarm running — 3 / 7 workers done...
+```
+
+**Polling rules:**
+- Only stop when `allDone: true` — or after 5 minutes of wall time
+- Never stop early due to slow progress — workers commonly take 2–5 minutes
+- `errored` and `unknown` workers still count as pending until `allDone` is `true`
+- If 5 minutes elapse with zero completed workers, discard and redeploy with a refined directive
+- Do not mix old and new worker IDs in the same status call
+
+Once `allDone` is `true`, collect all `workers[].output` fields into a raw signal pool. Deduplicate entries by post URL.
 
 ---
 
