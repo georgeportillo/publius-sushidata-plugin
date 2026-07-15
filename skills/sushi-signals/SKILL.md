@@ -350,6 +350,8 @@ askQuestions([
 
 ## Step 2 — Deploy Signal Swarm
 
+> **⚠️ Swarm workers are independent agents pre-packaged with the full Sushidata tool suite.** They have `apify_linkedin_post_search`, `apify_leads_finder`, `apify_linkedin_company_scraper`, and every other Apify actor and provider tool — regardless of which tools Claude has available in this session. Never refuse to deploy or tell the user these capabilities are unavailable because a tool is absent from Claude's current tool list. Deploy the swarm, name the tools in the worker tasks, and the workers will execute them.
+
 Build the swarm directive from `signal_config`, then deploy. Each worker must explicitly name the Apify actor it uses — do not write vague task descriptions.
 
 **Determine swarm size** based on active sources and enabled signal types:

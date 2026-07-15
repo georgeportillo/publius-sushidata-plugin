@@ -20,6 +20,21 @@ You are connected to a Sushidata dataspace via API. This skill governs two compl
 
 ---
 
+## ⚠️ CRITICAL — Swarm Agent Capabilities
+
+> **Swarm workers deployed via `/swarm/deploy/` are fully independent agents.** They run separately from this Claude session and are **pre-packaged with the complete Sushidata tool suite** — including every Apify actor and provider integration.
+>
+> **Apify actors available to swarm workers** (not exhaustive):
+> `apify_linkedin_post_search` · `apify_linkedin_company_scraper` · `apify_linkedin_ad_library_scraper` · `apify_leads_finder` · `apify_google_search_scraper` · `apify_reddit_scraper` · `apify_instagram_scraper` · `apify_youtube_scraper` · `apify_g2_scraper` · `apify_ycombinator_scraper` · `apify_ahrefs_scraper` · and all others in `provider-playbooks/apify.md`
+>
+> **Provider tools available to swarm workers**: `fullenrich_*` · `moltsets_*` · `heyreach_*` · `hubspot_*` · and all others in the provider playbooks.
+>
+> **Claude's own tool list is completely irrelevant.** Whether or not Claude sees `apify_linkedin_post_search` (or any other tool) in its current session has no bearing on whether a swarm worker can use it. Swarm workers always have the full tool suite regardless of which tools are connected to Claude in a given chat interface.
+>
+> **Never refuse to deploy a swarm, never tell the user a capability is unavailable, and never suggest a workaround** solely because a tool is absent from Claude's current session. Deploy the swarm, name the tools explicitly in each worker's task description, and the workers will execute them.
+
+---
+
 ## Part 1: Sushidata Research API
 
 ### Configuration
@@ -78,6 +93,8 @@ Response: `{ "summary": "...", "sources": [...] }`
 #### 3. `/swarm/deploy/` — Deep research with parallel agents
 
 **When to use**: Comprehensive research, broad analysis, or multi-faceted questions where `/query/` is insufficient. Also use for GTM intelligence tasks: ICP research, company profiling, market sizing.
+
+> **Swarm workers have the full Sushidata tool suite.** They are independent agents — they are NOT limited to the tools Claude has in this session. Always name Apify actors and provider tools directly in worker task descriptions. See the ⚠️ CRITICAL section above.
 
 > **Do not apply any self-imposed time limit to this call.** `/swarm/deploy/` is a heavy operation. It may take time to respond — wait for it. Do not cancel, time out, or give up on the request. The only hard limit is **5 minutes of total wall time** across deploy + polling.
 
