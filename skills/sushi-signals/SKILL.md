@@ -31,7 +31,7 @@ Two phases:
 | LinkedIn post search | `apify_linkedin_post_search` (via `provider-playbooks/apify.md`) |
 | Lead enrichment | `apify_leads_finder` (via `provider-playbooks/apify.md`) |
 | Reddit / web search | `apify_google_search_scraper` — use `site:reddit.com/r/[subreddit]` queries (via `provider-playbooks/apify.md`) |
-| News & press | Swarm web search via `sushi-research` |
+| News & press | `apify_perplexity_ai_scraper` (synthesized news) + `apify_google_search_scraper` as fallback (via `provider-playbooks/apify.md`) |
 | Session persistence | `sushi-save` skill |
 
 ---
@@ -368,8 +368,8 @@ Build the swarm directive from `signal_config`, then deploy. Each worker must ex
 | Pain posts (LinkedIn) | `"Use apify_linkedin_post_search with searchQueries built from these pain keywords: [signal_config.keywords] combined with [ICP industry]. maxPosts: 20. Flag posts where the author asks for help, describes a struggle, or requests vendor recommendations."` |
 | Hiring signals (LinkedIn) | `"Use apify_linkedin_post_search with searchQueries: ['[ICP company] hiring [buyer persona role]', '[ICP industry] head of [function] job']. maxPosts: 15. Flag posts announcing open roles at ICP-fit companies for buyer persona titles."` |
 | LinkedIn job postings | `"Use apify_linkedin_company_scraper with profileUrls for the top 10 ICP target company LinkedIn pages. Extract open jobs. Flag any role matching these buyer persona titles: [personas]. Include company name, job title, job URL, and date posted."` *(include if LinkedIn job postings is an active source)* |
-| Reddit signals | `"Use apify web search to query r/[subreddit] for posts containing [signal_config.keywords]. Collect post title, author, text, URL, and top comments. Flag posts where the OP asks for tool recommendations or describes a pain this product solves."` *(one worker per 1–2 configured subreddits; omit if Reddit not in sources)* |
-| News / press | `"Use web search to find recent news for these ICP companies: [target_accounts]. Search queries: '[company] funding OR acquisition OR product launch site:techcrunch.com OR crunchbase.com OR businesswire.com'. Flag results showing funding rounds, acquisitions, or strategic hires at ICP-fit companies."` *(include if News is an active source)* |
+| Reddit signals | `"Use apify_google_search_scraper with queries: 'site:reddit.com/r/[subreddit] [signal_config.keywords]'. Collect post title, author, text, URL, and top comments. Flag posts where the OP asks for tool recommendations or describes a pain this product solves."` *(one worker per 1–2 configured subreddits; omit if Reddit not in sources)* |
+| News / press | `"Use apify_perplexity_ai_scraper with queries: '[company] funding OR acquisition OR product launch'. Then use apify_google_search_scraper with queries: '[company] funding OR acquisition OR product launch site:techcrunch.com OR crunchbase.com OR businesswire.com' as a fallback. Flag results showing funding rounds, acquisitions, or strategic hires at ICP-fit companies."` *(include if News is an active source)* |
 
 > **Do not apply any self-imposed time limit.** `/swarm/deploy/` is a heavy operation. The only hard limit is **5 minutes total** across deploy + polling.
 

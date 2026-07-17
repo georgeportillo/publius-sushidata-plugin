@@ -4,6 +4,34 @@ All notable changes to the sushidata-gtm plugin are documented here.
 
 ---
 
+## [0.5.12] — 2026-07-17
+
+### Added
+
+**`sushi-onboard` — end-to-end GTM onboarding skill**
+
+New `/sushi-onboard` skill that walks a new user through the full Sushidata setup in a single guided session:
+- ICP check: queries the context lake for a saved ICP; falls back to an elicitation form or LLM inference if none exists, and saves the result
+- Use case selection: choose between finding prospects (10-lead sample swarm using all three lead finder actors), finding buying signals (full `sushi-signals` workflow), or running both in parallel
+- Next-step routing: send to HeyReach, export as sheet, save to context lake, enrich further, or scale up
+- HeyReach connection check: auto-detects if HeyReach MCP is connected; if not, walks the user through account creation → API key → MCP URL → Claude connector setup step by step
+- CRM/tooling prompt: asks about HubSpot, Salesforce, Notion, Airtable, or Slack after HeyReach
+- Handoff summary: closing recap with ICP, lead count, signal count, and CRM status; stays in session for follow-on requests
+
+**`finding-companies-and-contacts.md` — lead finder actor prioritization**
+
+- Restructured people search escalation order: `apify_leads_finder` is now #1 for ICP discovery, followed by `moltsets_search_people` and `fullenrich_search_people`
+- Added "use all three actors together" directive and a swarm task template that names each actor explicitly, preventing workers from defaulting to Google search
+- Separated lead discovery from row-level enrichment into distinct ordered sections
+
+**`sushi-signals/SKILL.md` — named actor swarm tasks**
+
+- Reddit signal worker task now explicitly names `apify_google_search_scraper` with `site:reddit.com/r/[subreddit]` query pattern
+- News/press signal worker task now uses `apify_perplexity_ai_scraper` first (synthesized news) with `apify_google_search_scraper` as fallback — was "use web search" (unresolved, defaulted to Google)
+- Updated Dependencies table to reflect both actors for news/press
+
+---
+
 ## [0.5.11] — 2026-07-14
 
 ### Fixed

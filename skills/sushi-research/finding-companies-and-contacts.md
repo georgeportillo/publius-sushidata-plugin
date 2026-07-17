@@ -37,18 +37,32 @@ Escalate only when you need a filter the current step lacks.
 
 ## People search: provider escalation order
 
-1. **WebSearch / WebFetch** — for public directories, event attendee lists, or LinkedIn Sales Navigator exports the user already has.
-2. **`fullenrich_search_people`** — structured contact discovery by company domain.
-3. **`moltsets_search_people`** — synchronous people search by name, title, company domain, industry, seniority, or country. Up to 25 results per call; paginate with `offset`. Read [`provider-playbooks/moltsets.md`](provider-playbooks/moltsets.md) for field notes.
-4. **`moltsets_search_business_email_by_name`** — when you already have a person's name and company domain and just need their email: one synchronous call, tokens only charged on hit.
-5. **`fullenrich_start_enrichment`** — named-person email lookup; submit first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
-6. **`apify_leads_finder`** — large-scale ICP prospecting (200–50k leads) with rich company and person filters. Read [`provider-playbooks/apify.md`](provider-playbooks/apify.md) for the Leads Finder section.
-7. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
+> **Use all available lead finder actors together, not sequentially.** For any ICP prospecting or discovery task, run `apify_leads_finder`, `moltsets_search_people`, and `fullenrich_search_people` in combination — each covers different parts of the contact database. Never rely on a single actor for lead finding.
+
+### Lead discovery (finding new people matching ICP criteria)
+
+1. **`apify_leads_finder`** — primary tool for all ICP prospecting (200–50k leads). Rich filters: title, seniority, company domain, industry, company size, funding stage, tech stack, geography, verified/unverified email. Read [`provider-playbooks/apify.md`](provider-playbooks/apify.md) for the Leads Finder section. **Start here for any prospecting task.**
+2. **`moltsets_search_people`** — synchronous people search by name, title, company domain, industry, seniority, or country. Up to 25 results per call; paginate with `offset`. Best for targeted lookups at specific companies. Read [`provider-playbooks/moltsets.md`](provider-playbooks/moltsets.md).
+3. **`fullenrich_search_people`** — structured contact discovery by company domain. Best when you have a domain list and need contacts with emails.
+4. **WebSearch / WebFetch** — for public directories, event attendee lists, or LinkedIn Sales Navigator exports the user already has.
+5. **Sushidata swarm** — deploy a swarm naming all three lead finder actors explicitly when broad ICP discovery is needed. Use the swarm task template below.
+6. **Missing actor feedback** — if bulk LinkedIn employee scraping is required, follow `provider-playbooks/apify.md`.
+
+> **Swarm task template for lead finding** — always name all three actors explicitly so workers do not default to Google search:
+> ```
+> Worker 1: "Use apify_leads_finder with [title/seniority/industry/company-size filters] to find [N] leads matching ICP. Return linkedin_url, email, first_name, last_name, title, company, domain."
+> Worker 2: "Use moltsets_search_people with [title, companyDomain, seniority] to find contacts at [specific company list]. Paginate with offset if needed. Return linkedin_url, email, first_name, last_name, title, company."
+> Worker 3: "Use fullenrich_search_people with companyDomain for each domain in [domain list] to discover contacts. Return linkedin_url, email, first_name, last_name, title, company."
+> ```
+
+### Row-level enrichment (you have a person's identity, need email/phone)
+
+7. **`moltsets_search_business_email_by_name`** — when you already have a person's name and company domain and just need their email: one synchronous call, tokens only charged on hit.
+8. **`fullenrich_start_enrichment`** — named-person email lookup; submit first name + last name + domain (or linkedin_url), then poll `fullenrich_get_enrichment`.
+9. **Multi-provider enrichment waterfall** — for maximum coverage, run providers in parallel (read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)):
    - **Work email from LinkedIn URL**: `moltsets_linkedin_to_best_email` (synchronous) or `fullenrich_start_enrichment` → poll
    - **Bulk enrichment (20–100 contacts)**: `fullenrich_start_enrichment` → poll `fullenrich_get_enrichment`
    - **Mobile phone**: `moltsets_linkedin_to_mobile_phone`
-8. **Sushidata swarm** — for researching who the right contacts are at a target company (roles, reporting structure, influence mapping).
-9. **Missing actor feedback** — if bulk LinkedIn employee scraping is required, follow `provider-playbooks/apify.md`.
 
 ## Discovery workflow
 
