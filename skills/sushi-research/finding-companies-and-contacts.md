@@ -32,6 +32,8 @@ Escalate only when you need a filter the current step lacks.
 4. **Direct enrichment providers for company data** — use when you need firmographics or structured company profiles:
    - `fullenrich_search_company` — company search with rich filters
    - `moltsets_search_companies` — synchronous company search by name, domain, industry, employee count, or revenue
+   - [`predictleads_discover_companies`](provider-playbooks/predictleads.md) — search companies by location and size
+   - [`predictleads_portfolio_companies`](provider-playbooks/predictleads.md) — VC/accelerator portfolio companies from public portfolio pages
    - For full detail, read [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md)
 5. **Missing actor feedback** — if the needed scraper is not exposed, follow `provider-playbooks/apify.md` instead of improvising actor IDs.
 

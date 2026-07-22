@@ -8,7 +8,7 @@ description: >
   classifying ICP fit, discovering niche buyer signals from won/lost accounts, community feedback
   analysis (Discord, Slack, forums), competitor battlecards, GTM competitor reports, and document accuracy review. Governs the full Sushidata workflow:
   context-lake queries, deep swarm research, verification, context saving, and GTM execution routing
-  through provider playbooks for HeyReach, HubSpot, Apify, FullEnrich, and Massive. When in doubt, trigger.
+  through provider playbooks for HeyReach, HubSpot, Apify, FullEnrich, PredictLeads, and Massive. When in doubt, trigger.
 ---
 
 # Sushidata GTM Research Assistant
@@ -27,7 +27,7 @@ You are connected to a Sushidata dataspace via API. This skill governs two compl
 > **Apify actors available to swarm workers** (not exhaustive):
 > `apify_linkedin_post_search` · `apify_linkedin_company_scraper` · `apify_linkedin_ad_library_scraper` · `apify_leads_finder` · `apify_google_search_scraper` · `apify_instagram_scraper` · `apify_instagram_reel_scraper` · `apify_youtube_scraper` · `apify_facebook_posts_scraper` · `apify_facebook_comments_scraper` · `apify_g2_scraper` · `apify_ycombinator_scraper` · `apify_ahrefs_scraper` · `apify_perplexity_ai_scraper` · `apify_pitchbook_data_extractor` · `apify_real_estate_aggregator` · and all others in `provider-playbooks/apify.md`
 >
-> **Provider tools available to swarm workers**: `fullenrich_*` · `moltsets_*` · `heyreach_*` · `hubspot_*` · and all others in the provider playbooks.
+> **Provider tools available to swarm workers**: `fullenrich_*` · `moltsets_*` · `heyreach_*` · `hubspot_*` · `predictleads_*` · and all others in the provider playbooks.
 >
 > **Claude's own tool list is completely irrelevant.** Whether or not Claude sees `apify_linkedin_post_search` (or any other tool) in its current session has no bearing on whether a swarm worker can use it. Swarm workers always have the full tool suite regardless of which tools are connected to Claude in a given chat interface.
 >
@@ -348,7 +348,7 @@ Use this section when the task involves prospecting, enrichment, outbound activa
 
 - Route GTM decisions and provider selection before execution.
 - Use Sushidata swarms for research-heavy tasks (company profiling, ICP sizing, signal discovery).
-- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery and enrichment (FullEnrich), web automation (Apify), and residential browser fetching (Massive).
+- Use provider playbooks for outbound execution (HeyReach), CRM sync (HubSpot), email discovery and enrichment (FullEnrich), buying-signal and technology intelligence (PredictLeads), web automation (Apify), and residential browser fetching (Massive).
 
 ### Goal
 
@@ -361,7 +361,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 - **Level 1** (`SKILL.md`): routing, guardrails, and links to sub-docs.
 - **Level 2** (phase docs): [`finding-companies-and-contacts.md`](finding-companies-and-contacts.md)
 - **Level 2.5** (`recipes/*.md`): step-by-step playbooks for specific tasks.
-- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Apify, FullEnrich, MoltSets, Google Ads Transparency, Massive, and Clay.
+- **Level 3** (`provider-playbooks/*.md`): provider-specific guidance for HeyReach, HubSpot, Apify, FullEnrich, MoltSets, PredictLeads, Google Ads Transparency, Massive, and Clay.
 
 ---
 
@@ -401,6 +401,22 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 
 **Bot-protected pages (PitchBook, LinkedIn, CAPTCHA/403 errors):** `massive_browser_render` — use when standard fetching fails or returns empty. Formats: `markdown`, `text`, `rendered`. Set `country` for geo-targeted fetches. See [`provider-playbooks/massive.md`](provider-playbooks/massive.md).
 
+#### Buying Signals & Company Intelligence — [`provider-playbooks/predictleads.md`](provider-playbooks/predictleads.md)
+
+**Company enrichment:** `predictleads_company`
+
+**Buying signals (one company):** `predictleads_news_events` · `predictleads_financing_events` · `predictleads_connections` · `predictleads_products` · `predictleads_website_evolution` · `predictleads_github_repositories` · `predictleads_sec_filings`
+
+**Technology stack:** `predictleads_technology_detections` · `predictleads_companies_using_technology` · `predictleads_technologies` · `predictleads_technology` · `predictleads_extended_technology_detection`
+
+**Hiring signals:** `predictleads_job_openings` · `predictleads_job_openings_deleted` · `predictleads_discover_job_openings`
+
+**Cross-company discovery:** `predictleads_discover_companies` · `predictleads_discover_news_events` · `predictleads_discover_financing_events` · `predictleads_portfolio_companies` · `predictleads_startup_platform_posts` · `predictleads_similar_companies`
+
+**Follow / webhook tracking:** `predictleads_follow_company` · `predictleads_followings` · `predictleads_unfollow_company`
+
+**Account check (free):** `predictleads_api_subscription`
+
 ---
 
 ### Read the right sub-doc BEFORE executing
@@ -423,6 +439,7 @@ Customer is generally trying to go from "I have an ICP" to "Here's a list of pro
 | Extracting a Clay table config or records via script or MCP browser                                                              | [`references/clay-extraction.md`](references/clay-extraction.md)                           |
 | Finding or enriching emails, person profiles, or company data — multi-provider waterfall strategy                                | [`provider-playbooks/enrichment-waterfall.md`](provider-playbooks/enrichment-waterfall.md) |
 | FullEnrich — bulk async email + phone enrichment (15+ providers waterfall), reverse email, people + company search               | [`provider-playbooks/fullenrich.md`](provider-playbooks/fullenrich.md)                     |
+| PredictLeads — company intelligence, buying signals, tech stack, hiring/funding events, follow webhooks, discovery across companies | [`provider-playbooks/predictleads.md`](provider-playbooks/predictleads.md)                 |
 | Fetching pages that block standard crawlers (PitchBook, LinkedIn, Crunchbase, CAPTCHA/403 pages) via residential browser network | [`provider-playbooks/massive.md`](provider-playbooks/massive.md)                           |
 | Saving session outputs to the context lake on demand                                                                             | `sushi-save` skill — user says "save" or "save to sushidata"                               |
 | Pulling prior session memory at the start of a new conversation                                                                  | `sushi-restore` skill — user says "restore" or "pull my memory"                            |
@@ -520,6 +537,7 @@ python3 scripts/validate-linkedin-names.py --fixtures scripts/fixtures_name_vali
 - [HubSpot playbook](provider-playbooks/hubspot.md) — CRM reads, writes, and campaign tools
 - [FullEnrich playbook](provider-playbooks/fullenrich.md) — Email discovery and contact enrichment
 - [MoltSets playbook](provider-playbooks/moltsets.md) — Synchronous LinkedIn-to-email, reverse lookups, people/company search, mobile phone, ad audiences
+- [PredictLeads playbook](provider-playbooks/predictleads.md) — Company intelligence, buying signals, technology stack, hiring and funding events, follow webhooks
 - [Apify playbook](provider-playbooks/apify.md) — Web scraping, actor-based automation, large-scale B2B leads finder
 - [Google Ads Transparency playbook](provider-playbooks/ads-transparency.md) — Competitor ad creative research, paid channel analysis, creative longevity signals
 - [Massive playbook](provider-playbooks/massive.md) — Residential browser network for bot-protected pages

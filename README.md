@@ -53,6 +53,7 @@ Inside `skills/sushi-research/provider-playbooks/`:
 | `heyreach.md` | LinkedIn campaign insertion (â‰¤50 contacts per batch) |
 | `hubspot.md` | Contact, company, note, and deal upsert patterns |
 | `apify.md` | Actor quality ranking, job listing scraping, LinkedIn data |
+| `predictleads.md` | Company intelligence, buying signals, technology stack, hiring/funding events, follow webhooks |
 
 ---
 
@@ -131,4 +132,4 @@ The ZIP root must contain `.claude-plugin/plugin.json` and `skills/` directly â€
 
 - Claude Cowork (desktop app) with the plugin installed
 - Sushidata account with access to the `Sushidata Internal` dataspace
-- MCP connectors for the providers you want to use: HeyReach, HubSpot, Apify, FullEnrich
+- MCP connectors for the providers you want to use: HeyReach, HubSpot, Apify, FullEnrich, PredictLeads

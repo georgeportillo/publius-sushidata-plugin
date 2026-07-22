@@ -32,6 +32,17 @@ Use this playbook when you need to find or enrich email addresses, person profil
 | `fullenrich_search_people` | FullEnrich | Contact discovery by company domain or filters |
 | `fullenrich_search_company` | FullEnrich | Company search with rich filters |
 | `moltsets_search_companies` | MoltSets | Synchronous company search by name, domain, industry, employee count, revenue range |
+| `predictleads_company` | PredictLeads | Enrich one company by domain or ID — firmographics, descriptions, relationships |
+| `predictleads_discover_companies` | PredictLeads | Search companies by location and size |
+| `predictleads_news_events` | PredictLeads | Buying signals for one company: funding, hires, launches, partnerships, etc. |
+| `predictleads_financing_events` | PredictLeads | Funding rounds for one company |
+| `predictleads_technology_detections` | PredictLeads | Technology stack for one company |
+| `predictleads_companies_using_technology` | PredictLeads | Find all companies using a specific technology |
+| `predictleads_discover_job_openings` | PredictLeads | Cross-company hiring signal search |
+| `predictleads_discover_news_events` | PredictLeads | Cross-company news event search |
+| `predictleads_discover_financing_events` | PredictLeads | Cross-company funding event search |
+| `predictleads_portfolio_companies` | PredictLeads | VC/accelerator portfolio companies |
+| `predictleads_similar_companies` | PredictLeads | Find companies similar to a target |
 
 ---
 
@@ -128,6 +139,7 @@ When you have ICP criteria and need a list of matching contacts or companies:
 | Search contacts by domain or filters | `fullenrich_search_people` or `moltsets_search_people` (synchronous, up to 25/call) |
 | Search people with rich filters | `fullenrich_search_people` or `moltsets_search_people` |
 | Search companies with rich filters | `fullenrich_search_company` or `moltsets_search_companies` |
+| Signal-based company discovery (funding, hiring, tech usage, news) | `predictleads_discover_*` tools — see `provider-playbooks/predictleads.md` |
 | Large-scale ICP prospecting (200–50k leads) | `apify_leads_finder` — see `provider-playbooks/apify.md` |
 
 ---
